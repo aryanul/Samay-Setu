@@ -4,7 +4,7 @@ declare global {
   var __ssPool: mysql.Pool | undefined;
 }
 
-function createPool() {
+function createPool(): mysql.Pool {
   const url = process.env.DATABASE_URL;
   if (!url) {
     throw new Error("DATABASE_URL is not set");
@@ -19,8 +19,15 @@ function createPool() {
   });
 }
 
-export const pool: mysql.Pool = global.__ssPool ?? createPool();
-
-if (process.env.NODE_ENV !== "production") {
-  global.__ssPool = pool;
+export function getPool(): mysql.Pool {
+  if (!global.__ssPool) {
+    global.__ssPool = createPool();
+  }
+  return global.__ssPool;
 }
+
+export const pool = new Proxy({} as mysql.Pool, {
+  get(_target, prop, receiver) {
+    return Reflect.get(getPool(), prop, receiver);
+  },
+});
