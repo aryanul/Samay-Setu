@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:verified-architect": "node --env-file=.env.local scripts/apply-verified-architect-schema.mjs"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

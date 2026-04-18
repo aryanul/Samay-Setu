@@ -167,7 +167,7 @@ export default function HomePage() {
                 <div className="desc">Potential Exchanges</div>
               </div>
             </div>
-            <Link href="/join-circle" className="cta-gold">
+            <Link href="/onboarding" className="cta-gold">
               Claim Your Founding Seat →
             </Link>
           </div>
