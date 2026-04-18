@@ -18,7 +18,7 @@ function oauthErrorMessage(code: string | null): string | null {
   if (!code) return null;
   const map: Record<string, string> = {
     config:
-      "LinkedIn is not configured yet. Add LINKEDIN_CLIENT_ID and LINKEDIN_CLIENT_SECRET to .env.local (see .env.example), then restart the dev server.",
+      "LinkedIn is not configured on this server. Add LINKEDIN_CLIENT_ID and LINKEDIN_CLIENT_SECRET (locally in .env.local, or in Vercel → Settings → Environment Variables), then redeploy / restart.",
     invalid_state: "Sign-in expired. Please try LinkedIn again.",
     callback_failed: "We could not complete LinkedIn sign-in. Please try again.",
     access_denied: "LinkedIn sign-in was cancelled.",

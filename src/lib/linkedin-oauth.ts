@@ -1,12 +1,24 @@
 /**
  * LinkedIn OAuth 2.0 (Sign In with LinkedIn — OpenID Connect).
  * Required env: LINKEDIN_CLIENT_ID, LINKEDIN_CLIENT_SECRET.
- * Optional: NEXT_PUBLIC_APP_URL (e.g. https://yourdomain.com) for redirect URI; defaults to http://localhost:3000 in development.
+ *
+ * Public URL resolution (first match wins):
+ * 1. NEXT_PUBLIC_APP_URL — set this on Vercel/custom domains so redirect_uri matches LinkedIn exactly.
+ * 2. VERCEL_URL — set automatically on Vercel (hostname only); we prefix https://.
+ * 3. http://localhost:3000 — local dev only.
  */
 
 export function getAppBaseUrl(): string {
   const fromEnv = process.env.NEXT_PUBLIC_APP_URL?.trim();
   if (fromEnv) return fromEnv.replace(/\/$/, "");
+
+  const vercel = process.env.VERCEL_URL?.trim();
+  if (vercel) {
+    const v = vercel.replace(/\/$/, "");
+    if (v.startsWith("http://") || v.startsWith("https://")) return v;
+    return `https://${v}`;
+  }
+
   return "http://localhost:3000";
 }
 
