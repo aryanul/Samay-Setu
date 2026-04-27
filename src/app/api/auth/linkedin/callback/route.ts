@@ -2,10 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createArchitectDraft } from "@/lib/architect-draft";
 import { exchangeCodeForTokens, fetchLinkedInProfile, getAppBaseUrl } from "@/lib/linkedin-oauth";
+import { pool } from "@/lib/db";
+import { createMemberSession } from "@/lib/member-session";
 
 export const runtime = "nodejs";
 
 const STATE_COOKIE = "ss_linkedin_oauth_state";
+
+type ExistingMemberRow = { id: number; full_name: string };
 
 export async function GET(req: NextRequest) {
   const base = getAppBaseUrl();
@@ -36,6 +40,18 @@ export async function GET(req: NextRequest) {
   try {
     const { access_token } = await exchangeCodeForTokens(code);
     const profile = await fetchLinkedInProfile(access_token);
+
+    const [rowsRaw] = await pool.query(
+      "SELECT id, full_name FROM verified_architect_onboarding WHERE linkedin_sub = ? LIMIT 1",
+      [profile.linkedin_sub]
+    );
+    const rows = rowsRaw as ExistingMemberRow[];
+    const existing = rows[0];
+    if (existing) {
+      await createMemberSession({ memberId: existing.id, name: existing.full_name });
+      return NextResponse.redirect(`${base}/dashboard`);
+    }
+
     await createArchitectDraft({
       linkedin_sub: profile.linkedin_sub,
       name: profile.name,

@@ -1,15 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { pool } from "@/lib/db";
 import { clearArchitectDraft, readArchitectDraft } from "@/lib/architect-draft";
+import { clientIp } from "@/lib/req";
+import { createMemberSession } from "@/lib/member-session";
 
 export const runtime = "nodejs";
-
-function clientIp(req: NextRequest): string | null {
-  const forwarded = req.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0].trim();
-  const real = req.headers.get("x-real-ip");
-  return real || null;
-}
 
 function isValidHttpUrl(value: string): boolean {
   try {
@@ -59,8 +54,9 @@ export async function POST(req: NextRequest) {
   const ip = clientIp(req);
   const userAgent = req.headers.get("user-agent");
 
+  let memberId: number;
   try {
-    await pool.execute(
+    const [result] = await pool.execute(
       `INSERT INTO verified_architect_onboarding (
         linkedin_sub, full_name, professional_title, profile_picture_url, email,
         primary_expertise, current_need, proof_of_wisdom_url, source, ip, user_agent
@@ -79,6 +75,7 @@ export async function POST(req: NextRequest) {
         userAgent,
       ]
     );
+    memberId = (result as { insertId: number }).insertId;
   } catch (err: unknown) {
     const e = err as { code?: string; errno?: number; sqlMessage?: string };
     const code = typeof e.code === "string" ? e.code : "";
@@ -122,9 +119,11 @@ export async function POST(req: NextRequest) {
 
   const displayName = draft.name;
   await clearArchitectDraft();
+  await createMemberSession({ memberId, name: displayName });
   return NextResponse.json({
     ok: true,
     message: "Your Verified Architect profile is submitted.",
     displayName,
+    redirect: "/dashboard",
   });
 }

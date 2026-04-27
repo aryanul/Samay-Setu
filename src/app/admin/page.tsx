@@ -3,6 +3,7 @@ import { pool } from "@/lib/db";
 import { readAdminSession } from "@/lib/session";
 import LoginForm from "./LoginForm";
 import LogoutButton from "./LogoutButton";
+import MemberVisibilityToggle from "./MemberVisibilityToggle";
 import "./page.css";
 
 type ApplicationRow = {
@@ -27,7 +28,21 @@ type EmailRow = {
   user_agent: string | null;
 };
 
-type AdminView = "dashboard" | "applications" | "emails";
+type AdminView = "dashboard" | "applications" | "emails" | "members";
+
+type MemberRow = {
+  id: number;
+  created_at: Date;
+  full_name: string;
+  email: string | null;
+  professional_title: string | null;
+  primary_expertise: string;
+  current_need: string;
+  proof_of_wisdom_url: string;
+  is_visible: number;
+};
+
+type CountRow = { c: number };
 
 function formatDateTime(value: Date | string): string {
   const d = value instanceof Date ? value : new Date(value);
@@ -88,7 +103,7 @@ export default async function AdminPage({
   const sp = await searchParams;
   const requestedView = (sp.view ?? "dashboard").trim();
   const view: AdminView =
-    requestedView === "applications" || requestedView === "emails" || requestedView === "dashboard"
+    requestedView === "applications" || requestedView === "emails" || requestedView === "members" || requestedView === "dashboard"
       ? (requestedView as AdminView)
       : "dashboard";
 
@@ -98,9 +113,24 @@ export default async function AdminPage({
   const [emailsResult] = await pool.query(
     "SELECT id, created_at, email, source, ip, user_agent FROM waitlist_emails ORDER BY created_at DESC"
   );
+  const [membersResult] = await pool.query(
+    `SELECT id, created_at, full_name, email, professional_title,
+            primary_expertise, current_need, proof_of_wisdom_url, is_visible
+       FROM verified_architect_onboarding
+      ORDER BY created_at DESC`
+  );
+  const [pendingBridgesRaw] = await pool.query(
+    "SELECT COUNT(*) AS c FROM bridges WHERE status = 'pending'"
+  );
+  const [activeThreadsRaw] = await pool.query(
+    "SELECT COUNT(*) AS c FROM chat_threads WHERE last_message_at > DATE_SUB(NOW(), INTERVAL 7 DAY)"
+  );
 
   const applications = appsResult as ApplicationRow[];
   const waitlistEmails = emailsResult as EmailRow[];
+  const members = membersResult as MemberRow[];
+  const pendingBridges = (pendingBridgesRaw as CountRow[])[0]?.c ?? 0;
+  const activeThreads = (activeThreadsRaw as CountRow[])[0]?.c ?? 0;
 
   const today = new Date();
   const applicationsToday = applications.filter((a) => sameLocalDay(new Date(a.created_at), today)).length;
@@ -175,6 +205,10 @@ export default async function AdminPage({
             <Link href="/admin?view=dashboard" className={`nav-link${view === "dashboard" ? " active" : ""}`}>
               Dashboard
             </Link>
+            <Link href="/admin?view=members" className={`nav-link${view === "members" ? " active" : ""}`}>
+              Members
+              <span className="badge">{members.length}</span>
+            </Link>
             <Link href="/admin?view=applications" className={`nav-link${view === "applications" ? " active" : ""}`}>
               Join Circle
               <span className="badge">{applications.length}</span>
@@ -189,9 +223,24 @@ export default async function AdminPage({
             <>
               <section className="stats-grid">
                 <article className="stat-card">
+                  <p className="stat-title">Verified Members</p>
+                  <p className="stat-value">{members.length}</p>
+                  <p className="stat-sub">{members.filter((m) => m.is_visible === 1).length} visible · {members.filter((m) => m.is_visible !== 1).length} hidden</p>
+                </article>
+                <article className="stat-card">
+                  <p className="stat-title">Pending Bridges</p>
+                  <p className="stat-value">{pendingBridges}</p>
+                  <p className="stat-sub">Awaiting accept / decline</p>
+                </article>
+                <article className="stat-card">
+                  <p className="stat-title">Active Threads (7d)</p>
+                  <p className="stat-value">{activeThreads}</p>
+                  <p className="stat-sub">Chats with recent messages</p>
+                </article>
+                <article className="stat-card">
                   <p className="stat-title">Total Applications</p>
                   <p className="stat-value">{applications.length}</p>
-                  <p className="stat-sub">Founding membership requests</p>
+                  <p className="stat-sub">Legacy join-circle intake</p>
                 </article>
                 <article className="stat-card">
                   <p className="stat-title">Total Waitlist Emails</p>
@@ -268,6 +317,53 @@ export default async function AdminPage({
                 </article>
               </section>
             </>
+          )}
+
+          {view === "members" && (
+            <section className="section-block">
+              <h2 className="section-title">Verified Architect Members</h2>
+              <p className="section-note">Data source: table <code>verified_architect_onboarding</code></p>
+              {members.length === 0 ? (
+                <div className="empty">No verified members yet.</div>
+              ) : (
+                <div className="table-wrap">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Created</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Title</th>
+                        <th>Gives</th>
+                        <th>Seeks</th>
+                        <th>Proof</th>
+                        <th>Visible</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {members.map((m) => (
+                        <tr key={m.id}>
+                          <td>{formatDateTime(m.created_at)}</td>
+                          <td>{m.full_name}</td>
+                          <td>{m.email ?? ""}</td>
+                          <td>{m.professional_title ?? ""}</td>
+                          <td>{m.primary_expertise}</td>
+                          <td>{m.current_need}</td>
+                          <td>
+                            <a href={m.proof_of_wisdom_url} target="_blank" rel="noreferrer noopener">
+                              link
+                            </a>
+                          </td>
+                          <td>
+                            <MemberVisibilityToggle memberId={m.id} initialVisible={m.is_visible === 1} />
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </section>
           )}
 
           {view === "applications" && (

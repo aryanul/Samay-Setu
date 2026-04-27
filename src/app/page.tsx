@@ -76,6 +76,7 @@ export default function HomePage() {
           <li><a href="#how">How it Works</a></li>
           <li><a href="#skills">Skill Directory</a></li>
           <li><a href="#philosophy">The Ethics</a></li>
+          <li><Link href="/login">Sign in</Link></li>
         </ul>
         <a href="#founding" className="nav-cta">Apply for Founding Membership</a>
       </nav>

@@ -166,7 +166,20 @@ export default function OnboardingWizard({
       }
       setDoneName(nameForThanks);
       setDone(true);
-      router.refresh();
+      const redirectTo = typeof result.redirect === "string" ? result.redirect : null;
+      if (redirectTo) {
+        window.setTimeout(() => {
+          try {
+            window.sessionStorage.removeItem(DONE_KEY);
+            window.sessionStorage.removeItem(DONE_NAME_KEY);
+          } catch {
+            /* ignore */
+          }
+          router.push(redirectTo);
+        }, 1500);
+      } else {
+        router.refresh();
+      }
     } catch {
       setError("Network issue. Please try again.");
     } finally {
@@ -178,16 +191,15 @@ export default function OnboardingWizard({
     const thankName = (doneName || draft?.name || "there").trim();
     return (
       <div className="ss-onboard-success">
-        <div className="verify-badge muted">Received</div>
-        <h1>Verification dossier received</h1>
+        <div className="verify-badge">Welcome</div>
+        <h1>You&apos;re in, {thankName}.</h1>
         <p className="lead">
-          Thank you, <strong>{thankName}</strong>. Our team reviews each Verified Architect application by hand to keep the circle
-          safe and high-trust.
+          Opening the Live Bridge — your members-only feed of trade cards…
         </p>
-        <p className="sub">You will hear from us once your profile is cleared for the pilot.</p>
+        <p className="sub">If nothing happens in a moment, tap below.</p>
         <Link
           className="btn-primary-outline"
-          href="/"
+          href="/dashboard"
           onClick={() => {
             try {
               window.sessionStorage.removeItem(DONE_KEY);
@@ -197,7 +209,7 @@ export default function OnboardingWizard({
             }
           }}
         >
-          Return home
+          Enter the Bridge →
         </Link>
       </div>
     );
