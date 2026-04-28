@@ -351,6 +351,13 @@
   background: rgba(255, 255, 255, 0.95);
   color: var(--ink);
 }
+
+@media (max-width: 640px) {
+  .ss-onboard .field {
+    padding: 11px 12px;
+    font-size: 16px;
+  }
+}
 .ss-onboard .field.area {
   min-height: 120px;
   resize: vertical;
@@ -362,6 +369,18 @@
   align-items: center;
   gap: 12px;
   margin-top: 18px;
+}
+
+@media (max-width: 640px) {
+  .ss-onboard .actions {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+  .btn-ghost,
+  .btn-solid {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 .btn-ghost {

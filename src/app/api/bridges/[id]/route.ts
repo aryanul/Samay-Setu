@@ -12,6 +12,8 @@ type BridgeRow = {
   status: "pending" | "accepted" | "declined";
 };
 
+type ThreadIdRow = { id: number };
+
 export async function PATCH(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
   const session = await readMemberSession();
   if (!session) {
@@ -70,11 +72,42 @@ export async function PATCH(req: NextRequest, ctx: { params: Promise<{ id: strin
     if (newStatus === "accepted") {
       const memberA = Math.min(bridge.from_member_id, bridge.to_member_id);
       const memberB = Math.max(bridge.from_member_id, bridge.to_member_id);
-      const [insertResult] = await conn.execute(
-        "INSERT INTO chat_threads (bridge_id, member_a_id, member_b_id) VALUES (?, ?, ?)",
-        [bridgeId, memberA, memberB]
+
+      // If a thread already exists for this pair, reuse it instead of creating a duplicate.
+      const [threadRowsRaw] = await conn.query(
+        "SELECT id FROM chat_threads WHERE member_a_id = ? AND member_b_id = ? LIMIT 1 FOR UPDATE",
+        [memberA, memberB]
       );
-      threadId = (insertResult as ResultSetHeader).insertId;
+      const existingThread = (threadRowsRaw as ThreadIdRow[])[0];
+      if (existingThread) {
+        threadId = existingThread.id;
+      } else {
+        const [insertResult] = await conn.execute(
+          "INSERT INTO chat_threads (bridge_id, member_a_id, member_b_id) VALUES (?, ?, ?)",
+          [bridgeId, memberA, memberB]
+        );
+        threadId = (insertResult as ResultSetHeader).insertId;
+      }
+
+      // Once connected, any other pending offers between this pair are stale.
+      await conn.execute(
+        `UPDATE bridges
+            SET status = 'declined', responded_at = NOW()
+          WHERE id <> ?
+            AND status = 'pending'
+            AND (
+              (from_member_id = ? AND to_member_id = ?)
+              OR
+              (from_member_id = ? AND to_member_id = ?)
+            )`,
+        [
+          bridgeId,
+          bridge.from_member_id,
+          bridge.to_member_id,
+          bridge.to_member_id,
+          bridge.from_member_id,
+        ]
+      );
     }
 
     await conn.commit();

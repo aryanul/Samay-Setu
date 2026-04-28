@@ -40,10 +40,8 @@ export default function ChatRoom({
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const bodyRef = useRef<HTMLDivElement | null>(null);
-  const sinceRef = useRef<string>(
-    initialMessages.length > 0
-      ? initialMessages[initialMessages.length - 1].createdAt
-      : new Date(0).toISOString()
+  const sinceIdRef = useRef<number>(
+    initialMessages.length > 0 ? initialMessages[initialMessages.length - 1].id : 0
   );
 
   const scrollToBottom = useCallback(() => {
@@ -61,7 +59,7 @@ export default function ChatRoom({
     async function poll() {
       try {
         const res = await fetch(
-          `/api/chat/threads/${threadId}/messages?since=${encodeURIComponent(sinceRef.current)}`,
+          `/api/chat/threads/${threadId}/messages?sinceId=${sinceIdRef.current}`,
           { cache: "no-store" }
         );
         if (!res.ok) return;
@@ -76,7 +74,7 @@ export default function ChatRoom({
           return merged;
         });
         const last = data.messages[data.messages.length - 1];
-        sinceRef.current = last.createdAt;
+        sinceIdRef.current = last.id;
         requestAnimationFrame(scrollToBottom);
       } catch {
         /* swallow — next tick will retry */
@@ -112,7 +110,7 @@ export default function ChatRoom({
       setDraft("");
       // Optimistic refetch
       const after = await fetch(
-        `/api/chat/threads/${threadId}/messages?since=${encodeURIComponent(sinceRef.current)}`,
+        `/api/chat/threads/${threadId}/messages?sinceId=${sinceIdRef.current}`,
         { cache: "no-store" }
       );
       if (after.ok) {
@@ -126,7 +124,7 @@ export default function ChatRoom({
             }
             return merged;
           });
-          sinceRef.current = data.messages[data.messages.length - 1].createdAt;
+          sinceIdRef.current = data.messages[data.messages.length - 1].id;
           requestAnimationFrame(scrollToBottom);
         }
       }

@@ -25,6 +25,18 @@
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
 }
+
+@media (max-width: 1024px) {
+  .ss-home nav { padding: 0 32px; }
+}
+
+@media (max-width: 768px) {
+  .ss-home nav { padding: 0 20px; height: 64px; }
+}
+
+@media (max-width: 480px) {
+  .ss-home nav { padding: 0 16px; height: 60px; }
+}
 .ss-home .nav-logo {
   display: flex; align-items: center; gap: 10px;
   text-decoration: none; color: var(--ink);
@@ -72,6 +84,18 @@
   pointer-events: none;
 }
 .ss-home .hero-left { padding: 80px 60px 80px 80px; position: relative; z-index: 2; }
+
+@media (max-width: 1024px) {
+  .ss-home .hero-left { padding: 80px 40px 64px 40px; }
+}
+
+@media (max-width: 768px) {
+  .ss-home .hero-left { padding: 64px 20px 32px 20px; max-width: 520px; }
+}
+
+@media (max-width: 480px) {
+  .ss-home .hero-left { padding: 52px 16px 28px 16px; }
+}
 .ss-home .hero-tag {
   display: inline-flex; align-items: center; gap: 8px;
   font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
@@ -90,11 +114,23 @@
 }
 .ss-home .hero-sub strong { font-weight: 500; color: var(--ink); }
 .ss-home .hero-form { display: flex; gap: 0; max-width: 440px; }
+
+@media (max-width: 768px) {
+  .ss-home .hero-form { flex-direction: column; max-width: none; }
+}
+
+@media (max-width: 480px) {
+  .ss-home .hero-form { gap: 6px; }
+}
 .ss-home .hero-form input {
   flex: 1; padding: 14px 20px; border: 1.5px solid var(--ink);
   border-right: none; font-family: var(--sans); font-size: 0.88rem;
   background: var(--white); color: var(--ink); outline: none;
   transition: border-color 0.2s;
+}
+
+@media (max-width: 768px) {
+  .ss-home .hero-form input { border-right: 1.5px solid var(--ink); margin-bottom: 10px; }
 }
 .ss-home .hero-form input::placeholder { color: #aaa; }
 .ss-home .hero-form input:focus { border-color: var(--gold); }
@@ -178,6 +214,18 @@
   display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
   align-items: center;
   border-bottom: 1px solid var(--border);
+}
+
+@media (max-width: 1024px) {
+  .ss-home .founding { padding: 72px 40px; grid-template-columns: 1fr; gap: 40px; }
+}
+
+@media (max-width: 768px) {
+  .ss-home .founding { padding: 56px 20px; }
+}
+
+@media (max-width: 480px) {
+  .ss-home .founding { padding: 40px 16px; }
 }
 .ss-home .founding-left .section-tag {
   font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;

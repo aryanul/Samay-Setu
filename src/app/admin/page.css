@@ -27,6 +27,22 @@
   padding: 0 16px;
 }
 
+@media (max-width: 768px) {
+  .ss-admin .wrap {
+    width: calc(100% - 24px);
+    margin: 16px auto 32px;
+    padding: 0 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ss-admin .wrap {
+    width: calc(100% - 16px);
+    margin: 12px auto 24px;
+    padding: 0 8px;
+  }
+}
+
 .ss-admin .topbar {
   display: flex;
   justify-content: space-between;
@@ -76,6 +92,13 @@
   box-shadow: 0 22px 50px rgba(41, 37, 30, 0.08);
 }
 
+@media (max-width: 640px) {
+  .ss-admin .card {
+    padding: 16px;
+    border-radius: 14px;
+  }
+}
+
 .ss-admin h1 {
   font-family: var(--serif);
   font-size: clamp(1.85rem, 3vw, 2.3rem);
@@ -86,6 +109,11 @@
 .ss-admin .muted { color: #5c584f; font-size: 0.88rem; margin-bottom: 18px; }
 
 .ss-admin form.login-form { display: grid; gap: 12px; max-width: 380px; }
+
+@media (max-width: 480px) {
+  .ss-admin form.login-form { max-width: 100%; }
+  .ss-admin input { font-size: 16px; }
+}
 
 .ss-admin label {
   font-size: 0.82rem;
@@ -144,6 +172,13 @@
   gap: 12px;
   flex-wrap: wrap;
   margin-bottom: 14px;
+}
+
+@media (max-width: 640px) {
+  .ss-admin .top-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 .ss-admin .top-row .left h1 { margin-bottom: 6px; }
 
@@ -210,6 +245,20 @@
   gap: 12px;
   margin-bottom: 16px;
 }
+
+@media (max-width: 1024px) {
+  .ss-admin .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .ss-admin .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
 .ss-admin .stat-card {
   border: 1px solid var(--border);
   border-radius: 14px;
@@ -233,6 +282,14 @@
 .ss-admin .stat-sub { font-size: 0.78rem; color: #5c584f; }
 
 .ss-admin .panels-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 14px; }
+
+@media (max-width: 1024px) {
+  .ss-admin .panels-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .ss-admin .panels-grid { grid-template-columns: 1fr; gap: 10px; }
+}
 .ss-admin .panel {
   border: 1px solid var(--border);
   border-radius: 14px;

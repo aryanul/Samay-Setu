@@ -56,6 +56,7 @@ export default async function BridgesPage() {
        FROM bridges b
        JOIN verified_architect_onboarding m ON m.id = b.to_member_id
       WHERE b.from_member_id = ?
+        AND b.status = 'pending'
       ORDER BY b.status = 'pending' DESC, b.created_at DESC
       LIMIT 100`,
     [session.memberId]

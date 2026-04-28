@@ -49,27 +49,27 @@ export async function GET(req: NextRequest, ctx: { params: Promise<{ threadId: s
     return NextResponse.json({ ok: false, message: "Thread not found." }, { status: 404 });
   }
 
-  const since = req.nextUrl.searchParams.get("since");
+  const sinceIdRaw = req.nextUrl.searchParams.get("sinceId");
   let rowsRaw;
-  if (since) {
-    const sinceDate = new Date(since);
-    if (isNaN(sinceDate.getTime())) {
-      return NextResponse.json({ ok: false, message: "Invalid 'since' value." }, { status: 400 });
+  if (sinceIdRaw !== null) {
+    const sinceId = Number(sinceIdRaw);
+    if (!Number.isInteger(sinceId) || sinceId < 0) {
+      return NextResponse.json({ ok: false, message: "Invalid 'sinceId' value." }, { status: 400 });
     }
     [rowsRaw] = await pool.query(
       `SELECT id, thread_id, from_member_id, body, created_at
          FROM chat_messages
-        WHERE thread_id = ? AND created_at > ?
-        ORDER BY created_at ASC
+        WHERE thread_id = ? AND id > ?
+        ORDER BY id ASC
         LIMIT ?`,
-      [threadId, sinceDate, PAGE_LIMIT]
+      [threadId, sinceId, PAGE_LIMIT]
     );
   } else {
     [rowsRaw] = await pool.query(
       `SELECT id, thread_id, from_member_id, body, created_at
          FROM chat_messages
         WHERE thread_id = ?
-        ORDER BY created_at ASC
+        ORDER BY id ASC
         LIMIT ?`,
       [threadId, PAGE_LIMIT]
     );

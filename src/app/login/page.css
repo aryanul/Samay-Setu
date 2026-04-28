@@ -36,6 +36,19 @@
   align-items: stretch;
 }
 
+@media (max-width: 540px) {
+  .magic-row {
+    grid-template-columns: 1fr;
+  }
+  .magic-row .btn-solid {
+    padding: 12px 18px;
+    width: 100%;
+  }
+  .magic-row .field {
+    font-size: 16px;
+  }
+}
+
 .magic-row .field {
   margin: 0;
 }

@@ -20,6 +20,13 @@ type ListRow = {
   other_headline: string | null;
 };
 
+type ExistingBridgeRow = {
+  id: number;
+  from_member_id: number;
+  to_member_id: number;
+  status: "pending" | "accepted";
+};
+
 export async function GET() {
   const session = await readMemberSession();
   if (!session) {
@@ -97,15 +104,35 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, message: "That member is no longer visible." }, { status: 404 });
   }
 
-  const [openRowsRaw] = await pool.query(
-    `SELECT id FROM bridges
-      WHERE from_member_id = ? AND to_member_id = ? AND status = 'pending'
+  const [existingRowsRaw] = await pool.query(
+    `SELECT id, from_member_id, to_member_id, status
+       FROM bridges
+      WHERE (
+        (from_member_id = ? AND to_member_id = ?)
+        OR
+        (from_member_id = ? AND to_member_id = ?)
+      )
+        AND status IN ('pending', 'accepted')
+      ORDER BY created_at DESC
       LIMIT 1`,
-    [session.memberId, toMemberId]
+    [session.memberId, toMemberId, toMemberId, session.memberId]
   );
-  if ((openRowsRaw as unknown[]).length > 0) {
+  const existing = (existingRowsRaw as ExistingBridgeRow[])[0];
+  if (existing) {
+    if (existing.status === "accepted") {
+      return NextResponse.json(
+        { ok: false, message: "You are already connected with this member." },
+        { status: 409 }
+      );
+    }
+    if (existing.from_member_id === session.memberId) {
+      return NextResponse.json(
+        { ok: false, message: "You already have an open offer waiting on them." },
+        { status: 409 }
+      );
+    }
     return NextResponse.json(
-      { ok: false, message: "You already have an open offer waiting on them." },
+      { ok: false, message: "They already sent you an offer. Respond from the Bridges tab." },
       { status: 409 }
     );
   }
