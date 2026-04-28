@@ -27,6 +27,53 @@ function oauthErrorMessage(code: string | null): string | null {
   return map[code] ?? "Something went wrong with LinkedIn. Please try again.";
 }
 
+function handleLinkedInAuth() {
+  if (typeof window === "undefined") return;
+  
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
+  if (!isMobile) {
+    window.location.href = "/api/auth/linkedin";
+    return;
+  }
+  
+  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+  const isAndroid = /Android/.test(navigator.userAgent);
+  
+  if (isIOS) {
+    const appUrl = "linkedin://";
+    const webUrl = "/api/auth/linkedin";
+    
+    const timeout = setTimeout(() => {
+      window.location.href = webUrl;
+    }, 1000);
+    
+    window.location.href = appUrl;
+    setTimeout(() => clearTimeout(timeout), 1500);
+    return;
+  }
+  
+  if (isAndroid) {
+    const intent = "intent://linkedin.com#Intent;scheme=https;package=com.linkedin.android;S.browser_fallback_url=" + 
+                   encodeURIComponent(window.location.origin + "/api/auth/linkedin") + ";end";
+    
+    const timeout = setTimeout(() => {
+      window.location.href = "/api/auth/linkedin";
+    }, 1000);
+    
+    try {
+      window.location.href = intent;
+      setTimeout(() => clearTimeout(timeout), 1500);
+    } catch {
+      clearTimeout(timeout);
+      window.location.href = "/api/auth/linkedin";
+    }
+    return;
+  }
+  
+  window.location.href = "/api/auth/linkedin";
+}
+
 export default function OnboardingWizard({
   draft,
   initialError,
@@ -231,7 +278,11 @@ export default function OnboardingWizard({
           <li>Proof of wisdom — one post or article</li>
         </ul>
         {displayError && <p className="form-error">{displayError}</p>}
-        <a className="btn-linkedin" href="/api/auth/linkedin">
+        <button 
+          className="btn-linkedin" 
+          onClick={() => handleLinkedInAuth()}
+          style={{ border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit' }}
+        >
           <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
             <path
               fill="currentColor"
@@ -239,7 +290,7 @@ export default function OnboardingWizard({
             />
           </svg>
           Continue with LinkedIn
-        </a>
+        </button>
         <p className="fineprint">
           We use LinkedIn only for verification-style onboarding. By continuing you agree to share basic profile fields allowed by
           your LinkedIn settings.
