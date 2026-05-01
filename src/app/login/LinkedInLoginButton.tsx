@@ -1,44 +1,10 @@
 "use client";
 
 export default function LinkedInLoginButton() {
-  function handleLinkedInAuth() {
-    if (typeof window === "undefined") return;
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    if (!isMobile) {
-      window.location.href = "/api/auth/linkedin";
-      return;
-    }
-
-    // Detect specific mobile OS
-    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-    const isAndroid = /Android/.test(navigator.userAgent);
-
-    if (isIOS) {
-      // Try to open LinkedIn app on iOS
-      const linkedInAppURL = "linkedin://";
-      window.location.href = linkedInAppURL;
-
-      // Fallback to web after 1 second if app is not installed
-      const timeout = setTimeout(() => {
-        window.location.href = "/api/auth/linkedin";
-      }, 1000);
-
-      // Clean up timeout if user is redirected to app
-      window.addEventListener("blur", () => clearTimeout(timeout), { once: true });
-    } else if (isAndroid) {
-      // On Android, use intent URL with browser_fallback_url
-      const intentURL = `intent://www.linkedin.com/feed#Intent;scheme=https;package=com.linkedin.android;action=android.intent.action.VIEW;browser_fallback_url=/api/auth/linkedin;end`;
-      window.location.href = intentURL;
-    } else {
-      // Fallback: just use web OAuth
-      window.location.href = "/api/auth/linkedin";
-    }
-  }
-
   return (
-    <button 
-      className="btn-linkedin" 
-      onClick={() => handleLinkedInAuth()}
+    <button
+      className="btn-linkedin"
+      onClick={() => { window.location.href = "/api/auth/linkedin"; }}
       style={{ border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit' }}
     >
       <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
