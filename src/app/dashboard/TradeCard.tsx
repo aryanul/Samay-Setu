@@ -21,14 +21,26 @@ export type TradeCardMember = {
   location: string | null;
   proofUrl: string;
   bridge: BridgeState | null;
+  match: { myTradeId: number } | null;
 };
 
 export default function TradeCard({ member }: { member: TradeCardMember }) {
   const [open, setOpen] = useState(false);
   const [bridge, setBridge] = useState<BridgeState | null>(member.bridge);
 
+  const isMatch = !!member.match;
+
   return (
-    <article className="trade-card">
+    <article className={`trade-card${isMatch ? " trade-card-match" : ""}`}>
+      {isMatch && (
+        <>
+          <span className="tc-match-ribbon" aria-label="Two-way match with one of your trades">
+            ✦ Mutual match
+          </span>
+          <span className="tc-match-edge" aria-hidden="true" />
+        </>
+      )}
+
       <div className="tc-head">
         {member.picture ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -42,12 +54,18 @@ export default function TradeCard({ member }: { member: TradeCardMember }) {
         </div>
       </div>
 
-      <div className="tc-pillar">
-        <p className="tc-pillar-tag">Gives</p>
+      <div className={`tc-pillar${isMatch ? " tc-pillar-matched" : ""}`}>
+        <p className="tc-pillar-tag">
+          Gives
+          {isMatch && <span className="tc-pillar-match-hint">↻ what you seek</span>}
+        </p>
         <p className="tc-pillar-body">{member.give}</p>
       </div>
-      <div className="tc-pillar">
-        <p className="tc-pillar-tag">Seeks</p>
+      <div className={`tc-pillar${isMatch ? " tc-pillar-matched" : ""}`}>
+        <p className="tc-pillar-tag">
+          Seeks
+          {isMatch && <span className="tc-pillar-match-hint">↻ what you give</span>}
+        </p>
         <p className="tc-pillar-body">{member.take}</p>
       </div>
       {member.location && (

@@ -16,6 +16,16 @@ type FeedRow = {
   proof_of_wisdom_url: string;
 };
 
+type MyTradeRow = {
+  id: number;
+  skill_offered: string;
+  skill_needed: string;
+};
+
+function normSkill(s: string): string {
+  return s.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
 type BridgeStatusRow = {
   other_id: number;
   status: "pending" | "accepted";
@@ -46,6 +56,15 @@ export default async function DashboardFeedPage() {
   );
   const trades = rowsRaw as FeedRow[];
 
+  const [myTradesRaw] = await pool.query(
+    `SELECT id, skill_offered, skill_needed
+       FROM trades
+      WHERE member_id = ?
+        AND status = 'open'`,
+    [session.memberId]
+  );
+  const myTrades = myTradesRaw as MyTradeRow[];
+
   const [bridgeRowsRaw] = await pool.query(
     `SELECT
         CASE WHEN b.from_member_id = ? THEN b.to_member_id ELSE b.from_member_id END AS other_id,
@@ -72,18 +91,35 @@ export default async function DashboardFeedPage() {
     });
   }
 
-  const cards: TradeCardMember[] = trades.map((t) => ({
-    tradeId: t.trade_id,
-    id: t.member_id,
-    name: t.full_name,
-    headline: t.professional_title ?? "",
-    picture: t.profile_picture_url ?? "",
-    give: t.skill_offered,
-    take: t.skill_needed,
-    location: t.location_preference,
-    proofUrl: t.proof_of_wisdom_url,
-    bridge: stateByTarget.get(t.member_id) ?? null,
-  }));
+  const cards: TradeCardMember[] = trades.map((t) => {
+    const theirGive = normSkill(t.skill_offered);
+    const theirSeek = normSkill(t.skill_needed);
+    const matchedMine = myTrades.find(
+      (mine) =>
+        normSkill(mine.skill_offered) === theirSeek &&
+        normSkill(mine.skill_needed) === theirGive
+    );
+    return {
+      tradeId: t.trade_id,
+      id: t.member_id,
+      name: t.full_name,
+      headline: t.professional_title ?? "",
+      picture: t.profile_picture_url ?? "",
+      give: t.skill_offered,
+      take: t.skill_needed,
+      location: t.location_preference,
+      proofUrl: t.proof_of_wisdom_url,
+      bridge: stateByTarget.get(t.member_id) ?? null,
+      match: matchedMine ? { myTradeId: matchedMine.id } : null,
+    };
+  });
+
+  // Surface mutual matches first.
+  cards.sort((a, b) => {
+    const am = a.match ? 1 : 0;
+    const bm = b.match ? 1 : 0;
+    return bm - am;
+  });
 
   return (
     <>

@@ -56,7 +56,10 @@ export default function ChatRoom({
 
   useEffect(() => {
     let cancelled = false;
+    let intervalId: number | null = null;
+
     async function poll() {
+      if (typeof document !== "undefined" && document.hidden) return;
       try {
         const res = await fetch(
           `/api/chat/threads/${threadId}/messages?sinceId=${sinceIdRef.current}`,
@@ -80,10 +83,32 @@ export default function ChatRoom({
         /* swallow — next tick will retry */
       }
     }
-    const id = window.setInterval(poll, POLL_MS);
+
+    function start() {
+      if (intervalId !== null) return;
+      void poll();
+      intervalId = window.setInterval(poll, POLL_MS);
+    }
+    function stop() {
+      if (intervalId === null) return;
+      window.clearInterval(intervalId);
+      intervalId = null;
+    }
+    function onVisibility() {
+      if (document.hidden) {
+        stop();
+      } else {
+        start();
+      }
+    }
+
+    if (!document.hidden) start();
+    document.addEventListener("visibilitychange", onVisibility);
+
     return () => {
       cancelled = true;
-      window.clearInterval(id);
+      stop();
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [threadId, scrollToBottom]);
 
