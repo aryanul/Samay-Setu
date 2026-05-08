@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "db:verified-architect": "node --env-file=.env.local scripts/apply-verified-architect-schema.mjs",
-    "db:live-bridge": "node --env-file=.env.local scripts/apply-live-bridge-schema.mjs"
+    "db:live-bridge": "node --env-file=.env.local scripts/apply-live-bridge-schema.mjs",
+    "db:wipe-users": "node scripts/wipe-users.mjs"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

@@ -1,25 +1,31 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import OfferBridgeModal from "./OfferBridgeModal";
 
+export type BridgeState = {
+  status: "pending" | "accepted";
+  direction: "outgoing" | "incoming";
+  threadId: number | null;
+};
+
 export type TradeCardMember = {
+  tradeId: number;
   id: number;
   name: string;
   headline: string;
   picture: string;
   give: string;
   take: string;
+  location: string | null;
   proofUrl: string;
-  existingBridgeStatus: "pending" | "accepted" | null;
+  bridge: BridgeState | null;
 };
 
 export default function TradeCard({ member }: { member: TradeCardMember }) {
   const [open, setOpen] = useState(false);
-  const [status, setStatus] = useState<"pending" | "accepted" | null>(member.existingBridgeStatus);
-
-  const buttonLabel =
-    status === "accepted" ? "Bridge open" : status === "pending" ? "Awaiting response" : "Offer a Bridge";
+  const [bridge, setBridge] = useState<BridgeState | null>(member.bridge);
 
   return (
     <article className="trade-card">
@@ -44,13 +50,31 @@ export default function TradeCard({ member }: { member: TradeCardMember }) {
         <p className="tc-pillar-tag">Seeks</p>
         <p className="tc-pillar-body">{member.take}</p>
       </div>
+      {member.location && (
+        <div className="tc-pillar">
+          <p className="tc-pillar-tag">Where</p>
+          <p className="tc-pillar-body">{member.location}</p>
+        </div>
+      )}
 
       <div className="tc-foot">
         <a className="tc-proof" href={member.proofUrl} target="_blank" rel="noreferrer noopener">
           View proof of practice ↗
         </a>
-        {status ? (
-          <span className="tc-status-pill">{buttonLabel}</span>
+        {bridge?.status === "accepted" ? (
+          bridge.threadId ? (
+            <Link className="tc-bridge-btn" href={`/dashboard/chat/${bridge.threadId}`}>
+              Open chat
+            </Link>
+          ) : (
+            <span className="tc-status-pill">Bridge open</span>
+          )
+        ) : bridge?.status === "pending" && bridge.direction === "outgoing" ? (
+          <span className="tc-status-pill">Awaiting response</span>
+        ) : bridge?.status === "pending" && bridge.direction === "incoming" ? (
+          <Link className="tc-bridge-btn" href="/dashboard/bridges">
+            Respond to their offer
+          </Link>
         ) : (
           <button type="button" className="tc-bridge-btn" onClick={() => setOpen(true)}>
             Offer a Bridge
@@ -64,7 +88,7 @@ export default function TradeCard({ member }: { member: TradeCardMember }) {
           toMemberId={member.id}
           onClose={() => setOpen(false)}
           onSent={() => {
-            setStatus("pending");
+            setBridge({ status: "pending", direction: "outgoing", threadId: null });
             setOpen(false);
           }}
         />

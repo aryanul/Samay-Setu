@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const MAX_NOTE = 280;
@@ -15,9 +16,11 @@ export default function OfferBridgeModal({
   onClose: () => void;
   onSent: () => void;
 }) {
+  const router = useRouter();
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [conflict, setConflict] = useState(false);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -48,6 +51,7 @@ export default function OfferBridgeModal({
       const result = await res.json();
       if (!res.ok || !result.ok) {
         setError(result?.message || "Could not send your offer.");
+        if (res.status === 409) setConflict(true);
         return;
       }
       onSent();
@@ -80,6 +84,7 @@ export default function OfferBridgeModal({
           maxLength={MAX_NOTE + 50}
           placeholder='e.g. "I can help with SEO for an hour — would love guidance on home cooking."'
           autoFocus
+          disabled={conflict}
         />
         {error && <p className="form-error">{error}</p>}
         <div className="bridge-modal-foot">
@@ -87,12 +92,36 @@ export default function OfferBridgeModal({
             {note.trim().length}/{MAX_NOTE}
           </span>
           <div className="bridge-modal-actions">
-            <button type="button" className="dash-logout" onClick={onClose} disabled={submitting}>
-              Cancel
-            </button>
-            <button type="button" className="tc-bridge-btn" onClick={() => void submit()} disabled={submitting}>
-              {submitting ? "Sending…" : "Send offer"}
-            </button>
+            {conflict ? (
+              <>
+                <button
+                  type="button"
+                  className="dash-logout"
+                  onClick={() => {
+                    onClose();
+                    router.refresh();
+                  }}
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  className="tc-bridge-btn"
+                  onClick={() => router.push("/dashboard/bridges")}
+                >
+                  Go to Bridges
+                </button>
+              </>
+            ) : (
+              <>
+                <button type="button" className="dash-logout" onClick={onClose} disabled={submitting}>
+                  Cancel
+                </button>
+                <button type="button" className="tc-bridge-btn" onClick={() => void submit()} disabled={submitting}>
+                  {submitting ? "Sending…" : "Send offer"}
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

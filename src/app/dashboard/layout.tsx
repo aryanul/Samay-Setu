@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { readMemberSession } from "@/lib/member-session";
 import { pool } from "@/lib/db";
 import LogoutButton from "./LogoutButton";
+import NotificationsClient from "./NotificationsClient";
 import "./page.css";
 
 type CountsRow = { pending_bridges: number; total_unread: number };
@@ -62,6 +63,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
       </header>
 
       <main className="dash-main">{children}</main>
+
+      <NotificationsClient />
     </div>
   );
 }

@@ -143,6 +143,13 @@ export async function POST(req: NextRequest) {
       [session.memberId, toMemberId, note]
     );
   } catch (err) {
+    const code = (err as { code?: string } | null)?.code;
+    if (code === "ER_DUP_ENTRY") {
+      return NextResponse.json(
+        { ok: false, message: "There is already an open offer between the two of you." },
+        { status: 409 }
+      );
+    }
     console.error("[bridges/POST] insert failed:", err);
     return NextResponse.json(
       { ok: false, message: "Could not send your offer right now." },
