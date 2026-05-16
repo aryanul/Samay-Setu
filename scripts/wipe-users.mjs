@@ -39,7 +39,10 @@ const TABLES = [
   "applications",
 ];
 
-const conn = await mysql.createConnection(url);
+const conn = await mysql.createConnection({
+  uri: url,
+  ssl: { minVersion: "TLSv1.2", rejectUnauthorized: true },
+});
 
 await conn.query("SET FOREIGN_KEY_CHECKS = 0");
 

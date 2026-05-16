@@ -28,12 +28,14 @@ if (!url) {
 
 const sql = fs.readFileSync(sqlPath, "utf8");
 
-// Split on semicolons that end a statement. Keeps things simple — our SQL has no
-// stored procs / dollar-quoted bodies, so a naive split is fine.
+// Strip -- line comments, then split on every ';'. Our SQL has no stored procs
+// or strings containing ';', so this is safe. TiDB rejects multi-statement
+// queries by default, so each statement must be sent individually.
 const statements = sql
-  .split(/;\s*\n/)
+  .replace(/^\s*--.*$/gm, "")
+  .split(";")
   .map((s) => s.trim())
-  .filter((s) => s.length > 0 && !s.startsWith("--"));
+  .filter((s) => s.length > 0);
 
 let connection;
 try {
@@ -41,6 +43,7 @@ try {
     uri: url,
     timezone: "Z",
     multipleStatements: false,
+    ssl: { minVersion: "TLSv1.2", rejectUnauthorized: true },
   });
   for (const stmt of statements) {
     await connection.query(stmt);

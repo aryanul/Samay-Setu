@@ -45,6 +45,9 @@ CREATE TABLE IF NOT EXISTS member_login_tokens (
 
 
 -- 3. Bridge offers
+-- NOTE: active_pair_key MUST be declared inline at CREATE TABLE time. TiDB
+-- rejects adding STORED generated columns via ALTER TABLE, so a later
+-- column-add fallback (see src/lib/schema.ts) cannot recover from this.
 CREATE TABLE IF NOT EXISTS bridges (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   from_member_id BIGINT UNSIGNED NOT NULL,
@@ -53,7 +56,15 @@ CREATE TABLE IF NOT EXISTS bridges (
   status ENUM('pending', 'accepted', 'declined') NOT NULL DEFAULT 'pending',
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   responded_at DATETIME NULL,
+  active_pair_key VARCHAR(64) GENERATED ALWAYS AS (
+    CASE WHEN status IN ('pending', 'accepted')
+      THEN CONCAT(LEAST(from_member_id, to_member_id), '-', GREATEST(from_member_id, to_member_id))
+      ELSE NULL
+    END
+  ) STORED,
+  trade_id BIGINT UNSIGNED NULL,
   PRIMARY KEY (id),
+  UNIQUE KEY uq_bridges_active_pair (active_pair_key),
   KEY idx_bridges_to_status (to_member_id, status),
   KEY idx_bridges_from_status (from_member_id, status),
   KEY idx_bridges_created (created_at)

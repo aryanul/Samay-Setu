@@ -18,6 +18,7 @@ function createPool(): mysql.Pool {
     queueLimit: 0,
     dateStrings: false,
     timezone: "Z",
+    ssl: { minVersion: "TLSv1.2", rejectUnauthorized: true },
   });
 }
 

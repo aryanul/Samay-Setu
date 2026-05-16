@@ -30,7 +30,10 @@ if (!url) {
   process.exit(1);
 }
 
-const conn = await mysql.createConnection(url);
+const conn = await mysql.createConnection({
+  uri: url,
+  ssl: { minVersion: "TLSv1.2", rejectUnauthorized: true },
+});
 
 console.log("Creating tables...");
 

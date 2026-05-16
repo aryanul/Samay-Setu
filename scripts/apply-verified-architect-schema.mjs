@@ -39,6 +39,7 @@ try {
     uri: url,
     timezone: "Z",
     multipleStatements: false,
+    ssl: { minVersion: "TLSv1.2", rejectUnauthorized: true },
   });
   await connection.query(sql);
   console.log("OK: table `verified_architect_onboarding` is ready (CREATE TABLE IF NOT EXISTS).");
