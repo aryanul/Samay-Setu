@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { pool } from "@/lib/db";
 import { readMemberSession } from "@/lib/member-session";
+import { DEFAULT_PILLAR, isPillarSlug, type PillarSlug } from "@/lib/pillars";
 
 export const runtime = "nodejs";
 
@@ -14,6 +15,7 @@ type TradeRow = {
   skill_offered: string;
   skill_needed: string;
   location_preference: string | null;
+  pillar: string;
   status: "open" | "matched" | "closed";
   created_at: Date;
 };
@@ -35,7 +37,7 @@ export async function GET() {
   }
 
   const [rowsRaw] = await pool.query(
-    `SELECT id, member_id, skill_offered, skill_needed, location_preference, status, created_at
+    `SELECT id, member_id, skill_offered, skill_needed, location_preference, pillar, status, created_at
        FROM trades
       WHERE member_id = ?
       ORDER BY FIELD(status, 'open', 'matched', 'closed') ASC, created_at DESC`,
@@ -46,6 +48,7 @@ export async function GET() {
     skillOffered: t.skill_offered,
     skillNeeded: t.skill_needed,
     locationPreference: t.location_preference,
+    pillar: t.pillar,
     status: t.status,
     createdAt: new Date(t.created_at).toISOString(),
   }));
@@ -83,6 +86,14 @@ export async function POST(req: NextRequest) {
     locationPreference = checked;
   }
 
+  let pillar: PillarSlug = DEFAULT_PILLAR;
+  if (body.pillar != null && body.pillar !== "") {
+    if (!isPillarSlug(body.pillar)) {
+      return NextResponse.json({ ok: false, message: "Unknown pillar." }, { status: 422 });
+    }
+    pillar = body.pillar;
+  }
+
   const [countRaw] = await pool.query(
     "SELECT COUNT(*) AS n FROM trades WHERE member_id = ? AND status = 'open'",
     [session.memberId]
@@ -99,9 +110,9 @@ export async function POST(req: NextRequest) {
   }
 
   await pool.execute(
-    `INSERT INTO trades (member_id, skill_offered, skill_needed, location_preference, status)
-     VALUES (?, ?, ?, ?, 'open')`,
-    [session.memberId, skillOffered, skillNeeded, locationPreference]
+    `INSERT INTO trades (member_id, skill_offered, skill_needed, location_preference, pillar, status)
+     VALUES (?, ?, ?, ?, ?, 'open')`,
+    [session.memberId, skillOffered, skillNeeded, locationPreference, pillar]
   );
 
   return NextResponse.json({ ok: true });

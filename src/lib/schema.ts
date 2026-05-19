@@ -139,6 +139,7 @@ const TABLE_STATEMENTS: string[] = [
     skill_offered VARCHAR(255) NOT NULL,
     skill_needed VARCHAR(255) NOT NULL,
     location_preference VARCHAR(255) NULL,
+    pillar VARCHAR(64) NOT NULL DEFAULT 'general',
     status ENUM('open', 'matched', 'closed') NOT NULL DEFAULT 'open',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -147,6 +148,7 @@ const TABLE_STATEMENTS: string[] = [
     KEY idx_trades_status (status),
     KEY idx_trades_skill_offered (skill_offered),
     KEY idx_trades_skill_needed (skill_needed),
+    KEY idx_trades_pillar (pillar),
     KEY idx_trades_created (created_at)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 ];
@@ -184,6 +186,11 @@ const COLUMN_ADDS: ColumnAdd[] = [
     column: "trade_id",
     ddl: "trade_id BIGINT UNSIGNED NULL",
   },
+  {
+    table: "trades",
+    column: "pillar",
+    ddl: "pillar VARCHAR(64) NOT NULL DEFAULT 'general'",
+  },
 ];
 
 type IndexAdd = {
@@ -198,6 +205,11 @@ const INDEX_ADDS: IndexAdd[] = [
     table: "bridges",
     index: "uq_bridges_active_pair",
     ddl: "UNIQUE KEY uq_bridges_active_pair (active_pair_key)",
+  },
+  {
+    table: "trades",
+    index: "idx_trades_pillar",
+    ddl: "KEY idx_trades_pillar (pillar)",
   },
 ];
 
@@ -261,10 +273,11 @@ export async function ensureSchema(pool: Pool): Promise<void> {
   // Idempotent — re-runs safely because the NOT EXISTS guard skips members
   // who already have at least one trade.
   await pool.query(
-    `INSERT INTO trades (member_id, skill_offered, skill_needed, status)
+    `INSERT INTO trades (member_id, skill_offered, skill_needed, pillar, status)
      SELECT m.id,
             LEFT(TRIM(m.primary_expertise), 255),
             LEFT(TRIM(m.current_need), 255),
+            'general',
             'open'
        FROM verified_architect_onboarding m
       WHERE m.primary_expertise IS NOT NULL

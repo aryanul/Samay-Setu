@@ -97,3 +97,27 @@ CREATE TABLE IF NOT EXISTS chat_messages (
   PRIMARY KEY (id),
   KEY idx_chat_messages_thread_created (thread_id, created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- 6. Trades.pillar (idempotent column + index for the Live Bridge pillar filter)
+SET @col_exists := (
+  SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+  WHERE TABLE_SCHEMA = DATABASE()
+    AND TABLE_NAME = 'trades'
+    AND COLUMN_NAME = 'pillar'
+);
+SET @stmt := IF(@col_exists = 0,
+  'ALTER TABLE trades ADD COLUMN pillar VARCHAR(64) NOT NULL DEFAULT ''general''',
+  'SELECT 1');
+PREPARE s FROM @stmt; EXECUTE s; DEALLOCATE PREPARE s;
+
+SET @idx_exists := (
+  SELECT COUNT(*) FROM INFORMATION_SCHEMA.STATISTICS
+  WHERE TABLE_SCHEMA = DATABASE()
+    AND TABLE_NAME = 'trades'
+    AND INDEX_NAME = 'idx_trades_pillar'
+);
+SET @stmt := IF(@idx_exists = 0,
+  'ALTER TABLE trades ADD KEY idx_trades_pillar (pillar)',
+  'SELECT 1');
+PREPARE s FROM @stmt; EXECUTE s; DEALLOCATE PREPARE s;

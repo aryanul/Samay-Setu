@@ -21,6 +21,7 @@ type TradeRow = {
   skill_offered: string;
   skill_needed: string;
   location_preference: string | null;
+  pillar: string;
   status: "open" | "matched" | "closed";
   created_at: Date;
 };
@@ -40,7 +41,7 @@ export default async function MePage() {
   }
 
   const [tradeRowsRaw] = await pool.query(
-    `SELECT id, skill_offered, skill_needed, location_preference, status, created_at
+    `SELECT id, skill_offered, skill_needed, location_preference, pillar, status, created_at
        FROM trades
       WHERE member_id = ?
       ORDER BY FIELD(status, 'open', 'matched', 'closed') ASC, created_at DESC`,
@@ -51,6 +52,7 @@ export default async function MePage() {
     skillOffered: t.skill_offered,
     skillNeeded: t.skill_needed,
     locationPreference: t.location_preference,
+    pillar: t.pillar,
     status: t.status,
     createdAt: new Date(t.created_at).toISOString(),
   }));

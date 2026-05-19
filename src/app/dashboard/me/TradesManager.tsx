@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { DEFAULT_PILLAR, PILLARS, pillarLabel, type PillarSlug } from "@/lib/pillars";
 
 export type MyTrade = {
   id: number;
   skillOffered: string;
   skillNeeded: string;
   locationPreference: string | null;
+  pillar: string;
   status: "open" | "matched" | "closed";
   createdAt: string;
 };
@@ -21,6 +23,7 @@ export default function TradesManager({ trades }: { trades: MyTrade[] }) {
   const [skillOffered, setSkillOffered] = useState("");
   const [skillNeeded, setSkillNeeded] = useState("");
   const [locationPreference, setLocationPreference] = useState("");
+  const [pillar, setPillar] = useState<PillarSlug>(DEFAULT_PILLAR);
   const [error, setError] = useState("");
 
   async function create() {
@@ -38,6 +41,7 @@ export default function TradesManager({ trades }: { trades: MyTrade[] }) {
           skillOffered: skillOffered.trim(),
           skillNeeded: skillNeeded.trim(),
           locationPreference: locationPreference.trim() || null,
+          pillar,
         }),
       });
       const result = await res.json();
@@ -48,6 +52,7 @@ export default function TradesManager({ trades }: { trades: MyTrade[] }) {
       setSkillOffered("");
       setSkillNeeded("");
       setLocationPreference("");
+      setPillar(DEFAULT_PILLAR);
       router.refresh();
     } catch {
       setError("Network issue. Please try again.");
@@ -99,16 +104,35 @@ export default function TradesManager({ trades }: { trades: MyTrade[] }) {
             />
           </div>
         </div>
-        <label htmlFor="t-loc">Location preference (optional)</label>
-        <input
-          id="t-loc"
-          className="field"
-          type="text"
-          maxLength={MAX_LOCATION}
-          value={locationPreference}
-          onChange={(e) => setLocationPreference(e.target.value)}
-          placeholder="e.g. North Kolkata, Remote, Salt Lake"
-        />
+        <div className="trade-create-row">
+          <div>
+            <label htmlFor="t-pillar">Pillar</label>
+            <select
+              id="t-pillar"
+              className="field"
+              value={pillar}
+              onChange={(e) => setPillar(e.target.value as PillarSlug)}
+            >
+              {PILLARS.map((p) => (
+                <option key={p.slug} value={p.slug}>
+                  {p.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="t-loc">Location preference (optional)</label>
+            <input
+              id="t-loc"
+              className="field"
+              type="text"
+              maxLength={MAX_LOCATION}
+              value={locationPreference}
+              onChange={(e) => setLocationPreference(e.target.value)}
+              placeholder="e.g. North Kolkata, Remote, Salt Lake"
+            />
+          </div>
+        </div>
 
         {error && <p className="form-error">{error}</p>}
 
@@ -152,6 +176,10 @@ function TradeRow({ trade }: { trade: MyTrade }) {
   return (
     <div className="trade-row">
       <div className="trade-body">
+        <div className="trade-pillars">
+          <span className="trade-pillar-tag">Pillar</span>
+          <span className="trade-pillar-body">{pillarLabel(trade.pillar)}</span>
+        </div>
         <div className="trade-pillars">
           <span className="trade-pillar-tag">Gives</span>
           <span className="trade-pillar-body">{trade.skillOffered}</span>

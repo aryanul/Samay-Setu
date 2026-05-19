@@ -1,5 +1,7 @@
 import { pool } from "@/lib/db";
 import { readMemberSession } from "@/lib/member-session";
+import { isPillarSlug, pillarLabel, type PillarSlug } from "@/lib/pillars";
+import LiveBridgeFilters from "./LiveBridgeFilters";
 import TradeCard, { type TradeCardMember } from "./TradeCard";
 
 export const dynamic = "force-dynamic";
@@ -9,6 +11,7 @@ type FeedRow = {
   skill_offered: string;
   skill_needed: string;
   location_preference: string | null;
+  pillar: string;
   member_id: number;
   full_name: string;
   professional_title: string | null;
@@ -33,14 +36,48 @@ type BridgeStatusRow = {
   thread_id: number | null;
 };
 
-export default async function DashboardFeedPage() {
+type SearchParams = Record<string, string | string[] | undefined>;
+
+function readParam(params: SearchParams, key: string): string | null {
+  const raw = params[key];
+  if (Array.isArray(raw)) return raw[0] ?? null;
+  return raw ?? null;
+}
+
+export default async function DashboardFeedPage({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
   const session = (await readMemberSession())!;
+  const params = await searchParams;
+
+  const pillarParam = readParam(params, "pillar");
+  const activePillar: PillarSlug | null = isPillarSlug(pillarParam) ? pillarParam : null;
+  const rawQuery = (readParam(params, "q") ?? "").trim();
+  const query = rawQuery.slice(0, 80);
+
+  const filters: string[] = ["t.status = 'open'", "m.is_visible = 1", "m.id <> ?"];
+  const queryArgs: (string | number)[] = [session.memberId];
+
+  if (activePillar) {
+    filters.push("t.pillar = ?");
+    queryArgs.push(activePillar);
+  }
+  if (query) {
+    filters.push("(t.skill_offered LIKE ? OR t.skill_needed LIKE ? OR t.location_preference LIKE ?)");
+    const like = `%${query}%`;
+    queryArgs.push(like, like, like);
+  }
+
+  const whereSql = filters.join(" AND ");
 
   const [rowsRaw] = await pool.query(
     `SELECT t.id           AS trade_id,
             t.skill_offered,
             t.skill_needed,
             t.location_preference,
+            t.pillar,
             m.id           AS member_id,
             m.full_name,
             m.professional_title,
@@ -48,11 +85,9 @@ export default async function DashboardFeedPage() {
             m.proof_of_wisdom_url
        FROM trades t
        JOIN verified_architect_onboarding m ON m.id = t.member_id
-      WHERE t.status = 'open'
-        AND m.is_visible = 1
-        AND m.id <> ?
+      WHERE ${whereSql}
       ORDER BY t.created_at DESC`,
-    [session.memberId]
+    queryArgs
   );
   const trades = rowsRaw as FeedRow[];
 
@@ -108,6 +143,7 @@ export default async function DashboardFeedPage() {
       give: t.skill_offered,
       take: t.skill_needed,
       location: t.location_preference,
+      pillar: t.pillar,
       proofUrl: t.proof_of_wisdom_url,
       bridge: stateByTarget.get(t.member_id) ?? null,
       match: matchedMine ? { myTradeId: matchedMine.id } : null,
@@ -121,6 +157,9 @@ export default async function DashboardFeedPage() {
     return bm - am;
   });
 
+  const scopeLabel = activePillar ? pillarLabel(activePillar) : "all pillars";
+  const countText = `${cards.length} Open`;
+
   return (
     <>
       <div className="dash-header">
@@ -128,14 +167,23 @@ export default async function DashboardFeedPage() {
         <h1 className="dash-title">A circle of trade, not transaction.</h1>
         <p className="dash-subtitle">
           Each card is one verified neighbour. Read what they give, what they seek,
-          and offer a Bridge if there&apos;s an exchange to be made. Phones and emails
-          stay private — the first conversation happens here.
+          and offer a Bridge if there&apos;s an exchange to be made.
         </p>
       </div>
 
+      <LiveBridgeFilters activePillar={activePillar} initialQuery={query} />
+
+      <p className="lb-active-count">
+        {activePillar
+          ? <>Active Trades in <strong>{scopeLabel}</strong> ({countText})</>
+          : <>Active Trades across <strong>{scopeLabel}</strong> ({countText})</>}
+      </p>
+
       {cards.length === 0 ? (
         <div className="empty-card">
-          No open trades right now. The circle is just opening — check back soon.
+          {query || activePillar
+            ? "No trades match this filter yet. Try widening it."
+            : "No open trades right now. The circle is just opening — check back soon."}
         </div>
       ) : (
         <div className="feed-grid">

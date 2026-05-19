@@ -1,0 +1,753 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Live Bridge — Pillar Redesign Walkthrough</title>
+<style>
+  :root {
+    --ink: #1a1a18;
+    --stone: #3d3b35;
+    --gold: #c9a96e;
+    --gold-soft: rgba(201, 169, 110, 0.18);
+    --paper: #f8f4ee;
+    --paper-2: #faf6f0;
+    --border: rgba(26, 26, 24, 0.14);
+    --code-bg: #1d1c1a;
+    --code-fg: #eee2cf;
+    --good: #1f4d3a;
+    --warn: #8a6f3f;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 5% 0%, rgba(201, 169, 110, 0.16), transparent 35%),
+      radial-gradient(circle at 95% 5%, rgba(26, 26, 24, 0.06), transparent 30%),
+      linear-gradient(180deg, var(--paper-2) 0%, var(--paper) 100%);
+    min-height: 100vh;
+    line-height: 1.55;
+  }
+  .wrap {
+    width: min(900px, calc(100% - 32px));
+    margin: 48px auto 96px;
+  }
+
+  header.hero {
+    padding: 32px 0 28px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 36px;
+  }
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 500;
+    margin: 0 0 8px;
+    line-height: 1.15;
+  }
+  .lede {
+    color: var(--stone);
+    font-size: 1.05rem;
+    max-width: 640px;
+    margin: 0;
+  }
+  .meta {
+    margin-top: 18px;
+    font-size: 0.85rem;
+    color: var(--stone);
+  }
+  .meta code {
+    background: var(--gold-soft);
+    color: var(--ink);
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+  }
+
+  section {
+    margin: 0 0 44px;
+  }
+  section h2 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 1.7rem;
+    font-weight: 500;
+    margin: 0 0 4px;
+    letter-spacing: 0.005em;
+  }
+  section h3 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 22px 0 6px;
+  }
+  section .sub {
+    color: var(--stone);
+    font-size: 0.95rem;
+    margin: 0 0 18px;
+  }
+  p { margin: 0 0 12px; }
+
+  ul.checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 12px;
+  }
+  ul.checklist li {
+    padding: 8px 0 8px 26px;
+    position: relative;
+    color: var(--ink);
+    font-size: 0.95rem;
+    border-bottom: 1px dashed var(--border);
+  }
+  ul.checklist li:last-child { border-bottom: none; }
+  ul.checklist li::before {
+    content: "✦";
+    position: absolute;
+    left: 0;
+    top: 8px;
+    color: var(--gold);
+    font-size: 0.85rem;
+  }
+
+  .card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(255,255,255,0.78));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    margin: 0 0 18px;
+    box-shadow: 0 14px 36px rgba(41, 37, 30, 0.06);
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 720px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  .label {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  /* code block */
+  pre.code {
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 16px 18px;
+    border-radius: 12px;
+    overflow-x: auto;
+    font-size: 0.84rem;
+    line-height: 1.55;
+    margin: 8px 0 14px;
+    font-family: "JetBrains Mono", "Fira Code", "Consolas", monospace;
+  }
+  pre.code .kw  { color: #d4b478; }
+  pre.code .str { color: #b8d0a8; }
+  pre.code .com { color: #8a8475; font-style: italic; }
+  pre.code .num { color: #e8b46b; }
+
+  code.inline {
+    background: rgba(26, 26, 24, 0.06);
+    border: 1px solid var(--border);
+    padding: 1px 6px;
+    border-radius: 5px;
+    font-size: 0.85em;
+    font-family: "JetBrains Mono", monospace;
+  }
+
+  a.file {
+    color: var(--ink);
+    text-decoration: none;
+    background: var(--gold-soft);
+    border: 1px solid rgba(201, 169, 110, 0.4);
+    padding: 1px 8px;
+    border-radius: 6px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82em;
+  }
+  a.file:hover { background: rgba(201, 169, 110, 0.32); }
+
+  /* mock card for before/after */
+  .mock {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 0.88rem;
+    color: var(--ink);
+  }
+  .mock-badge {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+  .mock-badge-pillar {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .mock-badge-ref {
+    font-size: 0.72rem;
+    color: rgba(61, 59, 53, 0.6);
+    font-family: "JetBrains Mono", monospace;
+  }
+  .mock-name {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin: 0;
+  }
+  .mock-headline {
+    font-size: 0.78rem;
+    color: var(--stone);
+    margin: 2px 0 14px;
+  }
+  .mock-tag {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 700;
+    margin: 12px 0 2px;
+  }
+  .mock-body {
+    font-size: 0.9rem;
+    margin: 0;
+  }
+  .mock-loc {
+    margin: 14px 0 12px;
+    font-size: 0.82rem;
+    color: var(--stone);
+  }
+  .mock-cta {
+    display: block;
+    text-align: center;
+    background: linear-gradient(135deg, #c9a96e, #b08a4a);
+    color: #1a1a18;
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 10px;
+  }
+  .mock-cta.full-w { width: 100%; }
+  .mock-row-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+  .mock-proof {
+    font-size: 0.76rem;
+    color: var(--stone);
+    text-decoration: underline;
+  }
+
+  /* mini pill row */
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0 0;
+  }
+  .pill {
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.6);
+    color: var(--stone);
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 500;
+  }
+  .pill.active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* status callout */
+  .callout {
+    border-left: 3px solid var(--gold);
+    background: var(--gold-soft);
+    padding: 12px 16px;
+    border-radius: 0 10px 10px 0;
+    margin: 14px 0;
+  }
+  .callout.warn { border-left-color: var(--warn); background: rgba(138, 111, 63, 0.1); }
+  .callout.todo { border-left-color: #c84a4a; background: rgba(200, 74, 74, 0.08); }
+  .callout strong { display: block; margin-bottom: 4px; }
+
+  table.kv {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin: 8px 0 12px;
+  }
+  table.kv th, table.kv td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  table.kv th {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+  }
+
+  .toc {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 0 0 36px;
+  }
+  .toc ol { margin: 0; padding-left: 22px; }
+  .toc li { padding: 3px 0; color: var(--stone); font-size: 0.92rem; }
+  .toc a { color: inherit; text-decoration: none; border-bottom: 1px dotted var(--border); }
+  .toc a:hover { color: var(--ink); border-bottom-color: var(--gold); }
+
+  .footer {
+    border-top: 1px solid var(--border);
+    padding-top: 18px;
+    margin-top: 48px;
+    color: var(--stone);
+    font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <p class="eyebrow">Walkthrough — Live Bridge redesign</p>
+    <h1>Pillars, filters, and a card that earns its space.</h1>
+    <p class="lede">
+      You shipped a UI blueprint that turned the Live Bridge from “a stack of cards”
+      into a filterable, taxonomy-driven exchange. Here is exactly what changed in your
+      project, file by file, with the reasoning behind each move.
+    </p>
+    <p class="meta">
+      Applies to branch <code>main</code> · TypeScript and ESLint pass · 9 files touched,
+      3 created.
+    </p>
+  </header>
+
+  <div class="toc">
+    <p class="label">On this page</p>
+    <ol>
+      <li><a href="#tldr">TL;DR — the four things that changed</a></li>
+      <li><a href="#taxonomy">1. A real pillar taxonomy</a></li>
+      <li><a href="#schema">2. The database knows about pillars now</a></li>
+      <li><a href="#api">3. The trade form + API accept a pillar</a></li>
+      <li><a href="#feed">4. The feed page has a search + pill row</a></li>
+      <li><a href="#card">5. The card has a header badge and a real CTA</a></li>
+      <li><a href="#seed">6. A seed script for demo members</a></li>
+      <li><a href="#apply">How to apply on your machine</a></li>
+      <li><a href="#leftover">Still on the punch list</a></li>
+    </ol>
+  </div>
+
+  <!-- ───────────────────────────────── TL;DR ───────────────────────────────── -->
+  <section id="tldr">
+    <h2>TL;DR — the four things that changed</h2>
+    <p class="sub">If you only read one section, read this one.</p>
+    <ul class="checklist">
+      <li>
+        Trades now have a <strong>pillar</strong>. The DB has a new column, the
+        API validates it, and the form lets a user pick one. Old trades default
+        to <code class="inline">general</code> so nothing breaks.
+      </li>
+      <li>
+        The Live Bridge feed has a <strong>search bar</strong> and a row of
+        <strong>pillar pills</strong> (All Trades · Growth &amp; SEO · Finance &amp; Tax · …).
+        Both write to the URL, so filters are bookmarkable and SSR-friendly.
+      </li>
+      <li>
+        The card has a new <strong>header badge</strong> (PILLAR name on the left,
+        <code class="inline">#021</code> reference on the right), uses
+        <strong>OFFERING:</strong> / <strong>SEEKING:</strong> labels per the blueprint,
+        renders the location with a 📍 pin, and ends with a full-width
+        <strong>Propose a Bridge</strong> CTA.
+      </li>
+      <li>
+        A new script seeds <strong>10 demo members</strong> across all pillars so
+        you can see the feed populated immediately. Idempotent — re-running won’t
+        duplicate anyone.
+      </li>
+    </ul>
+  </section>
+
+  <!-- ───────────────────────────────── 1. Pillars ──────────────────────────── -->
+  <section id="taxonomy">
+    <h2>1. A real pillar taxonomy</h2>
+    <p class="sub">
+      Until now “pillar” was only a CSS class. The blueprint treats it as a first-class
+      filter dimension, so it needs a stable, lowercase slug list with human labels.
+    </p>
+
+    <p>New file: <a class="file" href="/../src/lib/pillars.ts">src/lib/pillars.ts</a></p>
+    <pre class="code"><span class="kw">export type</span> PillarSlug =
+  | <span class="str">"growth-seo"</span>
+  | <span class="str">"finance-tax"</span>
+  | <span class="str">"hr-leadership"</span>
+  | <span class="str">"prem-lifestyle"</span>
+  | <span class="str">"tech-product"</span>
+  | <span class="str">"creative-content"</span>
+  | <span class="str">"general"</span>;
+
+<span class="com">// slug → label, plus helpers</span>
+<span class="kw">export function</span> pillarLabel(slug): string { … }
+<span class="kw">export function</span> formatTradeRef(id) { <span class="kw">return</span> `#${String(id).padStart(<span class="num">3</span>, <span class="str">"0"</span>)}`; }
+<span class="kw">export function</span> isPillarSlug(value): value is PillarSlug { … }</pre>
+
+    <p>
+      <code class="inline">slug</code> is what lives in the URL and DB.
+      <code class="inline">label</code> is what users see on pills and badges.
+      Adding a new pillar means appending one line — nothing else.
+      <code class="inline">formatTradeRef(021)</code> produces
+      <code class="inline">#021</code> exactly as the blueprint shows.
+    </p>
+  </section>
+
+  <!-- ───────────────────────────────── 2. Schema ───────────────────────────── -->
+  <section id="schema">
+    <h2>2. The database knows about pillars now</h2>
+    <p class="sub">A new column, a new index, and a safe backfill — all idempotent.</p>
+
+    <h3>Changed: the in-process schema bootstrap</h3>
+    <p>
+      <code class="inline">ensureSchema()</code> in
+      <a class="file" href="/../src/lib/schema.ts">src/lib/schema.ts</a>
+      now creates and patches the column.
+    </p>
+
+    <pre class="code"><span class="kw">CREATE TABLE IF NOT EXISTS</span> trades (
+  …
+  pillar <span class="kw">VARCHAR</span>(<span class="num">64</span>) <span class="kw">NOT NULL DEFAULT</span> <span class="str">'general'</span>,
+  …
+  <span class="kw">KEY</span> idx_trades_pillar (pillar),
+  …
+);
+
+<span class="com">// Defensive ALTER for DBs that pre-date this change</span>
+<span class="kw">ALTER TABLE</span> trades <span class="kw">ADD COLUMN</span> pillar <span class="kw">VARCHAR</span>(<span class="num">64</span>) <span class="kw">NOT NULL DEFAULT</span> <span class="str">'general'</span>;
+<span class="kw">ALTER TABLE</span> trades <span class="kw">ADD KEY</span> idx_trades_pillar (pillar);</pre>
+
+    <p>
+      The same idempotent <code class="inline">ALTER</code> guards live in
+      <a class="file" href="/../database/live_bridge.sql">database/live_bridge.sql</a>
+      so <code class="inline">npm&nbsp;run&nbsp;db:live-bridge</code> can fix a stale DB without
+      manual intervention.
+    </p>
+
+    <h3>Why <code class="inline">VARCHAR(64)</code> and not <code class="inline">ENUM</code>?</h3>
+    <p>
+      ENUMs are painful to extend on MySQL/TiDB — every new pillar needs a migration.
+      A short VARCHAR with an index and an app-layer allow-list (the
+      <code class="inline">isPillarSlug</code> guard) gives the same correctness for free,
+      and adding a pillar is a one-line edit to <code class="inline">pillars.ts</code>.
+    </p>
+  </section>
+
+  <!-- ───────────────────────────────── 3. API + form ───────────────────────── -->
+  <section id="api">
+    <h2>3. The trade form + API accept a pillar</h2>
+    <p class="sub">A user can now categorise the trade they’re listing.</p>
+
+    <h3>API: <a class="file" href="/../src/app/api/trades/route.ts">src/app/api/trades/route.ts</a></h3>
+    <pre class="code"><span class="kw">let</span> pillar: PillarSlug = DEFAULT_PILLAR;
+<span class="kw">if</span> (body.pillar != <span class="kw">null</span> &amp;&amp; body.pillar !== <span class="str">""</span>) {
+  <span class="kw">if</span> (!isPillarSlug(body.pillar)) {
+    <span class="kw">return</span> NextResponse.json({ ok: <span class="kw">false</span>, message: <span class="str">"Unknown pillar."</span> }, { status: <span class="num">422</span> });
+  }
+  pillar = body.pillar;
+}
+
+<span class="kw">await</span> pool.execute(
+  `INSERT INTO trades (member_id, skill_offered, skill_needed, location_preference, pillar, status)
+   VALUES (?, ?, ?, ?, ?, 'open')`,
+  [session.memberId, skillOffered, skillNeeded, locationPreference, pillar]
+);</pre>
+
+    <p>
+      <strong>Why the guard?</strong> Anything the client sends is treated as
+      hostile until it matches one of the slugs we know about. Unknown values
+      get a 422 and never reach the DB.
+    </p>
+
+    <h3>Form: <a class="file" href="/../src/app/dashboard/me/TradesManager.tsx">src/app/dashboard/me/TradesManager.tsx</a></h3>
+    <p>
+      A new <strong>Pillar</strong> <code class="inline">&lt;select&gt;</code> sits
+      beside Location preference. The pillar also shows up as the first row inside
+      a trade entry so members see it on their own page.
+    </p>
+  </section>
+
+  <!-- ───────────────────────────────── 4. Feed page ────────────────────────── -->
+  <section id="feed">
+    <h2>4. The feed page has a search + pill row</h2>
+    <p class="sub">URL-driven filtering, debounced search, server-rendered count.</p>
+
+    <h3>How filtering flows</h3>
+    <ol>
+      <li>The user types in the search box or clicks a pill.</li>
+      <li>
+        The new client component
+        <a class="file" href="/../src/app/dashboard/LiveBridgeFilters.tsx">LiveBridgeFilters.tsx</a>
+        rewrites the URL: <code class="inline">/dashboard?pillar=finance-tax&amp;q=GST</code>.
+      </li>
+      <li>
+        Next.js re-renders the server page
+        <a class="file" href="/../src/app/dashboard/page.tsx">page.tsx</a>,
+        which reads the params and adds two extra <code class="inline">WHERE</code> clauses
+        to the SQL.
+      </li>
+      <li>
+        The subtitle updates to
+        <code class="inline">Active Trades in Finance &amp; Tax (3 Open)</code>.
+      </li>
+    </ol>
+
+    <h3>A peek at the resulting toolbar</h3>
+    <div class="card">
+      <div style="background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:10px;">
+        <span style="color:var(--stone);">⌕</span>
+        <span style="color:rgba(61,59,53,0.55);font-size:0.9rem;">Search skills, locations, or keywords…</span>
+      </div>
+      <div class="pill-row">
+        <span class="pill">All Trades</span>
+        <span class="pill">Growth &amp; SEO</span>
+        <span class="pill active">Finance &amp; Tax</span>
+        <span class="pill">HR &amp; Leadership</span>
+        <span class="pill">Prem Lifestyle</span>
+        <span class="pill">Tech &amp; Product</span>
+        <span class="pill">Creative &amp; Content</span>
+      </div>
+      <p style="margin:14px 0 0;font-size:0.9rem;color:var(--stone);">
+        Active Trades in <strong style="color:var(--ink);">Finance &amp; Tax</strong> (4 Open)
+      </p>
+    </div>
+
+    <h3>Why URL-driven?</h3>
+    <ul class="checklist">
+      <li>The server is the source of truth for the visible list — no client/server drift.</li>
+      <li>Refreshing the page keeps the filter. Sharing a URL shares the filter.</li>
+      <li>
+        Search is debounced (<code class="inline">280ms</code>) so we don’t pummel the DB
+        on every keystroke.
+      </li>
+      <li>
+        <code class="inline">useTransition</code> keeps the UI responsive while the
+        server is fetching — the toolbar fades to <code class="inline">opacity 0.65</code>
+        instead of freezing.
+      </li>
+    </ul>
+  </section>
+
+  <!-- ───────────────────────────────── 5. Card ─────────────────────────────── -->
+  <section id="card">
+    <h2>5. The card has a header badge and a real CTA</h2>
+    <p class="sub">The structure now matches your blueprint exactly.</p>
+
+    <div class="grid-2">
+      <div>
+        <p class="label">Before</p>
+        <div class="mock">
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#c9a96e44,#1a1a1822);"></div>
+            <div>
+              <p class="mock-name" style="font-size:1rem;">Priya Sengupta</p>
+              <p class="mock-headline" style="margin:0;">CA · GST &amp; ITC specialist</p>
+            </div>
+          </div>
+          <p class="mock-tag">Gives</p>
+          <p class="mock-body">GST Registration &amp; ITC Structuring</p>
+          <p class="mock-tag">Seeks</p>
+          <p class="mock-body">High-End Web Developer (MERN Stack)</p>
+          <p class="mock-tag">Where</p>
+          <p class="mock-body">Kolkata / Remote</p>
+          <div class="mock-row-foot">
+            <span class="mock-proof">View proof of practice ↗</span>
+            <span class="mock-cta" style="font-size:0.7rem;padding:7px 12px;">Offer a Bridge</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p class="label">After</p>
+        <div class="mock">
+          <div class="mock-badge">
+            <span class="mock-badge-pillar">Finance &amp; Tax</span>
+            <span class="mock-badge-ref">#021</span>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#c9a96e44,#1a1a1822);"></div>
+            <div>
+              <p class="mock-name" style="font-size:1rem;">Priya Sengupta</p>
+              <p class="mock-headline" style="margin:0;">CA · GST &amp; ITC specialist</p>
+            </div>
+          </div>
+          <p class="mock-tag">OFFERING:</p>
+          <p class="mock-body">GST Registration &amp; ITC Structuring</p>
+          <p class="mock-tag">SEEKING:</p>
+          <p class="mock-body">High-End Web Developer (MERN Stack)</p>
+          <p class="mock-loc">📍 Kolkata / Remote</p>
+          <span class="mock-proof" style="display:block;margin-bottom:8px;">View proof of practice ↗</span>
+          <span class="mock-cta full-w">Propose a Bridge</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>What changed in <a class="file" href="/../src/app/dashboard/TradeCard.tsx">TradeCard.tsx</a></h3>
+    <table class="kv">
+      <tr><th>Element</th><th>Before</th><th>After</th></tr>
+      <tr>
+        <td>Top of card</td>
+        <td>Avatar + name first</td>
+        <td>Pillar badge + <code class="inline">#021</code> ref, then avatar</td>
+      </tr>
+      <tr>
+        <td>Block labels</td>
+        <td><code class="inline">Gives</code> / <code class="inline">Seeks</code> / <code class="inline">Where</code></td>
+        <td><code class="inline">OFFERING:</code> / <code class="inline">SEEKING:</code> + inline 📍 row</td>
+      </tr>
+      <tr>
+        <td>CTA</td>
+        <td>“Offer a Bridge” — pill button beside proof link</td>
+        <td>“Propose a Bridge” — full-width, anchored to the card’s footer</td>
+      </tr>
+      <tr>
+        <td>Proof link</td>
+        <td>Inside footer row, fighting the CTA for space</td>
+        <td>Lifted above the CTA, allowed to breathe</td>
+      </tr>
+    </table>
+  </section>
+
+  <!-- ───────────────────────────────── 6. Seed ─────────────────────────────── -->
+  <section id="seed">
+    <h2>6. A seed script for demo members</h2>
+    <p class="sub">10 fake architects across all pillars, idempotent, easy to wipe.</p>
+
+    <p>
+      New script: <a class="file" href="/../scripts/seed-demo-members.mjs">scripts/seed-demo-members.mjs</a><br>
+      New npm command: <code class="inline">npm run db:seed-demo</code>
+    </p>
+
+    <h3>What it inserts</h3>
+    <table class="kv">
+      <tr><th>Pillar</th><th>Demo members</th></tr>
+      <tr><td>Finance &amp; Tax</td><td>Priya Sengupta, Arjun Iyer, Ritika Bansal, Neel Kapoor</td></tr>
+      <tr><td>Growth &amp; SEO</td><td>Ananya Roy (2 trades)</td></tr>
+      <tr><td>HR &amp; Leadership</td><td>Meera Krishnan, Ishita Verma</td></tr>
+      <tr><td>Prem Lifestyle</td><td>Rohan Deshpande</td></tr>
+      <tr><td>Tech &amp; Product</td><td>Kabir Mukherjee</td></tr>
+      <tr><td>Creative &amp; Content</td><td>Vikram Shah</td></tr>
+    </table>
+
+    <h3>How it stays safe to re-run</h3>
+    <ul class="checklist">
+      <li>
+        Each demo member is identified by
+        <code class="inline">linkedin_sub = "demo:&lt;slug&gt;"</code>. The script checks
+        that key first and reuses the row if it already exists.
+      </li>
+      <li>
+        Each demo trade is matched on
+        <code class="inline">(member_id, skill_offered, skill_needed)</code>. If it
+        already exists, the script only backfills the pillar — no duplicate rows.
+      </li>
+      <li>
+        To start from scratch, run <code class="inline">npm run db:wipe-users</code>
+        (it truncates the member + chat + bridge tables, admin users untouched) and
+        re-seed.
+      </li>
+    </ul>
+
+    <div class="callout">
+      <strong>Note</strong>
+      Demo accounts do not get login tokens — they exist purely so the Live Bridge
+      feed has cards to render. Log in with your own LinkedIn to actually propose
+      a Bridge to one of them.
+    </div>
+  </section>
+
+  <!-- ───────────────────────────────── How to apply ────────────────────────── -->
+  <section id="apply">
+    <h2>How to apply on your machine</h2>
+    <p class="sub">Three commands, in this order.</p>
+
+    <pre class="code">npm run db:live-bridge      <span class="com"># adds trades.pillar + index (idempotent)</span>
+npm run db:seed-demo        <span class="com"># 10 demo members across the pillars</span>
+npm run dev                 <span class="com"># visit /dashboard</span></pre>
+
+    <p>
+      <code class="inline">ensureSchema()</code> also self-heals on the first DB
+      hit, so even if you forget <code class="inline">db:live-bridge</code> the
+      column will appear when the app boots. The script form exists for ops shells
+      and CI where Node may not start the app.
+    </p>
+  </section>
+
+  <!-- ───────────────────────────────── Leftover ────────────────────────────── -->
+  <section id="leftover">
+    <h2>Still on the punch list</h2>
+    <p class="sub">From the blueprint — intentionally not done in this pass.</p>
+
+    <div class="callout todo">
+      <strong>Guest browsing of the Live Bridge</strong>
+      The blueprint shows logged-out users <em>seeing</em> the feed and only being
+      sent through LinkedIn Auth when they click <em>Propose a Bridge</em>. Today,
+      <code class="inline">src/app/dashboard/layout.tsx</code> still redirects
+      anonymous visitors to <code class="inline">/login</code>. Two options when
+      you want to ship this:
+      <ul>
+        <li>Move the feed to a public route (e.g. <code class="inline">/bridge</code>) and keep <code class="inline">/dashboard</code> auth-gated.</li>
+        <li>Drop the redirect and conditionally render the CTA as a LinkedIn-login link for guests.</li>
+      </ul>
+      The first is cleaner and what I’d recommend — happy to wire it up next.
+    </div>
+
+    <div class="callout warn">
+      <strong>Pillar at onboarding</strong>
+      A brand-new architect picks their pillar today only on the Me page, after
+      they’ve already signed up. Wiring the same <code class="inline">&lt;select&gt;</code>
+      into <code class="inline">OnboardingWizard.tsx</code> would make the funnel
+      tighter — say the word.
+    </div>
+  </section>
+
+  <div class="footer">
+    Generated for Aryan · Walkthrough of the Live Bridge pillar redesign · 2026-05-19
+  </div>
+
+</div>
+</body>
+</html>
