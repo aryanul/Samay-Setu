@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Samay Setu — Direction C · Crafted Bicolor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink: #14120e;
+    --ink-2: #1f1c16;
+    --ink-3: #2a261d;
+    --paper: #f4ecdb;
+    --paper-2: #ebe1cc;
+    --rule-light: #c5b899;
+    --rule-dark: #2e2a20;
+    --text-on-ink: #ebe1cc;
+    --text-on-ink-2: #c9bea2;
+    --muted-on-ink: #8a8068;
+    --muted-on-paper: #6e6552;
+    --gold: #b8924c;
+    --gold-bright: #d6b676;
+    --gold-glow: rgba(184,146,76,0.18);
+    --serif: "Cormorant Garamond", "EB Garamond", Georgia, serif;
+    --sans: "DM Sans", system-ui, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; }
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; }
+  .cb-app { position: relative; }
+
+  /* ───── Top bar (ink section) ───── */
+  .cb-top-wrap { background: var(--ink); position: sticky; top: 0; z-index: 10; }
+  .cb-top {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 18px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--rule-dark);
+  }
+  .cb-brand { display: flex; align-items: center; gap: 12px; color: var(--text-on-ink); }
+  .cb-brand svg { width: 32px; height: 32px; }
+  .cb-brand .word {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--text-on-ink);
+    letter-spacing: -0.005em;
+  }
+  .cb-brand .word em { font-style: italic; color: var(--gold-bright); font-weight: 500; }
+
+  .cb-nav { display: flex; align-items: center; gap: 4px; }
+  .cb-tab {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted-on-ink);
+    padding: 9px 14px;
+    border-radius: 4px;
+    transition: color 160ms ease, background 160ms ease;
+  }
+  .cb-tab:hover { color: var(--text-on-ink); }
+  .cb-tab.active {
+    color: var(--ink);
+    background: var(--gold-bright);
+  }
+  .cb-tab .badge {
+    display: inline-block;
+    min-width: 18px; height: 18px;
+    padding: 0 5px;
+    background: var(--gold);
+    color: var(--ink);
+    border-radius: 9px;
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 18px;
+    text-align: center;
+    margin-left: 6px;
+    font-weight: 600;
+  }
+  .cb-tab.active .badge { background: var(--ink); color: var(--gold-bright); }
+
+  .cb-me { display: flex; align-items: center; gap: 12px; }
+  .cb-pip {
+    width: 32px; height: 32px;
+    border-radius: 4px;
+    background: var(--gold);
+    color: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-weight: 600; font-size: 15px;
+  }
+  .cb-me .out {
+    font-size: 12px;
+    color: var(--muted-on-ink);
+    padding: 7px 12px;
+    border: 1px solid var(--rule-dark);
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    transition: border-color 160ms ease, color 160ms ease;
+  }
+  .cb-me .out:hover { border-color: var(--gold-bright); color: var(--text-on-ink); }
+
+  /* ───── Hero band (ink) ───── */
+  .cb-hero { background: var(--ink); color: var(--text-on-ink); position: relative; overflow: hidden; }
+  .cb-hero-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 88px 48px 96px;
+    position: relative;
+    z-index: 1;
+  }
+  /* the bridge curve from the logo, large, as background motif */
+  .cb-hero::before {
+    content: "";
+    position: absolute;
+    right: -120px; top: 50%; transform: translateY(-50%);
+    width: 720px; height: 720px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23b8924c' stroke-width='0.4' stroke-linecap='round'/></svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.18;
+    pointer-events: none;
+  }
+
+  .cb-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+    font-weight: 600;
+    margin-bottom: 28px;
+  }
+  .cb-eyebrow::before { content: ""; width: 30px; height: 1px; background: var(--gold-bright); }
+  .cb-eyebrow .vol {
+    font-family: var(--mono);
+    color: var(--muted-on-ink);
+    letter-spacing: 0.04em;
+    font-weight: 400;
+    text-transform: none;
+    padding-left: 10px;
+    border-left: 1px solid var(--rule-dark);
+    margin-left: 4px;
+  }
+
+  .cb-h1 {
+    font-family: var(--serif);
+    font-size: clamp(48px, 6.5vw, 88px);
+    font-weight: 300;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: var(--text-on-ink);
+    max-width: 18ch;
+  }
+  .cb-h1 em { font-style: italic; color: var(--gold-bright); font-weight: 400; }
+
+  .cb-lede {
+    margin-top: 26px;
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--text-on-ink-2);
+    max-width: 58ch;
+    font-weight: 400;
+  }
+
+  /* divider — the bridge curve as a horizontal motif */
+  .cb-divider {
+    height: 56px;
+    background:
+      linear-gradient(to bottom, var(--ink) 50%, var(--paper) 50%);
+    position: relative;
+  }
+  .cb-divider::after {
+    content: "";
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 80px; height: 80px;
+    transform: translate(-50%, -50%);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23b8924c' stroke-width='2' stroke-linecap='round'/><circle cx='8' cy='24' r='2.5' fill='%23b8924c'/><circle cx='28' cy='12' r='2.5' fill='%23b8924c'/></svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: var(--paper);
+    border-radius: 50%;
+    padding: 14px;
+    box-shadow: 0 0 0 1px var(--rule-light);
+  }
+
+  /* ───── Filter band (paper) ───── */
+  .cb-filters {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 36px 48px 0;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .cb-pills { display: flex; gap: 4px; flex-wrap: wrap; }
+  .cb-pill {
+    font-size: 13px;
+    padding: 9px 16px;
+    border-radius: 4px;
+    color: var(--muted-on-paper);
+    cursor: pointer;
+    transition: color 160ms ease, background 160ms ease;
+    border: 1px solid transparent;
+    font-weight: 500;
+  }
+  .cb-pill:hover { color: var(--ink); background: var(--paper-2); }
+  .cb-pill.active {
+    background: var(--ink);
+    color: var(--gold-bright);
+  }
+  .cb-search { position: relative; margin-left: auto; width: 280px; }
+  .cb-search input {
+    width: 100%;
+    font: inherit;
+    font-size: 13.5px;
+    padding: 11px 14px 11px 38px;
+    background: var(--paper-2);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 160ms ease, background 160ms ease;
+  }
+  .cb-search input::placeholder { color: var(--muted-on-paper); }
+  .cb-search input:focus { border-color: var(--ink); background: var(--paper); }
+  .cb-search svg {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    width: 14px; height: 14px; color: var(--muted-on-paper);
+  }
+
+  .cb-count {
+    max-width: 1280px;
+    margin: 32px auto 0;
+    padding: 0 48px;
+    display: flex; justify-content: space-between; align-items: baseline;
+    color: var(--muted-on-paper);
+    font-size: 13px;
+  }
+  .cb-count strong {
+    font-family: var(--mono);
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .cb-count em {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--gold);
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  /* ───── Trade cards — ink plates floating on paper ───── */
+  .cb-grid {
+    max-width: 1280px;
+    margin: 28px auto 96px;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .cb-card {
+    position: relative;
+    background: var(--ink);
+    color: var(--text-on-ink);
+    border-radius: 8px;
+    padding: 26px 24px 22px;
+    display: flex; flex-direction: column;
+    box-shadow: 0 1px 0 0 var(--rule-light), 0 18px 28px -20px rgba(20,18,14,0.25);
+    transition: transform 220ms ease, box-shadow 220ms ease;
+    overflow: hidden;
+  }
+  .cb-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 1px 0 0 var(--gold), 0 22px 36px -20px rgba(20,18,14,0.35);
+  }
+  /* corner stitch — bridge curve in the top-right */
+  .cb-card::before {
+    content: "";
+    position: absolute;
+    top: -10px; right: -10px;
+    width: 60px; height: 60px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23b8924c' stroke-width='0.5' stroke-linecap='round'/></svg>");
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .cb-card.match { border: 1px solid var(--gold); padding: 25px 23px 21px; }
+  .cb-card.match::after {
+    content: "MUTUAL MATCH";
+    position: absolute;
+    top: 12px; right: 16px;
+    padding: 4px 9px 3px;
+    background: var(--gold-bright);
+    color: var(--ink);
+    border-radius: 4px;
+    font-size: 9.5px; letter-spacing: 0.18em;
+    font-weight: 700;
+    z-index: 1;
+  }
+  .cb-card.match::before { display: none; }
+
+  .cb-card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .cb-pillar {
+    font-size: 10.5px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold-bright);
+    font-weight: 600;
+  }
+  .cb-card-id {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--muted-on-ink);
+  }
+
+  .cb-person { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+  .cb-avatar {
+    width: 52px; height: 52px;
+    border-radius: 4px;
+    background: var(--ink-3);
+    border: 1px solid var(--rule-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-size: 22px; font-weight: 500;
+    color: var(--gold-bright);
+    flex-shrink: 0;
+  }
+  .cb-person .nm {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--text-on-ink);
+  }
+  .cb-person .ti { font-size: 12.5px; color: var(--muted-on-ink); margin-top: 3px; }
+
+  .cb-swap {
+    border-top: 1px solid var(--rule-dark);
+    padding-top: 16px;
+  }
+  .cb-row { padding: 6px 0; display: flex; gap: 12px; align-items: flex-start; }
+  .cb-row .k {
+    font-family: var(--mono);
+    font-size: 10px; letter-spacing: 0;
+    color: var(--muted-on-ink);
+    width: 46px; flex-shrink: 0;
+    padding-top: 4px;
+    text-transform: uppercase;
+  }
+  .cb-row.gives .k { color: var(--gold-bright); }
+  .cb-row .v {
+    font-family: var(--serif);
+    font-size: 17.5px;
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--text-on-ink);
+    letter-spacing: -0.005em;
+  }
+
+  .cb-meta {
+    display: flex; gap: 0; flex-wrap: wrap;
+    margin: 16px 0 18px;
+    font-size: 11.5px; color: var(--muted-on-ink);
+  }
+  .cb-meta span { padding: 0 8px; border-right: 1px solid var(--rule-dark); }
+  .cb-meta span:first-child { padding-left: 0; }
+  .cb-meta span:last-child { border-right: none; }
+
+  .cb-actions {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule-dark);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px;
+  }
+  .cb-proof {
+    font-size: 12.5px;
+    color: var(--muted-on-ink);
+    display: inline-flex; align-items: center; gap: 5px;
+    transition: color 160ms ease;
+  }
+  .cb-proof:hover { color: var(--gold-bright); }
+  .cb-cta {
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 9px 16px;
+    background: var(--gold-bright);
+    color: var(--ink);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: background 160ms ease;
+  }
+  .cb-cta:hover { background: var(--gold); color: var(--ink); }
+
+  /* ───── Footer band (ink) ───── */
+  .cb-foot-wrap { background: var(--ink); color: var(--text-on-ink-2); margin-top: 0; }
+  .cb-foot {
+    max-width: 1280px; margin: 0 auto;
+    padding: 48px;
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 12.5px;
+    border-top: 1px solid var(--rule-dark);
+  }
+  .cb-foot em {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--gold-bright);
+    font-size: 15px;
+  }
+
+  /* Responsive */
+  @media (max-width: 1100px) { .cb-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 720px) {
+    .cb-top, .cb-hero-inner, .cb-filters, .cb-count, .cb-grid, .cb-foot { padding-left: 22px; padding-right: 22px; }
+    .cb-nav { display: none; }
+    .cb-grid { grid-template-columns: 1fr; }
+    .cb-search { width: 100%; margin-left: 0; }
+    .cb-hero::before { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="cb-app">
+
+  <div class="cb-top-wrap">
+    <header class="cb-top">
+      <a class="cb-brand" href="#">
+        <svg viewBox="0 0 36 36" fill="none">
+          <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#d6b676" stroke-width="2" stroke-linecap="round" />
+          <circle cx="8" cy="24" r="2.5" fill="#d6b676" />
+          <circle cx="28" cy="12" r="2.5" fill="#ebe1cc" />
+        </svg>
+        <span class="word">samay <em>setu</em></span>
+      </a>
+      <nav class="cb-nav">
+        <a class="cb-tab active" href="#">Live Bridge</a>
+        <a class="cb-tab" href="#">Bridges <span class="badge">2</span></a>
+        <a class="cb-tab" href="#">Chats</a>
+        <a class="cb-tab" href="#">Me</a>
+      </nav>
+      <div class="cb-me">
+        <div class="cb-pip">A</div>
+        <button class="out">Sign out</button>
+      </div>
+    </header>
+  </div>
+
+  <section class="cb-hero">
+    <div class="cb-hero-inner">
+      <p class="cb-eyebrow">The Live Bridge <span class="vol">Vol. I · 047</span></p>
+      <h1 class="cb-h1">Who, this week,<br /><em>has time to give.</em></h1>
+      <p class="cb-lede">Each card is a verified neighbour, the hour they offer, and the hour they seek. Mutual matches surface first. Read carefully — the swap begins with attention.</p>
+    </div>
+  </section>
+
+  <div class="cb-divider" aria-hidden="true"></div>
+
+  <div class="cb-filters">
+    <div class="cb-pills">
+      <span class="cb-pill active">All pillars</span>
+      <span class="cb-pill">Skill</span>
+      <span class="cb-pill">Care</span>
+      <span class="cb-pill">Craft</span>
+      <span class="cb-pill">Knowledge</span>
+    </div>
+    <div class="cb-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3-3" /></svg>
+      <input type="search" placeholder="Search a skill or neighbourhood" />
+    </div>
+  </div>
+
+  <div class="cb-count">
+    <span><strong>06</strong> open trades · across <em>all pillars</em></span>
+    <span>North Kolkata · this fortnight</span>
+  </div>
+
+  <div class="cb-grid">
+
+    <article class="cb-card match">
+      <div class="cb-card-head">
+        <span class="cb-pillar">Care</span>
+        <span class="cb-card-id">№ 0042</span>
+      </div>
+      <div class="cb-person">
+        <div class="cb-avatar">P</div>
+        <div>
+          <div class="nm">Dr. Priya Mukherjee</div>
+          <div class="ti">Retired physician · Shyambazar</div>
+        </div>
+      </div>
+      <div class="cb-swap">
+        <div class="cb-row gives">
+          <span class="k">Gives</span>
+          <span class="v">Eldercare check-ins, in-home BP & medication review</span>
+        </div>
+        <div class="cb-row seeks">
+          <span class="k">Seeks</span>
+          <span class="v">Cooked vegetarian tiffin, three meals a week</span>
+        </div>
+      </div>
+      <div class="cb-meta">
+        <span>1 hr</span><span>Within 3 km</span><span>Joined Apr</span>
+      </div>
+      <div class="cb-actions">
+        <a class="cb-proof" href="#">View proof of practice</a>
+        <button class="cb-cta">Offer Bridge</button>
+      </div>
+    </article>
+
+    <article class="cb-card">
+      <div class="cb-card-head">
+        <span class="cb-pillar">Knowledge</span>
+        <span class="cb-card-id">№ 0041</span>
+      </div>
+      <div class="cb-person">
+        <div class="cb-avatar">R</div>
+        <div>
+          <div class="nm">Rohit Banerjee</div>
+          <div class="ti">Independent plumber · Manicktala</div>
+        </div>
+      </div>
+      <div class="cb-swap">
+        <div class="cb-row gives">
+          <span class="k">Gives</span>
+          <span class="v">Basic plumbing & electrical fixes, after-hours emergencies</span>
+        </div>
+        <div class="cb-row seeks">
+          <span class="k">Seeks</span>
+          <span class="v">Math tutoring for my daughter, Class 9</span>
+        </div>
+      </div>
+      <div class="cb-meta">
+        <span>1 hr</span><span>Within 5 km</span><span>Joined Mar</span>
+      </div>
+      <div class="cb-actions">
+        <a class="cb-proof" href="#">View proof of practice</a>
+        <button class="cb-cta">Offer Bridge</button>
+      </div>
+    </article>
+
+    <article class="cb-card">
+      <div class="cb-card-head">
+        <span class="cb-pillar">Skill</span>
+        <span class="cb-card-id">№ 0040</span>
+      </div>
+      <div class="cb-person">
+        <div class="cb-avatar">L</div>
+        <div>
+          <div class="nm">Lakshmi Sharma</div>
+          <div class="ti">Master tailor · Hatibagan</div>
+        </div>
+      </div>
+      <div class="cb-swap">
+        <div class="cb-row gives">
+          <span class="k">Gives</span>
+          <span class="v">Tailoring, alterations, and bespoke kurta cutting</span>
+        </div>
+        <div class="cb-row seeks">
+          <span class="k">Seeks</span>
+          <span class="v">English-to-Bangla translation of a 4-page document</span>
+        </div>
+      </div>
+      <div class="cb-meta">
+        <span>2 hrs</span><span>Walking distance</span><span>Joined May</span>
+      </div>
+      <div class="cb-actions">
+        <a class="cb-proof" href="#">View proof of practice</a>
+        <button class="cb-cta">Offer Bridge</button>
+      </div>
+    </article>
+
+    <article class="cb-card">
+      <div class="cb-card-head">
+        <span class="cb-pillar">Craft</span>
+        <span class="cb-card-id">№ 0039</span>
+      </div>
+      <div class="cb-person">
+        <div class="cb-avatar">A</div>
+        <div>
+          <div class="nm">Arjun Das</div>
+          <div class="ti">Frontend developer · Kankurgachi</div>
+        </div>
+      </div>
+      <div class="cb-swap">
+        <div class="cb-row gives">
+          <span class="k">Gives</span>
+          <span class="v">Small website fixes, deployment, and one-on-one debugging</span>
+        </div>
+        <div class="cb-row seeks">
+          <span class="k">Seeks</span>
+          <span class="v">Driving lessons, manual transmission</span>
+        </div>
+      </div>
+      <div class="cb-meta">
+        <span>1 hr</span><span>Within 4 km</span><span>Joined Apr</span>
+      </div>
+      <div class="cb-actions">
+        <a class="cb-proof" href="#">View proof of practice</a>
+        <button class="cb-cta">Offer Bridge</button>
+      </div>
+    </article>
+
+    <article class="cb-card">
+      <div class="cb-card-head">
+        <span class="cb-pillar">Knowledge</span>
+        <span class="cb-card-id">№ 0038</span>
+      </div>
+      <div class="cb-person">
+        <div class="cb-avatar">S</div>
+        <div>
+          <div class="nm">Subhajit Roy</div>
+          <div class="ti">HR consultant · Ultadanga</div>
+        </div>
+      </div>
+      <div class="cb-swap">
+        <div class="cb-row gives">
+          <span class="k">Gives</span>
+          <span class="v">Resume review, mock interviews, salary negotiation prep</span>
+        </div>
+        <div class="cb-row seeks">
+          <span class="k">Seeks</span>
+          <span class="v">Plant care during a two-week trip</span>
+        </div>
+      </div>
+      <div class="cb-meta">
+        <span>1 hr</span><span>Within 6 km</span><span>Joined Feb</span>
+      </div>
+      <div class="cb-actions">
+        <a class="cb-proof" href="#">View proof of practice</a>
+        <button class="cb-cta">Offer Bridge</button>
+      </div>
+    </article>
+
+    <article class="cb-card">
+      <div class="cb-card-head">
+        <span class="cb-pillar">Skill</span>
+        <span class="cb-card-id">№ 0037</span>
+      </div>
+      <div class="cb-person">
+        <div class="cb-avatar">A</div>
+        <div>
+          <div class="nm">Anjali Sen</div>
+          <div class="ti">Chartered accountant · Bagbazar</div>
+        </div>
+      </div>
+      <div class="cb-swap">
+        <div class="cb-row gives">
+          <span class="k">Gives</span>
+          <span class="v">Personal income tax filing, including capital gains</span>
+        </div>
+        <div class="cb-row seeks">
+          <span class="k">Seeks</span>
+          <span class="v">Spoken Bangla tutoring, conversational level</span>
+        </div>
+      </div>
+      <div class="cb-meta">
+        <span>1 hr</span><span>Within 3 km</span><span>Joined Jan</span>
+      </div>
+      <div class="cb-actions">
+        <a class="cb-proof" href="#">View proof of practice</a>
+        <button class="cb-cta">Offer Bridge</button>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="cb-foot-wrap">
+    <footer class="cb-foot">
+      <span>Samay Setu · North Kolkata · 2026</span>
+      <em>One hour given, one hour received.</em>
+    </footer>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Samay Setu — Mockup Walkthrough</title>
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink:#14120e; --ink-2:#1f1c16; --ink-3:#2a261d;
+    --paper:#f4ecdb; --paper-2:#ebe1cc;
+    --rule-light:#c5b899; --rule-dark:#2e2a20;
+    --text:#ebe1cc; --text-2:#c9bea2; --muted:#8a8068;
+    --gold:#b8924c; --gold-bright:#d6b676;
+    --serif:"Cormorant Garamond",serif;
+    --sans:"DM Sans",system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:var(--sans); background:var(--ink); color:var(--text); min-height:100vh; -webkit-font-smoothing:antialiased; line-height:1.55; overflow-x:hidden; }
+  a { color:inherit; text-decoration:none; }
+  button { font-family:inherit; cursor:pointer; }
+
+  /* Topbar */
+  .top { max-width:1280px; margin:0 auto; padding:22px 48px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--rule-dark); }
+  .brand { display:flex; align-items:center; gap:12px; color:var(--text); }
+  .brand svg { width:32px; height:32px; }
+  .brand .word { font-family:var(--serif); font-size:22px; }
+  .brand .word em { font-style:italic; color:var(--gold-bright); font-weight:500; }
+  .top-tag { display:inline-flex; align-items:center; gap:8px; font-size:10.5px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold-bright); font-weight:600; padding:6px 12px; border:1px solid var(--rule-dark); border-radius:4px; }
+  .top-tag::before { content:""; width:6px; height:6px; border-radius:50%; background:var(--gold-bright); }
+
+  /* Hero */
+  .hero { max-width:1280px; margin:0 auto; padding:88px 48px 64px; position:relative; }
+  .hero::before { content:""; position:absolute; right:-160px; top:-40px; width:560px; height:560px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23b8924c' stroke-width='0.3' stroke-linecap='round'/></svg>"); background-size:contain; opacity:0.18; pointer-events:none; }
+  .eyebrow { display:inline-flex; align-items:center; gap:10px; font-size:11.5px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-bright); font-weight:600; margin-bottom:28px; position:relative; z-index:1; }
+  .eyebrow::before { content:""; width:30px; height:1px; background:var(--gold-bright); }
+  .eyebrow .vol { font-family:var(--mono); color:var(--muted); letter-spacing:0.04em; font-weight:400; text-transform:none; padding-left:10px; border-left:1px solid var(--rule-dark); margin-left:4px; }
+  h1 { font-family:var(--serif); font-size:clamp(48px,6vw,80px); font-weight:300; line-height:1.02; letter-spacing:-0.03em; max-width:18ch; position:relative; z-index:1; }
+  h1 em { font-style:italic; color:var(--gold-bright); font-weight:400; }
+  .lede { margin-top:28px; font-family:var(--serif); font-size:21px; color:var(--text-2); max-width:60ch; line-height:1.5; position:relative; z-index:1; }
+  .lede strong { color:var(--gold-bright); font-weight:500; }
+
+  /* Walkthrough button */
+  .start { margin-top:36px; display:inline-flex; align-items:center; gap:10px; padding:14px 22px; background:var(--gold-bright); color:var(--ink); border-radius:6px; font-size:14px; font-weight:600; transition:background 160ms, transform 160ms; position:relative; z-index:1; }
+  .start:hover { background:var(--gold); transform:translateY(-2px); }
+  .start svg { width:16px; height:16px; }
+
+  /* Sections */
+  .sec { max-width:1280px; margin:0 auto; padding:48px 48px 0; }
+  .sec-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--rule-dark); }
+  .sec-head h2 { font-family:var(--serif); font-size:28px; font-weight:500; letter-spacing:-0.015em; color:var(--text); line-height:1.15; }
+  .sec-head h2 em { font-style:italic; color:var(--gold-bright); }
+  .sec-head .num { font-family:var(--mono); font-size:11px; color:var(--muted); letter-spacing:0.06em; }
+  .sec-sub { font-size:14px; color:var(--text-2); max-width:64ch; margin-bottom:24px; }
+
+  /* Card grid */
+  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; }
+
+  a.card {
+    display:flex; flex-direction:column;
+    background:var(--ink-2);
+    border:1px solid var(--rule-dark); border-radius:10px;
+    overflow:hidden;
+    transition:transform 220ms, border-color 220ms;
+    position:relative;
+  }
+  a.card:hover { border-color:var(--gold-bright); transform:translateY(-3px); }
+  a.card::before { content:""; position:absolute; top:-10px; right:-10px; width:60px; height:60px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23d6b676' stroke-width='0.5' stroke-linecap='round'/></svg>"); background-size:contain; opacity:0.35; pointer-events:none; z-index:1; }
+
+  .card-preview {
+    height:140px;
+    background:var(--ink-3);
+    position:relative; overflow:hidden;
+    border-bottom:1px solid var(--rule-dark);
+  }
+  .card-preview .pv-art {
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--serif);
+  }
+  .card-preview .pv-num {
+    font-size:64px; font-weight:300; color:var(--gold);
+    letter-spacing:-0.02em; line-height:1; opacity:0.5;
+  }
+  .card-preview.pv-landing { background:linear-gradient(135deg, var(--ink-2) 0%, var(--ink-3) 100%); }
+  .card-preview.pv-landing::after { content:""; position:absolute; inset:0; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23d6b676' stroke-width='0.6' stroke-linecap='round'/><circle cx='8' cy='24' r='2.5' fill='%23d6b676'/><circle cx='28' cy='12' r='2.5' fill='%23ebe1cc'/></svg>"); background-position:center; background-repeat:no-repeat; background-size:60% auto; opacity:0.5; }
+  .card-preview.pv-gate { background:linear-gradient(135deg, var(--ink-3) 0%, var(--ink-2) 100%); }
+  .card-preview.pv-gate::after { content:"🔐"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:48px; opacity:0.5; }
+  .card-preview.pv-contest { background:linear-gradient(135deg, var(--gold) 0%, var(--ink) 60%); }
+  .card-preview.pv-contest::after { content:"🏆"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:64px; }
+
+  .card-body { padding:22px 22px 20px; flex:1; display:flex; flex-direction:column; position:relative; z-index:2; }
+  .card-tag { display:inline-block; font-family:var(--mono); font-size:10.5px; letter-spacing:0.04em; color:var(--gold-bright); margin-bottom:10px; }
+  .card-body h3 { font-family:var(--serif); font-size:22px; font-weight:500; letter-spacing:-0.005em; line-height:1.15; color:var(--text); margin-bottom:6px; }
+  .card-body p { font-size:13px; color:var(--text-2); line-height:1.55; flex:1; }
+  .card-arrow { margin-top:14px; font-size:12.5px; color:var(--gold-bright); font-weight:600; display:inline-flex; align-items:center; gap:4px; }
+
+  /* Featured contest banner */
+  .featured {
+    background:linear-gradient(135deg, var(--gold) 0%, var(--ink-3) 70%);
+    border:1px solid var(--gold);
+    border-radius:14px;
+    padding:0;
+    margin-bottom:48px;
+    overflow:hidden;
+    position:relative;
+    display:grid; grid-template-columns:1fr auto;
+    gap:0;
+    transition:transform 220ms;
+  }
+  .featured:hover { transform:translateY(-3px); }
+  .featured::after { content:""; position:absolute; top:-40px; right:-40px; width:280px; height:280px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23ebe1cc' stroke-width='0.4' stroke-linecap='round'/></svg>"); background-size:contain; opacity:0.18; pointer-events:none; }
+  .featured-body { padding:32px 36px; color:var(--ink); position:relative; z-index:1; }
+  .featured-tag { display:inline-flex; align-items:center; gap:8px; font-size:10.5px; letter-spacing:0.2em; text-transform:uppercase; color:var(--ink); background:rgba(20,18,14,0.12); padding:5px 11px; border-radius:4px; font-weight:700; margin-bottom:16px; }
+  .featured-tag::before { content:""; width:6px; height:6px; border-radius:50%; background:var(--ink); animation:f-pulse 1.6s ease-out infinite; }
+  @keyframes f-pulse { 0% { box-shadow:0 0 0 0 rgba(20,18,14,0.5); } 70% { box-shadow:0 0 0 8px rgba(20,18,14,0); } 100% { box-shadow:0 0 0 0 rgba(20,18,14,0); } }
+  .featured h3 { font-family:var(--serif); font-size:36px; font-weight:400; letter-spacing:-0.02em; line-height:1.1; color:var(--ink); margin-bottom:8px; }
+  .featured h3 em { font-style:italic; }
+  .featured p { font-size:14px; color:rgba(20,18,14,0.78); max-width:50ch; line-height:1.55; }
+  .featured-cta {
+    display:flex; align-items:center; justify-content:center;
+    padding:0 36px;
+    background:var(--ink);
+    color:var(--gold-bright);
+    font-family:var(--serif);
+    font-size:30px;
+    font-weight:500;
+    position:relative; z-index:1;
+    letter-spacing:-0.01em;
+  }
+  .featured-cta em { font-style:italic; }
+  .featured-cta::after { content:" →"; color:var(--gold-bright); }
+
+  /* Deprecated archive */
+  .archive { opacity:0.6; }
+  .archive a.card { background:transparent; }
+  .archive a.card .card-preview { background:var(--ink); }
+  .archive .card-tag { color:var(--muted); }
+
+  /* Footer */
+  .foot { max-width:1280px; margin:80px auto 0; padding:32px 48px; border-top:1px solid var(--rule-dark); display:flex; justify-content:space-between; align-items:baseline; font-size:12.5px; color:var(--muted); }
+  .foot em { font-family:var(--serif); font-style:italic; color:var(--gold-bright); font-size:14px; }
+
+  /* Responsive */
+  @media (max-width:720px) {
+    .top, .hero, .sec, .foot { padding-left:22px; padding-right:22px; }
+    .top { padding-top:16px; padding-bottom:16px; }
+    .hero { padding-top:48px; padding-bottom:32px; }
+    .featured { grid-template-columns:1fr; }
+    .featured-body { padding:24px 22px; }
+    .featured-cta { padding:18px; font-size:20px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="index.html">
+    <svg viewBox="0 0 36 36" fill="none">
+      <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#d6b676" stroke-width="2" stroke-linecap="round" />
+      <circle cx="8" cy="24" r="2.5" fill="#d6b676" />
+      <circle cx="28" cy="12" r="2.5" fill="#ebe1cc" />
+    </svg>
+    <span class="word">samay <em>setu</em></span>
+  </a>
+  <span class="top-tag">Mockup · Walkthrough</span>
+</header>
+
+<section class="hero">
+  <p class="eyebrow">The full product, in seven screens <span class="vol">Direction C · applied end-to-end</span></p>
+  <h1>The whole thing, <em>laid out.</em></h1>
+  <p class="lede">
+    Marketing site, sign-in, onboarding wizard, dashboard, bridges inbox, chats, profile manager, and the Founding 50 Race contest. <strong>Two visual systems, one design language</strong> — the marketing pages feel like a magazine, the software feels like a tool, and the bridge curve threads through both.
+  </p>
+  <a class="start" href="landing.html">
+    Start at the landing page
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+  </a>
+</section>
+
+<!-- Featured: contest -->
+<section class="sec">
+  <a class="featured" href="contest.html">
+    <div class="featured-body">
+      <span class="featured-tag">Live · This week's centrepiece</span>
+      <h3>The <em>Founding 50 Race</em> — leaderboard &amp; tracker.</h3>
+      <p>Cinematic hero, prize card, live leaderboard with rank movement indicators, your-rank highlight, copy-link block, Instagram &amp; LinkedIn share. Built for the contest you described.</p>
+    </div>
+    <div class="featured-cta">View race</div>
+  </a>
+</section>
+
+<!-- Section: Marketing -->
+<section class="sec">
+  <div class="sec-head">
+    <h2><em>01</em> &nbsp;Marketing</h2>
+    <span class="num">PUBLIC · UNAUTHENTICATED</span>
+  </div>
+  <p class="sec-sub">Bigger swings, alternating bands, hero with emblem panel. The pages a stranger sees before they're verified.</p>
+  <div class="grid">
+    <a class="card" href="landing.html">
+      <div class="card-preview pv-landing"></div>
+      <div class="card-body">
+        <span class="card-tag">01 · /</span>
+        <h3>Landing page</h3>
+        <p>Hero with live contest strip · Three pillars · Ethics blockquote · Founding circle progress · Waitlist CTA.</p>
+        <span class="card-arrow">Open →</span>
+      </div>
+    </a>
+    <a class="card" href="bridge-passport.html">
+      <div class="card-preview pv-gate"></div>
+      <div class="card-body">
+        <span class="card-tag">02 · /live-bridge</span>
+        <h3>Bridge Passport</h3>
+        <p>Instagram→site gate. Shows the locked bounty preview &amp; demands LinkedIn verification before any action. Trust copy below.</p>
+        <span class="card-arrow">Open →</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- Section: Sign-in -->
+<section class="sec">
+  <div class="sec-head">
+    <h2><em>02</em> &nbsp;Sign-in &amp; verification</h2>
+    <span class="num">GATED · AUTH FLOW</span>
+  </div>
+  <p class="sec-sub">First contact with the software. Ink topbar, single ink card on paper. Same chrome carries into the dashboard so the transition feels continuous.</p>
+  <div class="grid">
+    <a class="card" href="login.html">
+      <div class="card-preview"><div class="pv-art"><span class="pv-num">03</span></div></div>
+      <div class="card-body">
+        <span class="card-tag">03 · /login</span>
+        <h3>Sign in</h3>
+        <p>LinkedIn + magic-link. Centered ink card with bridge-curve motif. "Not a member? Apply →" footer link.</p>
+        <span class="card-arrow">Open →</span>
+      </div>
+    </a>
+    <a class="card" href="onboarding.html">
+      <div class="card-preview"><div class="pv-art"><span class="pv-num">04</span></div></div>
+      <div class="card-body">
+        <span class="card-tag">04 · /onboarding</span>
+        <h3>Verified Architect wizard</h3>
+        <p>Identity strip pulled from LinkedIn · 3-step rail · Active step card with serif title and prompt. Showing step 2 of 3.</p>
+        <span class="card-arrow">Open →</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- Section: Member -->
+<section class="sec">
+  <div class="sec-head">
+    <h2><em>03</em> &nbsp;Member surfaces</h2>
+    <span class="num">AUTHENTICATED · PRODUCT</span>
+  </div>
+  <p class="sec-sub">Sticky ink topbar with the five tabs. Each surface has its own hero band, bridge-curve divider, then dense content below. Ink card plates float on paper.</p>
+  <div class="grid">
+    <a class="card" href="dashboard.html">
+      <div class="card-preview"><div class="pv-art"><span class="pv-num">05</span></div></div>
+      <div class="card-body">
+        <span class="card-tag">05 · /dashboard</span>
+        <h3>Live Bridge feed</h3>
+        <p>Contest banner up top · Editorial hero · Pillar pills + search · Grid of trade cards with mutual matches surfacing first.</p>
+        <span class="card-arrow">Open →</span>
+      </div>
+    </a>
+    <a class="card" href="bridges.html">
+      <div class="card-preview"><div class="pv-art"><span class="pv-num">06</span></div></div>
+      <div class="card-body">
+        <span class="card-tag">06 · /dashboard/bridges</span>
+        <h3>Bridges inbox</h3>
+        <p>Incoming / Outgoing / Accepted / Archived tabs. Accept-decline-open. Status pills colour-coded.</p>
+        <span class="card-arrow">Open →</span>
+      </div>
+    </a>
+    <a class="card" href="chats.html">
+      <div class="card-preview"><div class="pv-art"><span class="pv-num">07</span></div></div>
+      <div class="card-body">
+        <span class="card-tag">07 · /dashboard/chats</span>
+        <h3>Chats</h3>
+        <p>Two-pane: thread list + active conversation. Active-bridge context strip at the top. Composer at the bottom.</p>
+        <span class="card-arrow">Open →</span>
+      </div>
+    </a>
+    <a class="card" href="me.html">
+      <div class="card-preview"><div class="pv-art"><span class="pv-num">08</span></div></div>
+      <div class="card-body">
+        <span class="card-tag">08 · /dashboard/me</span>
+        <h3>Me — profile &amp; trades</h3>
+        <p>Credit balance hero · Profile preview (what others see) · Trade manager with live indicators &amp; "Add new trade".</p>
+        <span class="card-arrow">Open →</span>
+      </div>
+    </a>
+    <a class="card" href="contest.html">
+      <div class="card-preview pv-contest"></div>
+      <div class="card-body">
+        <span class="card-tag">09 · /dashboard/contest</span>
+        <h3>Founding 50 Race</h3>
+        <p>Your rank &amp; invite link · Live leaderboard with up/down arrows · Prize card · Share buttons · How-it-works strip.</p>
+        <span class="card-arrow">Open →</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- Section: Archive -->
+<section class="sec archive">
+  <div class="sec-head">
+    <h2><em>—</em> &nbsp;Archive</h2>
+    <span class="num">DEPRECATED · REFERENCE</span>
+  </div>
+  <p class="sec-sub">The three early direction variants (A / B / C). C became the applied direction and grew into the screens above. A and B kept for reference.</p>
+  <div class="grid">
+    <a class="card" href="archive/a-editorial.html">
+      <div class="card-preview"><div class="pv-art"><span class="pv-num" style="color:var(--muted);">A</span></div></div>
+      <div class="card-body">
+        <span class="card-tag">A · DEPRECATED</span>
+        <h3>Editorial Gallery</h3>
+        <p>Warm parchment everywhere, gallery-plate cards.</p>
+      </div>
+    </a>
+    <a class="card" href="archive/b-premium-dark.html">
+      <div class="card-preview"><div class="pv-art"><span class="pv-num" style="color:var(--muted);">B</span></div></div>
+      <div class="card-body">
+        <span class="card-tag">B · DEPRECATED</span>
+        <h3>Premium Dark</h3>
+        <p>All-dark surface, glass nav, gold accents.</p>
+      </div>
+    </a>
+    <a class="card" href="archive/c-crafted-bicolor.html">
+      <div class="card-preview"><div class="pv-art"><span class="pv-num" style="color:var(--gold-bright);">C</span></div></div>
+      <div class="card-body">
+        <span class="card-tag">C · APPLIED</span>
+        <h3>Crafted Bicolor (early)</h3>
+        <p>The original single-screen that became the full mockup above.</p>
+      </div>
+    </a>
+  </div>
+</section>
+
+<footer class="foot">
+  <span>Samay Setu · Mockup walkthrough · 2026</span>
+  <em>One hour given, one hour received.</em>
+</footer>
+
+</body>
+</html>

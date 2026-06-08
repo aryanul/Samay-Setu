@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Samay Setu — Bridges</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink:#14120e; --ink-2:#1f1c16; --ink-3:#2a261d;
+    --paper:#f4ecdb; --paper-2:#ebe1cc;
+    --rule-light:#c5b899; --rule-dark:#2e2a20;
+    --text-on-ink:#ebe1cc; --text-on-ink-2:#c9bea2;
+    --muted-on-ink:#8a8068; --muted-on-paper:#6e6552;
+    --gold:#b8924c; --gold-bright:#d6b676;
+    --rose:#c97b5e; --green:#7fa67d;
+    --serif:"Cormorant Garamond",serif;
+    --sans:"DM Sans",system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:var(--sans); background:var(--paper); color:var(--ink); line-height:1.55; min-height:100vh; display:flex; flex-direction:column; }
+  a { color:inherit; text-decoration:none; }
+  button { font-family:inherit; cursor:pointer; }
+
+  /* Software topbar (full nav) */
+  .top-wrap { background:var(--ink); position:sticky; top:0; z-index:10; }
+  .top { max-width:1280px; margin:0 auto; padding:18px 48px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--rule-dark); }
+  .brand { display:flex; align-items:center; gap:12px; color:var(--text-on-ink); }
+  .brand svg { width:32px; height:32px; }
+  .brand .word { font-family:var(--serif); font-size:22px; }
+  .brand .word em { font-style:italic; color:var(--gold-bright); font-weight:500; }
+  .nav { display:flex; align-items:center; gap:4px; }
+  .tab { font-size:13px; font-weight:500; color:var(--muted-on-ink); padding:9px 14px; border-radius:4px; transition:color 160ms ease, background 160ms ease; }
+  .tab:hover { color:var(--text-on-ink); }
+  .tab.active { color:var(--ink); background:var(--gold-bright); }
+  .badge { display:inline-block; min-width:18px; height:18px; padding:0 5px; background:var(--gold); color:var(--ink); border-radius:9px; font-family:var(--mono); font-size:10px; line-height:18px; text-align:center; margin-left:6px; font-weight:600; }
+  .tab.active .badge { background:var(--ink); color:var(--gold-bright); }
+  .me { display:flex; align-items:center; gap:12px; }
+  .pip { width:32px; height:32px; border-radius:4px; background:var(--gold); color:var(--ink); display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-weight:600; font-size:15px; }
+  .out { font-size:12px; color:var(--muted-on-ink); padding:7px 12px; border:1px solid var(--rule-dark); border-radius:4px; background:transparent; transition:border-color 160ms, color 160ms; }
+  .out:hover { border-color:var(--gold-bright); color:var(--text-on-ink); }
+
+  /* Hero band (ink) — smaller than landing's */
+  .hero-wrap { background:var(--ink); color:var(--text-on-ink); position:relative; overflow:hidden; }
+  .hero { max-width:1280px; margin:0 auto; padding:64px 48px 72px; position:relative; z-index:1; }
+  .hero-wrap::before { content:""; position:absolute; right:-100px; top:50%; transform:translateY(-50%); width:500px; height:500px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23b8924c' stroke-width='0.3' stroke-linecap='round'/></svg>"); background-size:contain; opacity:0.2; }
+  .eyebrow { display:inline-flex; align-items:center; gap:10px; font-size:11.5px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-bright); font-weight:600; margin-bottom:24px; }
+  .eyebrow::before { content:""; width:30px; height:1px; background:var(--gold-bright); }
+  .eyebrow .vol { font-family:var(--mono); color:var(--muted-on-ink); letter-spacing:0.04em; font-weight:400; text-transform:none; padding-left:10px; border-left:1px solid var(--rule-dark); margin-left:4px; }
+  h1 { font-family:var(--serif); font-size:clamp(40px,5vw,64px); font-weight:300; line-height:1.04; letter-spacing:-0.025em; color:var(--text-on-ink); max-width:20ch; }
+  h1 em { font-style:italic; color:var(--gold-bright); font-weight:400; }
+  .lede { margin-top:18px; font-family:var(--serif); font-size:19px; color:var(--text-on-ink-2); max-width:56ch; }
+
+  /* Divider */
+  .divider { height:48px; background:linear-gradient(to bottom, var(--ink) 50%, var(--paper) 50%); position:relative; }
+  .divider::after { content:""; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:72px; height:72px; padding:14px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23b8924c' stroke-width='2' stroke-linecap='round'/><circle cx='8' cy='24' r='2.5' fill='%23b8924c'/><circle cx='28' cy='12' r='2.5' fill='%23b8924c'/></svg>"); background-color:var(--paper); background-repeat:no-repeat; background-position:center; background-size:56% auto; border-radius:50%; box-shadow:0 0 0 1px var(--rule-light); }
+
+  /* Tabs (Incoming / Outgoing / Active) */
+  .seg-wrap { max-width:1280px; margin:0 auto; padding:32px 48px 0; }
+  .seg { display:flex; gap:0; border-bottom:1px solid var(--rule-light); }
+  .seg-tab { padding:14px 22px; font-size:13.5px; font-weight:500; color:var(--muted-on-paper); border-bottom:2px solid transparent; margin-bottom:-1px; transition:color 160ms, border-color 160ms; }
+  .seg-tab:hover { color:var(--ink); }
+  .seg-tab.active { color:var(--ink); border-bottom-color:var(--gold); }
+  .seg-tab .ct { font-family:var(--mono); color:var(--muted-on-paper); font-size:11px; margin-left:6px; font-weight:400; }
+  .seg-tab.active .ct { color:var(--gold); }
+
+  /* List */
+  .list-wrap { max-width:1280px; margin:0 auto; padding:24px 48px 96px; display:flex; flex-direction:column; gap:14px; }
+
+  /* Bridge row card (ink plate on paper) */
+  .row {
+    background:var(--ink); color:var(--text-on-ink);
+    border-radius:8px;
+    padding:22px 24px;
+    display:grid; grid-template-columns:auto 1fr auto auto; gap:24px; align-items:center;
+    box-shadow:0 1px 0 0 var(--rule-light), 0 14px 24px -20px rgba(20,18,14,0.25);
+    transition:transform 220ms ease, box-shadow 220ms ease;
+    position:relative; overflow:hidden;
+  }
+  .row:hover { transform:translateY(-2px); box-shadow:0 1px 0 0 var(--gold), 0 18px 28px -20px rgba(20,18,14,0.35); }
+  .row::before { content:""; position:absolute; top:-10px; right:-10px; width:50px; height:50px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23b8924c' stroke-width='0.5' stroke-linecap='round'/></svg>"); background-size:contain; opacity:0.3; pointer-events:none; }
+
+  .av { width:48px; height:48px; border-radius:4px; background:var(--ink-3); border:1px solid var(--rule-dark); display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-size:20px; font-weight:500; color:var(--gold-bright); flex-shrink:0; }
+
+  .who-line { display:flex; align-items:baseline; gap:10px; margin-bottom:4px; }
+  .nm { font-family:var(--serif); font-size:20px; font-weight:500; line-height:1.1; letter-spacing:-0.01em; }
+  .pillar-tag { font-size:10px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold-bright); font-weight:600; padding:3px 7px; border:1px solid var(--rule-dark); border-radius:3px; }
+  .ti { font-size:12.5px; color:var(--muted-on-ink); }
+  .swap { margin-top:8px; font-family:var(--serif); font-size:16px; color:var(--text-on-ink); line-height:1.4; }
+  .swap .key { font-family:var(--mono); font-size:10px; letter-spacing:0; text-transform:uppercase; color:var(--muted-on-ink); margin-right:6px; }
+  .swap .gives .key { color:var(--gold-bright); }
+  .swap > div { padding:2px 0; }
+
+  .status { display:flex; flex-direction:column; align-items:flex-end; gap:6px; min-width:110px; }
+  .pill { font-size:10.5px; padding:4px 10px; border-radius:999px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; }
+  .pill.pending { background:rgba(184,146,76,0.18); color:var(--gold-bright); }
+  .pill.accepted { background:rgba(127,166,125,0.18); color:var(--green); }
+  .pill.declined { background:rgba(201,123,94,0.18); color:var(--rose); }
+  .since { font-size:11.5px; color:var(--muted-on-ink); font-family:var(--mono); }
+
+  .actions { display:flex; gap:8px; align-items:center; }
+  .btn { font:inherit; font-size:13px; font-weight:600; padding:9px 14px; border-radius:4px; border:none; transition:background 160ms, color 160ms; letter-spacing:0.02em; }
+  .btn-accept { background:var(--gold-bright); color:var(--ink); }
+  .btn-accept:hover { background:var(--gold); }
+  .btn-decline { background:transparent; color:var(--muted-on-ink); border:1px solid var(--rule-dark); }
+  .btn-decline:hover { color:var(--rose); border-color:var(--rose); }
+  .btn-open { background:var(--ink-2); color:var(--text-on-ink); border:1px solid var(--rule-dark); display:inline-flex; align-items:center; gap:6px; }
+  .btn-open:hover { background:var(--gold-bright); color:var(--ink); border-color:var(--gold-bright); }
+  .btn-open svg { width:14px; height:14px; }
+
+  /* Footer */
+  .footer-wrap { background:var(--ink); border-top:1px solid var(--rule-dark); margin-top:auto; }
+  .footer { max-width:1280px; margin:0 auto; padding:24px 48px; display:flex; justify-content:space-between; font-size:12.5px; color:var(--muted-on-ink); }
+  .footer em { font-family:var(--serif); font-style:italic; color:var(--gold-bright); font-size:14px; }
+
+  @media (max-width:980px) {
+    .top, .hero, .seg-wrap, .list-wrap, .footer { padding-left:22px; padding-right:22px; }
+    .nav { display:none; }
+    .row { grid-template-columns:auto 1fr; gap:18px; }
+    .status, .actions { grid-column:1 / -1; flex-direction:row; justify-content:space-between; align-items:center; min-width:0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-wrap">
+  <header class="top">
+    <a class="brand" href="landing.html">
+      <svg viewBox="0 0 36 36" fill="none">
+        <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#d6b676" stroke-width="2" stroke-linecap="round" />
+        <circle cx="8" cy="24" r="2.5" fill="#d6b676" />
+        <circle cx="28" cy="12" r="2.5" fill="#ebe1cc" />
+      </svg>
+      <span class="word">samay <em>setu</em></span>
+    </a>
+    <nav class="nav">
+      <a class="tab" href="dashboard.html">Live Bridge</a>
+      <a class="tab active" href="bridges.html">Bridges <span class="badge">2</span></a>
+      <a class="tab" href="chats.html">Chats</a>
+      <a class="tab" href="me.html">Me</a>
+      <a class="tab" href="contest.html" style="color:var(--gold-bright);display:inline-flex;align-items:center;gap:6px;">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--gold-bright);display:inline-block;"></span>
+        Founding Race
+      </a>
+    </nav>
+    <div class="me">
+      <div class="pip">A</div>
+      <button class="out">Sign out</button>
+    </div>
+  </header>
+</div>
+
+<section class="hero-wrap">
+  <div class="hero">
+    <p class="eyebrow">Your bridges <span class="vol">Inbox · 047</span></p>
+    <h1>Five conversations,<br /><em>one decision each.</em></h1>
+    <p class="lede">A bridge is a one-tap "yes, let's do this swap." Accept to open the chat. Decline cleanly — no hard feelings, no notification beyond a quiet line in their inbox.</p>
+  </div>
+</section>
+
+<div class="divider" aria-hidden="true"></div>
+
+<div class="seg-wrap">
+  <div class="seg">
+    <a class="seg-tab active" href="#">Incoming <span class="ct">2</span></a>
+    <a class="seg-tab" href="#">Outgoing <span class="ct">1</span></a>
+    <a class="seg-tab" href="#">Accepted <span class="ct">2</span></a>
+    <a class="seg-tab" href="#">Archived <span class="ct">8</span></a>
+  </div>
+</div>
+
+<div class="list-wrap">
+
+  <!-- Incoming · pending · needs decision -->
+  <article class="row">
+    <div class="av">P</div>
+    <div>
+      <div class="who-line">
+        <span class="nm">Dr. Priya Mukherjee</span>
+        <span class="pillar-tag">Care</span>
+      </div>
+      <div class="ti">Retired physician · Shyambazar · 1 hr</div>
+      <div class="swap">
+        <div class="gives"><span class="key">She gives</span> Eldercare check-ins, in-home BP & medication review</div>
+        <div><span class="key">She seeks</span> Cooked vegetarian tiffin, three meals a week</div>
+      </div>
+    </div>
+    <div class="status">
+      <span class="pill pending">Awaiting you</span>
+      <span class="since">2 hrs ago</span>
+    </div>
+    <div class="actions">
+      <button class="btn btn-decline">Decline</button>
+      <button class="btn btn-accept">Accept bridge</button>
+    </div>
+  </article>
+
+  <article class="row">
+    <div class="av">R</div>
+    <div>
+      <div class="who-line">
+        <span class="nm">Rohit Banerjee</span>
+        <span class="pillar-tag">Knowledge</span>
+      </div>
+      <div class="ti">Independent plumber · Manicktala · 1 hr</div>
+      <div class="swap">
+        <div class="gives"><span class="key">He gives</span> Basic plumbing & electrical fixes</div>
+        <div><span class="key">He seeks</span> Math tutoring for his daughter, Class 9</div>
+      </div>
+    </div>
+    <div class="status">
+      <span class="pill pending">Awaiting you</span>
+      <span class="since">Yesterday</span>
+    </div>
+    <div class="actions">
+      <button class="btn btn-decline">Decline</button>
+      <button class="btn btn-accept">Accept bridge</button>
+    </div>
+  </article>
+
+  <!-- Accepted · chat open -->
+  <article class="row">
+    <div class="av">L</div>
+    <div>
+      <div class="who-line">
+        <span class="nm">Lakshmi Sharma</span>
+        <span class="pillar-tag">Skill</span>
+      </div>
+      <div class="ti">Master tailor · Hatibagan · 2 hrs</div>
+      <div class="swap">
+        <div class="gives"><span class="key">She gives</span> Tailoring & alterations</div>
+        <div><span class="key">She seeks</span> English-to-Bangla translation</div>
+      </div>
+    </div>
+    <div class="status">
+      <span class="pill accepted">Accepted</span>
+      <span class="since">3 days ago</span>
+    </div>
+    <div class="actions">
+      <button class="btn btn-open">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Open chat
+      </button>
+    </div>
+  </article>
+
+  <article class="row">
+    <div class="av">A</div>
+    <div>
+      <div class="who-line">
+        <span class="nm">Arjun Das</span>
+        <span class="pillar-tag">Craft</span>
+      </div>
+      <div class="ti">Frontend developer · Kankurgachi · 1 hr</div>
+      <div class="swap">
+        <div class="gives"><span class="key">He gives</span> Small website fixes & debugging</div>
+        <div><span class="key">He seeks</span> Driving lessons, manual transmission</div>
+      </div>
+    </div>
+    <div class="status">
+      <span class="pill accepted">Accepted</span>
+      <span class="since">Last week</span>
+    </div>
+    <div class="actions">
+      <button class="btn btn-open">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Open chat
+      </button>
+    </div>
+  </article>
+
+</div>
+
+<div class="footer-wrap">
+  <footer class="footer">
+    <span>Samay Setu · North Kolkata · 2026</span>
+    <em>One hour given, one hour received.</em>
+  </footer>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Samay Setu — The Founding 50 Race</title>
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink:#14120e; --ink-2:#1f1c16; --ink-3:#2a261d;
+    --paper:#f4ecdb; --paper-2:#ebe1cc;
+    --rule-light:#c5b899; --rule-dark:#2e2a20;
+    --text-on-ink:#ebe1cc; --text-on-ink-2:#c9bea2;
+    --muted-on-ink:#8a8068; --muted-on-paper:#6e6552;
+    --gold:#b8924c; --gold-bright:#d6b676; --gold-glow:rgba(214,182,118,0.18);
+    --rose:#c97b5e; --green:#7fa67d;
+    --serif:"Cormorant Garamond",serif;
+    --sans:"DM Sans",system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:var(--sans); background:var(--paper); color:var(--ink); line-height:1.55; min-height:100vh; display:flex; flex-direction:column; -webkit-font-smoothing:antialiased; }
+  a { color:inherit; text-decoration:none; }
+  button { font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; }
+
+  /* ───── Topbar ───── */
+  .top-wrap { background:var(--ink); position:sticky; top:0; z-index:10; }
+  .top { max-width:1280px; margin:0 auto; padding:18px 48px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--rule-dark); }
+  .brand { display:flex; align-items:center; gap:12px; color:var(--text-on-ink); }
+  .brand svg { width:32px; height:32px; }
+  .brand .word { font-family:var(--serif); font-size:22px; }
+  .brand .word em { font-style:italic; color:var(--gold-bright); font-weight:500; }
+  .nav { display:flex; align-items:center; gap:4px; }
+  .tab { font-size:13px; font-weight:500; color:var(--muted-on-ink); padding:9px 14px; border-radius:4px; transition:color 160ms, background 160ms; display:inline-flex; align-items:center; gap:6px; }
+  .tab:hover { color:var(--text-on-ink); }
+  .tab.active { color:var(--ink); background:var(--gold-bright); }
+  .tab.live { color:var(--gold-bright); }
+  .tab.live::before { content:""; width:6px; height:6px; border-radius:50%; background:var(--gold-bright); box-shadow:0 0 0 0 rgba(214,182,118,0.6); animation:pulse 1.6s ease-out infinite; }
+  @keyframes pulse { 0% { box-shadow:0 0 0 0 rgba(214,182,118,0.7); } 70% { box-shadow:0 0 0 10px rgba(214,182,118,0); } 100% { box-shadow:0 0 0 0 rgba(214,182,118,0); } }
+  .badge { display:inline-block; min-width:18px; height:18px; padding:0 5px; background:var(--gold); color:var(--ink); border-radius:9px; font-family:var(--mono); font-size:10px; line-height:18px; text-align:center; margin-left:6px; font-weight:600; }
+  .me-top { display:flex; align-items:center; gap:12px; }
+  .pip { width:32px; height:32px; border-radius:4px; background:var(--gold); color:var(--ink); display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-weight:600; font-size:15px; overflow:hidden; }
+  .pip img { width:100%; height:100%; object-fit:cover; }
+  .out { font-size:12px; color:var(--muted-on-ink); padding:7px 12px; border:1px solid var(--rule-dark); border-radius:4px; transition:border-color 160ms, color 160ms; }
+  .out:hover { border-color:var(--gold-bright); color:var(--text-on-ink); }
+
+  /* ───── Hero (ink, cinematic) ───── */
+  .hero-wrap { background:var(--ink); color:var(--text-on-ink); position:relative; overflow:hidden; }
+  .hero { max-width:1280px; margin:0 auto; padding:80px 48px 90px; position:relative; z-index:1; display:grid; grid-template-columns:1.4fr 1fr; gap:60px; align-items:center; }
+  .hero-wrap::before { content:""; position:absolute; right:-180px; top:50%; transform:translateY(-50%); width:800px; height:800px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23d6b676' stroke-width='0.25' stroke-linecap='round'/></svg>"); background-size:contain; background-repeat:no-repeat; opacity:0.22; }
+  .hero-wrap::after { content:""; position:absolute; left:-100px; bottom:-150px; width:600px; height:600px; background:radial-gradient(circle, rgba(214,182,118,0.08) 0%, transparent 60%); }
+  .eyebrow { display:inline-flex; align-items:center; gap:10px; font-size:11.5px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-bright); font-weight:600; margin-bottom:28px; }
+  .eyebrow::before { content:""; width:30px; height:1px; background:var(--gold-bright); }
+  .eyebrow .timer { font-family:var(--mono); color:var(--text-on-ink); letter-spacing:0.04em; font-weight:500; text-transform:none; padding-left:10px; border-left:1px solid var(--rule-dark); margin-left:4px; }
+  .eyebrow .timer strong { color:var(--gold-bright); }
+  h1 { font-family:var(--serif); font-size:clamp(48px,6.5vw,84px); font-weight:300; line-height:0.98; letter-spacing:-0.03em; color:var(--text-on-ink); }
+  h1 em { font-style:italic; color:var(--gold-bright); font-weight:400; display:block; }
+  .lede { margin-top:28px; font-family:var(--serif); font-size:21px; color:var(--text-on-ink-2); max-width:50ch; line-height:1.5; }
+  .lede strong { color:var(--gold-bright); font-weight:500; font-style:italic; }
+
+  /* Prize preview emblem */
+  .prize-emblem { display:flex; align-items:center; justify-content:center; position:relative; }
+  .prize-card { width:100%; max-width:380px; background:linear-gradient(160deg, var(--ink-3) 0%, var(--ink-2) 100%); border:1px solid var(--rule-dark); border-radius:14px; padding:32px; position:relative; overflow:hidden; box-shadow:0 32px 64px -32px rgba(0,0,0,0.4); }
+  .prize-card::before { content:""; position:absolute; inset:-1px; border-radius:14px; padding:1px; background:linear-gradient(135deg, var(--gold-bright) 0%, transparent 40%, transparent 60%, var(--gold) 100%); -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none; }
+  .prize-trophy { font-size:48px; line-height:1; margin-bottom:16px; }
+  .prize-title { font-family:var(--serif); font-size:28px; font-weight:500; color:var(--gold-bright); line-height:1.1; letter-spacing:-0.01em; margin-bottom:8px; }
+  .prize-sub { font-size:13.5px; color:var(--text-on-ink-2); margin-bottom:20px; }
+  .prize-list { list-style:none; }
+  .prize-list li { display:flex; align-items:flex-start; gap:10px; padding:9px 0; font-size:13px; color:var(--text-on-ink); border-top:1px solid var(--rule-dark); }
+  .prize-list li:first-child { border-top:none; }
+  .prize-list li::before { content:"✦"; color:var(--gold-bright); font-size:10px; margin-top:4px; flex-shrink:0; }
+  .prize-list li strong { color:var(--gold-bright); font-weight:600; }
+
+  /* ───── Divider ───── */
+  .divider { height:48px; background:linear-gradient(to bottom, var(--ink) 50%, var(--paper) 50%); position:relative; }
+  .divider::after { content:""; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:72px; height:72px; padding:14px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23b8924c' stroke-width='2' stroke-linecap='round'/><circle cx='8' cy='24' r='2.5' fill='%23b8924c'/><circle cx='28' cy='12' r='2.5' fill='%23b8924c'/></svg>"); background-color:var(--paper); background-repeat:no-repeat; background-position:center; background-size:56% auto; border-radius:50%; box-shadow:0 0 0 1px var(--rule-light); }
+
+  /* ───── Body ───── */
+  .body-wrap { max-width:1280px; margin:0 auto; padding:32px 48px 64px; display:grid; grid-template-columns:1fr 1.4fr; gap:24px; align-items:start; }
+
+  /* Your stats card (ink plate) */
+  .stats-card { background:var(--ink); color:var(--text-on-ink); border-radius:12px; padding:28px; position:relative; overflow:hidden; box-shadow:0 1px 0 0 var(--rule-light), 0 18px 36px -24px rgba(20,18,14,0.3); position:sticky; top:96px; }
+  .stats-card::before { content:""; position:absolute; top:-10px; right:-10px; width:80px; height:80px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23d6b676' stroke-width='0.4' stroke-linecap='round'/></svg>"); background-size:contain; opacity:0.32; }
+  .stats-label { font-size:10.5px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-bright); font-weight:600; margin-bottom:24px; position:relative; z-index:1; }
+  .stats-label::before { content:"◆ "; color:var(--gold); }
+  .stats-rank { font-family:var(--serif); font-size:96px; font-weight:300; color:var(--gold-bright); line-height:0.85; letter-spacing:-0.03em; position:relative; z-index:1; }
+  .stats-rank-prefix { font-family:var(--sans); font-size:24px; vertical-align:46px; color:var(--text-on-ink-2); margin-right:4px; font-weight:300; }
+  .stats-rank-sub { font-size:13px; color:var(--text-on-ink-2); margin-top:8px; position:relative; z-index:1; }
+  .stats-divider { border-top:1px solid var(--rule-dark); margin:24px 0; position:relative; z-index:1; }
+
+  .stat-row { display:flex; justify-content:space-between; align-items:baseline; padding:8px 0; position:relative; z-index:1; }
+  .stat-row .k { font-size:12.5px; color:var(--text-on-ink-2); }
+  .stat-row .v { font-family:var(--mono); font-size:18px; color:var(--gold-bright); font-weight:500; }
+
+  /* Invite link block */
+  .invite { background:var(--ink-2); border:1px solid var(--rule-dark); border-radius:8px; padding:14px 14px 14px 16px; display:flex; align-items:center; gap:10px; margin-top:18px; position:relative; z-index:1; }
+  .invite-url { flex:1; font-family:var(--mono); font-size:13px; color:var(--gold-bright); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .invite-copy { font-size:12px; font-weight:600; padding:8px 12px; background:var(--gold-bright); color:var(--ink); border-radius:4px; transition:background 160ms; flex-shrink:0; }
+  .invite-copy:hover { background:var(--gold); }
+  .invite-copy svg { width:12px; height:12px; vertical-align:-1px; margin-right:4px; }
+  .invite-hint { font-size:11.5px; color:var(--muted-on-ink); margin-top:8px; line-height:1.4; position:relative; z-index:1; }
+
+  /* Share buttons */
+  .shares { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:18px; position:relative; z-index:1; }
+  .share { padding:10px; background:var(--ink-2); border:1px solid var(--rule-dark); border-radius:6px; font-size:12px; color:var(--text-on-ink-2); display:flex; align-items:center; justify-content:center; gap:6px; transition:all 160ms; }
+  .share:hover { border-color:var(--gold-bright); color:var(--gold-bright); }
+  .share svg { width:14px; height:14px; }
+
+  /* ───── Leaderboard ───── */
+  .lb-wrap { background:transparent; }
+  .lb-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:14px; padding:0 4px; }
+  .lb-head h2 { font-family:var(--serif); font-size:34px; font-weight:500; letter-spacing:-0.02em; line-height:1.1; color:var(--ink); }
+  .lb-head h2 em { font-style:italic; color:var(--gold); }
+  .lb-head .live-pill { display:inline-flex; align-items:center; gap:6px; font-family:var(--mono); font-size:11px; color:var(--green); font-weight:500; }
+  .lb-head .live-pill::before { content:""; width:7px; height:7px; border-radius:50%; background:var(--green); animation:pulse-g 1.6s ease-out infinite; }
+  @keyframes pulse-g { 0% { box-shadow:0 0 0 0 rgba(127,166,125,0.5); } 70% { box-shadow:0 0 0 8px rgba(127,166,125,0); } 100% { box-shadow:0 0 0 0 rgba(127,166,125,0); } }
+
+  .lb-list { display:flex; flex-direction:column; gap:8px; }
+  .lb-row {
+    background:var(--ink); color:var(--text-on-ink); border-radius:8px;
+    padding:18px 22px;
+    display:grid; grid-template-columns:48px auto 1fr auto auto; gap:18px; align-items:center;
+    box-shadow:0 1px 0 0 var(--rule-light), 0 12px 18px -16px rgba(20,18,14,0.22);
+    position:relative; overflow:hidden;
+    transition:transform 220ms, box-shadow 220ms;
+  }
+  .lb-row:hover { transform:translateY(-2px); box-shadow:0 1px 0 0 var(--gold), 0 16px 24px -16px rgba(20,18,14,0.3); }
+  .lb-row::before { content:""; position:absolute; top:-8px; right:-8px; width:42px; height:42px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23b8924c' stroke-width='0.5' stroke-linecap='round'/></svg>"); background-size:contain; opacity:0.28; pointer-events:none; }
+
+  .lb-rank { font-family:var(--serif); font-size:36px; font-weight:300; color:var(--muted-on-ink); line-height:1; text-align:center; letter-spacing:-0.02em; }
+  .lb-row.top1 .lb-rank, .lb-row.top2 .lb-rank, .lb-row.top3 .lb-rank { color:var(--gold-bright); }
+
+  .lb-av { width:48px; height:48px; border-radius:4px; background:var(--ink-3); border:1px solid var(--rule-dark); overflow:hidden; }
+  .lb-av img { width:100%; height:100%; object-fit:cover; }
+
+  .lb-body .nm { font-family:var(--serif); font-size:20px; font-weight:500; line-height:1.1; letter-spacing:-0.01em; color:var(--text-on-ink); }
+  .lb-body .ti { font-size:12.5px; color:var(--muted-on-ink); margin-top:3px; }
+
+  .lb-trend { font-size:11.5px; color:var(--green); font-family:var(--mono); font-weight:500; display:flex; align-items:center; gap:4px; }
+  .lb-trend.down { color:var(--rose); }
+  .lb-trend.flat { color:var(--muted-on-ink); }
+  .lb-trend svg { width:12px; height:12px; }
+
+  .lb-refs { text-align:right; }
+  .lb-refs .n { font-family:var(--mono); font-size:22px; color:var(--gold-bright); font-weight:500; line-height:1; }
+  .lb-refs .d { font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted-on-ink); margin-top:4px; font-weight:600; }
+
+  /* You row variant */
+  .lb-row.you { border:1px solid var(--gold); background:linear-gradient(180deg, rgba(214,182,118,0.06) 0%, var(--ink) 60%); }
+  .lb-row.you::after { content:"YOU"; position:absolute; top:14px; right:18px; padding:3px 8px; background:var(--gold-bright); color:var(--ink); border-radius:4px; font-size:9.5px; letter-spacing:0.18em; font-weight:700; }
+  .lb-row.you::before { display:none; }
+
+  /* divider in list */
+  .lb-divider { padding:12px 4px; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted-on-paper); font-family:var(--mono); font-weight:500; display:flex; align-items:center; gap:14px; }
+  .lb-divider::before, .lb-divider::after { content:""; flex:1; height:1px; background:var(--rule-light); }
+
+  /* ───── How it works (small, below leaderboard) ───── */
+  .how {
+    margin-top:48px;
+    padding:36px 32px;
+    background:var(--paper-2);
+    border:1px solid var(--rule-light);
+    border-radius:10px;
+  }
+  .how h3 { font-family:var(--serif); font-size:26px; font-weight:500; letter-spacing:-0.015em; margin-bottom:8px; }
+  .how h3 em { font-style:italic; color:var(--gold); }
+  .how-sub { font-size:13.5px; color:var(--muted-on-paper); margin-bottom:24px; }
+  .how-steps { display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
+  .how-step { padding:18px 0; border-top:1px solid var(--rule-light); }
+  .how-step .n { font-family:var(--mono); font-size:11px; color:var(--gold); font-weight:600; letter-spacing:0.06em; margin-bottom:8px; }
+  .how-step .h { font-family:var(--serif); font-size:18px; font-weight:500; color:var(--ink); margin-bottom:6px; line-height:1.2; }
+  .how-step .b { font-size:13px; color:var(--ink-2); line-height:1.5; }
+
+  /* ───── Footer ───── */
+  .footer-wrap { background:var(--ink); border-top:1px solid var(--rule-dark); margin-top:auto; }
+  .footer { max-width:1280px; margin:0 auto; padding:24px 48px; display:flex; justify-content:space-between; font-size:12.5px; color:var(--muted-on-ink); }
+  .footer em { font-family:var(--serif); font-style:italic; color:var(--gold-bright); font-size:14px; }
+
+  /* Responsive */
+  @media (max-width:980px) {
+    .top, .hero, .body-wrap, .footer { padding-left:22px; padding-right:22px; }
+    .nav { display:none; }
+    .hero { grid-template-columns:1fr; gap:40px; padding-top:56px; padding-bottom:64px; }
+    .body-wrap { grid-template-columns:1fr; }
+    .stats-card { position:static; }
+    .how-steps { grid-template-columns:1fr; gap:0; }
+    .lb-row { grid-template-columns:32px 40px 1fr auto; gap:14px; }
+    .lb-trend { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-wrap">
+  <header class="top">
+    <a class="brand" href="landing.html">
+      <svg viewBox="0 0 36 36" fill="none">
+        <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#d6b676" stroke-width="2" stroke-linecap="round" />
+        <circle cx="8" cy="24" r="2.5" fill="#d6b676" />
+        <circle cx="28" cy="12" r="2.5" fill="#ebe1cc" />
+      </svg>
+      <span class="word">samay <em>setu</em></span>
+    </a>
+    <nav class="nav">
+      <a class="tab" href="dashboard.html">Live Bridge</a>
+      <a class="tab" href="bridges.html">Bridges <span class="badge">2</span></a>
+      <a class="tab" href="chats.html">Chats</a>
+      <a class="tab" href="me.html">Me</a>
+      <a class="tab active live" href="contest.html">Founding Race</a>
+    </nav>
+    <div class="me-top">
+      <div class="pip"><img src="https://i.pravatar.cc/64?img=47" alt="" /></div>
+      <button class="out">Sign out</button>
+    </div>
+  </header>
+</div>
+
+<section class="hero-wrap">
+  <div class="hero">
+    <div>
+      <p class="eyebrow">The Founding 50 Race <span class="timer">Closes in <strong>3d 14h 22m</strong></span></p>
+      <h1>
+        The Wisdom<br />
+        Unlock.<br />
+        <em>Five seats. One week.</em>
+      </h1>
+      <p class="lede">
+        Five <strong>Lifetime VIP Passes</strong> to the Samay Setu Elite Hub. Awarded to the five practitioners whose unique invite links bring in the most verified registrations by Friday midnight. No money, just network power.
+      </p>
+    </div>
+    <div class="prize-emblem">
+      <div class="prize-card">
+        <div class="prize-trophy">🏆</div>
+        <div class="prize-title">The Lifetime VIP Pass</div>
+        <div class="prize-sub">Awarded to the top 5 by Friday 23:59 IST</div>
+        <ul class="prize-list">
+          <li>Permanent <strong>"Legendary Architect"</strong> badge on your dashboard</li>
+          <li><strong>6 months</strong> matching priority — first pick on every new high-value trade</li>
+          <li>Quarterly 1:1 with the founder &amp; top-tier VC introductions</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" aria-hidden="true"></div>
+
+<div class="body-wrap">
+
+  <!-- Left: your stats -->
+  <aside class="stats-card">
+    <div class="stats-label">Your standing</div>
+    <div class="stats-rank">
+      <span class="stats-rank-prefix">#</span>14
+    </div>
+    <div class="stats-rank-sub">out of 47 practitioners racing</div>
+
+    <div class="stats-divider"></div>
+
+    <div class="stat-row">
+      <span class="k">Verified referrals</span>
+      <span class="v">08</span>
+    </div>
+    <div class="stat-row">
+      <span class="k">Pending verification</span>
+      <span class="v">03</span>
+    </div>
+    <div class="stat-row">
+      <span class="k">Refs to break top 5</span>
+      <span class="v">+19</span>
+    </div>
+
+    <div class="invite">
+      <span class="invite-url">samaysetu.net/ref/saurav</span>
+      <button class="invite-copy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy
+      </button>
+    </div>
+    <p class="invite-hint">Every verified architect who joins through this link counts toward your rank.</p>
+
+    <div class="shares">
+      <button class="share">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1 1 12.324 0 6.162 6.162 0 0 1-12.324 0zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm4.965-10.405a1.44 1.44 0 1 1 2.881.001 1.44 1.44 0 0 1-2.881-.001z"/></svg>
+        Instagram Story
+      </button>
+      <button class="share">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"/></svg>
+        Share on LinkedIn
+      </button>
+    </div>
+  </aside>
+
+  <!-- Right: live leaderboard -->
+  <section class="lb-wrap">
+    <div class="lb-head">
+      <h2>The <em>live leaderboard</em></h2>
+      <span class="live-pill">LIVE · UPDATES EVERY 60s</span>
+    </div>
+
+    <div class="lb-list">
+
+      <!-- 1 -->
+      <article class="lb-row top1">
+        <div class="lb-rank">01</div>
+        <div class="lb-av"><img src="https://i.pravatar.cc/96?img=33" alt="" /></div>
+        <div class="lb-body">
+          <div class="nm">Anup Majumdar</div>
+          <div class="ti">Tech Lead · Salt Lake</div>
+        </div>
+        <div class="lb-trend">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+          +6 today
+        </div>
+        <div class="lb-refs">
+          <div class="n">42</div>
+          <div class="d">verified</div>
+        </div>
+      </article>
+
+      <!-- 2 -->
+      <article class="lb-row top2">
+        <div class="lb-rank">02</div>
+        <div class="lb-av"><img src="https://i.pravatar.cc/96?img=44" alt="" /></div>
+        <div class="lb-body">
+          <div class="nm">Riddhi Bose</div>
+          <div class="ti">Finance Advisor · Park Street</div>
+        </div>
+        <div class="lb-trend">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+          +4 today
+        </div>
+        <div class="lb-refs">
+          <div class="n">38</div>
+          <div class="d">verified</div>
+        </div>
+      </article>
+
+      <!-- 3 -->
+      <article class="lb-row top3">
+        <div class="lb-rank">03</div>
+        <div class="lb-av"><img src="https://i.pravatar.cc/96?img=45" alt="" /></div>
+        <div class="lb-body">
+          <div class="nm">Rumi Sengupta</div>
+          <div class="ti">HR Director · Ballygunge</div>
+        </div>
+        <div class="lb-trend down">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          –2 today
+        </div>
+        <div class="lb-refs">
+          <div class="n">31</div>
+          <div class="d">verified</div>
+        </div>
+      </article>
+
+      <!-- 4 -->
+      <article class="lb-row">
+        <div class="lb-rank">04</div>
+        <div class="lb-av"><img src="https://i.pravatar.cc/96?img=12" alt="" /></div>
+        <div class="lb-body">
+          <div class="nm">Tarun Bhattacharya</div>
+          <div class="ti">Architect (literal) · Hatibagan</div>
+        </div>
+        <div class="lb-trend">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+          +3 today
+        </div>
+        <div class="lb-refs">
+          <div class="n">29</div>
+          <div class="d">verified</div>
+        </div>
+      </article>
+
+      <!-- 5 -->
+      <article class="lb-row">
+        <div class="lb-rank">05</div>
+        <div class="lb-av"><img src="https://i.pravatar.cc/96?img=20" alt="" /></div>
+        <div class="lb-body">
+          <div class="nm">Meera Chakraborty</div>
+          <div class="ti">Clinical psychologist · Lake Town</div>
+        </div>
+        <div class="lb-trend flat">— today</div>
+        <div class="lb-refs">
+          <div class="n">27</div>
+          <div class="d">verified</div>
+        </div>
+      </article>
+
+      <div class="lb-divider"><span>The cut-line for VIP pass</span></div>
+
+      <!-- 6 -->
+      <article class="lb-row">
+        <div class="lb-rank">06</div>
+        <div class="lb-av"><img src="https://i.pravatar.cc/96?img=15" alt="" /></div>
+        <div class="lb-body">
+          <div class="nm">Kabir Sen</div>
+          <div class="ti">Strength &amp; conditioning · Sealdah</div>
+        </div>
+        <div class="lb-trend">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+          +2 today
+        </div>
+        <div class="lb-refs">
+          <div class="n">24</div>
+          <div class="d">verified</div>
+        </div>
+      </article>
+
+      <!-- 7-13 omitted divider -->
+      <div class="lb-divider"><span>positions 07 – 13</span></div>
+
+      <!-- You -->
+      <article class="lb-row you">
+        <div class="lb-rank">14</div>
+        <div class="lb-av"><img src="https://i.pravatar.cc/96?img=47" alt="" /></div>
+        <div class="lb-body">
+          <div class="nm">Saurav Roy (you)</div>
+          <div class="ti">Tax consultant · Bagbazar</div>
+        </div>
+        <div class="lb-trend">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+          +1 today
+        </div>
+        <div class="lb-refs">
+          <div class="n">08</div>
+          <div class="d">verified</div>
+        </div>
+      </article>
+
+      <!-- 15 -->
+      <article class="lb-row">
+        <div class="lb-rank">15</div>
+        <div class="lb-av"><img src="https://i.pravatar.cc/96?img=11" alt="" /></div>
+        <div class="lb-body">
+          <div class="nm">Ishita Ghosh</div>
+          <div class="ti">UX researcher · Behala</div>
+        </div>
+        <div class="lb-trend">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 15-6-6-6 6"/></svg>
+          +3 today
+        </div>
+        <div class="lb-refs">
+          <div class="n">07</div>
+          <div class="d">verified</div>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- How it works -->
+    <section class="how">
+      <h3>How the race <em>actually works</em></h3>
+      <p class="how-sub">Three steps. No likes, no follow-for-follow nonsense. We only count verified, onboarded architects.</p>
+      <div class="how-steps">
+        <div class="how-step">
+          <div class="n">01</div>
+          <div class="h">Share your unique link</div>
+          <div class="b">Post the "Open Bridge" template to your Instagram Story or LinkedIn feed with your ref link.</div>
+        </div>
+        <div class="how-step">
+          <div class="n">02</div>
+          <div class="h">They join with LinkedIn</div>
+          <div class="b">When someone uses your link and completes Verified Architect onboarding, the referral counts.</div>
+        </div>
+        <div class="how-step">
+          <div class="n">03</div>
+          <div class="h">Top 5 win on Friday</div>
+          <div class="b">Race closes Friday 23:59 IST. The top five receive the VIP pass &amp; Legendary Architect badge instantly.</div>
+        </div>
+      </div>
+    </section>
+
+  </section>
+
+</div>
+
+<div class="footer-wrap">
+  <footer class="footer">
+    <span>Samay Setu · North Kolkata · 2026</span>
+    <em>One hour given, one hour received.</em>
+  </footer>
+</div>
+
+</body>
+</html>

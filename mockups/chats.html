@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Samay Setu — Chats</title>
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink:#14120e; --ink-2:#1f1c16; --ink-3:#2a261d;
+    --paper:#f4ecdb; --paper-2:#ebe1cc;
+    --rule-light:#c5b899; --rule-dark:#2e2a20;
+    --text-on-ink:#ebe1cc; --text-on-ink-2:#c9bea2;
+    --muted-on-ink:#8a8068; --muted-on-paper:#6e6552;
+    --gold:#b8924c; --gold-bright:#d6b676;
+    --green:#7fa67d;
+    --serif:"Cormorant Garamond",serif;
+    --sans:"DM Sans",system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:var(--sans); background:var(--paper); color:var(--ink); line-height:1.55; min-height:100vh; display:flex; flex-direction:column; -webkit-font-smoothing:antialiased; }
+  a { color:inherit; text-decoration:none; }
+  button { font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; }
+
+  /* Topbar */
+  .top-wrap { background:var(--ink); position:sticky; top:0; z-index:10; }
+  .top { max-width:1280px; margin:0 auto; padding:18px 48px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--rule-dark); }
+  .brand { display:flex; align-items:center; gap:12px; color:var(--text-on-ink); }
+  .brand svg { width:32px; height:32px; }
+  .brand .word { font-family:var(--serif); font-size:22px; }
+  .brand .word em { font-style:italic; color:var(--gold-bright); font-weight:500; }
+  .nav { display:flex; align-items:center; gap:4px; }
+  .tab { font-size:13px; font-weight:500; color:var(--muted-on-ink); padding:9px 14px; border-radius:4px; transition:color 160ms, background 160ms; display:inline-flex; align-items:center; gap:6px; }
+  .tab:hover { color:var(--text-on-ink); }
+  .tab.active { color:var(--ink); background:var(--gold-bright); }
+  .badge { display:inline-block; min-width:18px; height:18px; padding:0 5px; background:var(--gold); color:var(--ink); border-radius:9px; font-family:var(--mono); font-size:10px; line-height:18px; text-align:center; margin-left:6px; font-weight:600; }
+  .me-top { display:flex; align-items:center; gap:12px; }
+  .pip { width:32px; height:32px; border-radius:4px; overflow:hidden; }
+  .pip img { width:100%; height:100%; object-fit:cover; }
+  .out { font-size:12px; color:var(--muted-on-ink); padding:7px 12px; border:1px solid var(--rule-dark); border-radius:4px; transition:border-color 160ms, color 160ms; }
+  .out:hover { border-color:var(--gold-bright); color:var(--text-on-ink); }
+
+  /* Main split layout */
+  .main { flex:1; max-width:1280px; margin:0 auto; padding:32px 48px 64px; width:100%; display:grid; grid-template-columns:380px 1fr; gap:20px; min-height:calc(100vh - 200px); }
+
+  /* ─── Threads list ─── */
+  .threads { background:var(--ink); border-radius:12px; padding:18px 14px; color:var(--text-on-ink); box-shadow:0 1px 0 0 var(--rule-light); display:flex; flex-direction:column; position:relative; overflow:hidden; }
+  .threads::before { content:""; position:absolute; top:-10px; right:-10px; width:60px; height:60px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23b8924c' stroke-width='0.5' stroke-linecap='round'/></svg>"); background-size:contain; opacity:0.3; pointer-events:none; }
+  .threads-head { padding:6px 10px 14px; border-bottom:1px solid var(--rule-dark); margin-bottom:8px; position:relative; z-index:1; display:flex; justify-content:space-between; align-items:baseline; }
+  .threads-head h2 { font-family:var(--serif); font-size:22px; font-weight:500; letter-spacing:-0.01em; color:var(--text-on-ink); }
+  .threads-head h2 em { font-style:italic; color:var(--gold-bright); }
+  .threads-head .ct { font-family:var(--mono); font-size:11px; color:var(--gold-bright); }
+
+  .thread-item { padding:14px 12px; border-radius:6px; display:flex; gap:12px; cursor:pointer; transition:background 160ms; position:relative; }
+  .thread-item:hover { background:var(--ink-2); }
+  .thread-item.active { background:var(--ink-2); }
+  .thread-item.active::before { content:""; position:absolute; left:0; top:14px; bottom:14px; width:3px; background:var(--gold-bright); border-radius:3px; }
+  .thread-av { width:44px; height:44px; border-radius:4px; overflow:hidden; flex-shrink:0; background:var(--ink-3); border:1px solid var(--rule-dark); }
+  .thread-av img { width:100%; height:100%; object-fit:cover; }
+  .thread-body { flex:1; min-width:0; }
+  .thread-line1 { display:flex; align-items:baseline; justify-content:space-between; gap:8px; }
+  .thread-nm { font-family:var(--serif); font-size:16.5px; font-weight:500; color:var(--text-on-ink); line-height:1.1; letter-spacing:-0.005em; }
+  .thread-time { font-family:var(--mono); font-size:10.5px; color:var(--muted-on-ink); flex-shrink:0; }
+  .thread-preview { font-size:13px; color:var(--text-on-ink-2); margin-top:4px; line-height:1.4; overflow:hidden; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; }
+  .thread-meta { display:flex; align-items:center; gap:6px; margin-top:5px; font-size:11px; color:var(--muted-on-ink); }
+  .thread-meta .pillar { color:var(--gold-bright); letter-spacing:0.08em; text-transform:uppercase; font-weight:600; font-size:10px; }
+  .unread-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--gold-bright); margin-left:auto; flex-shrink:0; }
+
+  /* ─── Thread view ─── */
+  .thread-view { background:transparent; display:flex; flex-direction:column; gap:0; }
+  .tv-head { background:var(--ink); color:var(--text-on-ink); border-radius:12px 12px 0 0; padding:20px 24px; display:flex; align-items:center; gap:14px; border-bottom:1px solid var(--rule-dark); }
+  .tv-av { width:46px; height:46px; border-radius:4px; overflow:hidden; background:var(--ink-3); border:1px solid var(--rule-dark); }
+  .tv-av img { width:100%; height:100%; object-fit:cover; }
+  .tv-name { font-family:var(--serif); font-size:22px; font-weight:500; line-height:1.1; letter-spacing:-0.01em; }
+  .tv-status { font-size:12px; color:var(--green); margin-top:2px; display:inline-flex; align-items:center; gap:5px; }
+  .tv-status::before { content:""; width:6px; height:6px; border-radius:50%; background:var(--green); }
+  .tv-context {
+    background:var(--ink); color:var(--text-on-ink-2);
+    padding:14px 24px;
+    font-size:12.5px;
+    border-bottom:1px solid var(--rule-dark);
+    display:flex; align-items:center; gap:10px;
+  }
+  .tv-context svg { width:14px; height:14px; color:var(--gold-bright); }
+  .tv-context strong { color:var(--gold-bright); font-weight:500; }
+
+  /* Messages */
+  .messages { background:var(--ink); flex:1; padding:24px; display:flex; flex-direction:column; gap:14px; min-height:380px; }
+  .day-divider { text-align:center; font-family:var(--mono); font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted-on-ink); padding:8px 0 12px; position:relative; }
+  .day-divider span { background:var(--ink); padding:0 12px; position:relative; z-index:1; }
+  .day-divider::before { content:""; position:absolute; left:0; right:0; top:50%; height:1px; background:var(--rule-dark); }
+
+  .msg { display:flex; gap:10px; max-width:78%; }
+  .msg-av { width:32px; height:32px; border-radius:4px; overflow:hidden; flex-shrink:0; background:var(--ink-3); border:1px solid var(--rule-dark); }
+  .msg-av img { width:100%; height:100%; object-fit:cover; }
+  .msg-body { flex:1; }
+  .msg-bubble { background:var(--ink-2); border:1px solid var(--rule-dark); border-radius:10px 10px 10px 4px; padding:11px 14px; font-size:14px; color:var(--text-on-ink); line-height:1.5; }
+  .msg-time { font-family:var(--mono); font-size:10px; color:var(--muted-on-ink); margin-top:4px; padding-left:4px; }
+  .msg.me { margin-left:auto; flex-direction:row-reverse; }
+  .msg.me .msg-bubble { background:var(--gold-bright); color:var(--ink); border-color:var(--gold-bright); border-radius:10px 10px 4px 10px; }
+  .msg.me .msg-time { text-align:right; padding-left:0; padding-right:4px; color:var(--muted-on-ink); }
+
+  .composer { background:var(--ink-2); border-radius:0 0 12px 12px; padding:16px 18px; display:flex; gap:10px; border-top:1px solid var(--rule-dark); }
+  .composer input { flex:1; font:inherit; font-size:14px; padding:11px 14px; background:var(--ink); color:var(--text-on-ink); border:1px solid var(--rule-dark); border-radius:6px; outline:none; transition:border-color 160ms; }
+  .composer input::placeholder { color:var(--muted-on-ink); }
+  .composer input:focus { border-color:var(--gold-bright); }
+  .composer button { padding:11px 18px; background:var(--gold-bright); color:var(--ink); border-radius:6px; font-size:13px; font-weight:600; }
+  .composer button:hover { background:var(--gold); }
+
+  /* Footer */
+  .footer-wrap { background:var(--ink); border-top:1px solid var(--rule-dark); margin-top:auto; }
+  .footer { max-width:1280px; margin:0 auto; padding:24px 48px; display:flex; justify-content:space-between; font-size:12.5px; color:var(--muted-on-ink); }
+  .footer em { font-family:var(--serif); font-style:italic; color:var(--gold-bright); font-size:14px; }
+
+  /* Responsive */
+  @media (max-width:980px) {
+    .top, .main, .footer { padding-left:18px; padding-right:18px; }
+    .nav { display:none; }
+    .main { grid-template-columns:1fr; }
+    .threads { max-height:340px; }
+    .msg { max-width:90%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-wrap">
+  <header class="top">
+    <a class="brand" href="landing.html">
+      <svg viewBox="0 0 36 36" fill="none">
+        <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#d6b676" stroke-width="2" stroke-linecap="round" />
+        <circle cx="8" cy="24" r="2.5" fill="#d6b676" />
+        <circle cx="28" cy="12" r="2.5" fill="#ebe1cc" />
+      </svg>
+      <span class="word">samay <em>setu</em></span>
+    </a>
+    <nav class="nav">
+      <a class="tab" href="dashboard.html">Live Bridge</a>
+      <a class="tab" href="bridges.html">Bridges <span class="badge">2</span></a>
+      <a class="tab active" href="chats.html">Chats <span class="badge">3</span></a>
+      <a class="tab" href="me.html">Me</a>
+      <a class="tab" href="contest.html" style="color:var(--gold-bright);">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--gold-bright);display:inline-block;"></span>
+        Founding Race
+      </a>
+    </nav>
+    <div class="me-top">
+      <div class="pip"><img src="https://i.pravatar.cc/64?img=47" alt="" /></div>
+      <button class="out">Sign out</button>
+    </div>
+  </header>
+</div>
+
+<main class="main">
+
+  <!-- Threads list -->
+  <aside class="threads">
+    <div class="threads-head">
+      <h2>Your <em>conversations</em></h2>
+      <span class="ct">04 OPEN</span>
+    </div>
+
+    <div class="thread-item active">
+      <div class="thread-av"><img src="https://i.pravatar.cc/96?img=20" alt="" /></div>
+      <div class="thread-body">
+        <div class="thread-line1">
+          <span class="thread-nm">Dr. Priya Mukherjee</span>
+          <span class="thread-time">2m</span>
+        </div>
+        <div class="thread-preview">Friday morning at 10 would be perfect. I can come over with the dal and...</div>
+        <div class="thread-meta"><span class="pillar">Care</span> · 1 hr swap <span class="unread-dot"></span></div>
+      </div>
+    </div>
+
+    <div class="thread-item">
+      <div class="thread-av"><img src="https://i.pravatar.cc/96?img=44" alt="" /></div>
+      <div class="thread-body">
+        <div class="thread-line1">
+          <span class="thread-nm">Lakshmi Sharma</span>
+          <span class="thread-time">1h</span>
+        </div>
+        <div class="thread-preview">I've sent the document. Take your time, no rush — the deadline is Monday.</div>
+        <div class="thread-meta"><span class="pillar">Skill</span> · 2 hrs swap</div>
+      </div>
+    </div>
+
+    <div class="thread-item">
+      <div class="thread-av"><img src="https://i.pravatar.cc/96?img=12" alt="" /></div>
+      <div class="thread-body">
+        <div class="thread-line1">
+          <span class="thread-nm">Arjun Das</span>
+          <span class="thread-time">Yesterday</span>
+        </div>
+        <div class="thread-preview">Manual transmission it is. I'll meet you at Lake Mall parking, Saturday 7am.</div>
+        <div class="thread-meta"><span class="pillar">Craft</span> · 1 hr swap <span class="unread-dot"></span></div>
+      </div>
+    </div>
+
+    <div class="thread-item">
+      <div class="thread-av"><img src="https://i.pravatar.cc/96?img=15" alt="" /></div>
+      <div class="thread-body">
+        <div class="thread-line1">
+          <span class="thread-nm">Kabir Sen</span>
+          <span class="thread-time">3 days</span>
+        </div>
+        <div class="thread-preview">Done — your strength programme is in the email. Let me know how week 1 feels.</div>
+        <div class="thread-meta"><span class="pillar">Care</span> · 1 hr swap</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Thread view -->
+  <section class="thread-view">
+    <div class="tv-head">
+      <div class="tv-av"><img src="https://i.pravatar.cc/96?img=20" alt="" /></div>
+      <div>
+        <div class="tv-name">Dr. Priya Mukherjee</div>
+        <div class="tv-status">Online now</div>
+      </div>
+    </div>
+    <div class="tv-context">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12"/></svg>
+      Active bridge: <strong>Eldercare check-in (1 hr) ⇄ Cooked tiffin (1 hr)</strong> · accepted 3 days ago
+    </div>
+
+    <div class="messages">
+
+      <div class="day-divider"><span>Tuesday · accepted</span></div>
+
+      <div class="msg">
+        <div class="msg-av"><img src="https://i.pravatar.cc/64?img=20" alt="" /></div>
+        <div class="msg-body">
+          <div class="msg-bubble">Wonderful, thank you for accepting! When would suit you for the first session?</div>
+          <div class="msg-time">10:14 AM</div>
+        </div>
+      </div>
+
+      <div class="msg me">
+        <div class="msg-av"><img src="https://i.pravatar.cc/64?img=47" alt="" /></div>
+        <div class="msg-body">
+          <div class="msg-bubble">Hi Doctor — Friday morning works well for me. Around 10 or 11?</div>
+          <div class="msg-time">10:22 AM</div>
+        </div>
+      </div>
+
+      <div class="msg">
+        <div class="msg-av"><img src="https://i.pravatar.cc/64?img=20" alt="" /></div>
+        <div class="msg-body">
+          <div class="msg-bubble">Friday morning at 10 would be perfect. I can come over with the dal and a fresh portion of bhaja moog dal khichuri. Vegetarian, low-oil — hope that's alright?</div>
+          <div class="msg-time">Just now</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="composer">
+      <input type="text" placeholder="Write a message…" />
+      <button>Send</button>
+    </div>
+  </section>
+
+</main>
+
+<div class="footer-wrap">
+  <footer class="footer">
+    <span>Samay Setu · North Kolkata · 2026</span>
+    <em>One hour given, one hour received.</em>
+  </footer>
+</div>
+
+</body>
+</html>

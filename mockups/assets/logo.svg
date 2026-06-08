@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" fill="none" role="img" aria-label="Samay Setu">
+  <title>Samay Setu</title>
+  <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#C9A96E" stroke-width="2" stroke-linecap="round" />
+  <circle cx="8" cy="24" r="2.5" fill="#C9A96E" />
+  <circle cx="28" cy="12" r="2.5" fill="#1a1a18" />
+</svg>
