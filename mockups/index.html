@@ -3,351 +3,1080 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Samay Setu — Mockup Walkthrough</title>
-<link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+<title>Samay Setu — Your time is the only currency that matters</title>
+<meta name="description" content="An invite-only neighbourhood time-bank. Give an hour of your skill, earn a credit, spend it on any hour you need. No money — just minutes. Now in North Kolkata." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
 <style>
-  :root {
-    --ink:#14120e; --ink-2:#1f1c16; --ink-3:#2a261d;
-    --paper:#f4ecdb; --paper-2:#ebe1cc; --paper-3:#e3d7bd;
-    --band:#ece0c6; --plate:#f8eed0; --rule-gold:#dcc992;
-    --rule-light:#c5b899; --rule-dark:#d3c7a8;
-    --text:#14120e; --text-2:#4a4436; --muted:#6e6552;
-    --gold:#a07f3f; --gold-bright:#b0863f;
-    --serif:"Cormorant Garamond",serif;
-    --sans:"DM Sans",system-ui,sans-serif;
-    --mono:"JetBrains Mono",ui-monospace,monospace;
+  /* ════════ APP-UI MIMIC (reusable product chrome) ════════ */
+  .browser { background: var(--white); border: 1px solid var(--rule-gold); border-radius: 14px; box-shadow: var(--shadow-card); overflow: hidden; }
+  .browser-bar { display: flex; align-items: center; gap: 14px; padding: 11px 16px; background: var(--plate); border-bottom: 1px solid var(--rule-gold); }
+  .browser-dots { display: flex; gap: 7px; }
+  .browser-dots i { width: 11px; height: 11px; border-radius: 50%; display: block; }
+  .browser-dots i:nth-child(1){ background:#d98b7a; } .browser-dots i:nth-child(2){ background:#d9c07a; } .browser-dots i:nth-child(3){ background:#9fc08a; }
+  .browser-url { flex: 1; font-family: var(--mono); font-size: 11px; color: var(--ink-3); background: var(--white); border: 1px solid var(--rule-soft); border-radius: 6px; padding: 6px 12px; display: flex; align-items: center; gap: 7px; }
+  .browser-url svg { width: 12px; height: 12px; color: var(--gold); }
+
+  .ui { background: var(--paper); font-size: 13px; }
+  .ui-top { display: flex; align-items: center; gap: 16px; padding: 14px 20px; background: var(--white); border-bottom: 1px solid var(--rule-soft); }
+  .ui-top .brand-mini { display: flex; align-items: center; gap: 8px; font-family: var(--serif); font-size: 16px; color: var(--ink); }
+  .ui-top .brand-mini svg { width: 22px; height: 22px; }
+  .ui-nav { display: flex; gap: 4px; margin-left: 10px; }
+  .ui-nav a { font-size: 12.5px; color: var(--ink-3); padding: 6px 12px; border-radius: 7px; }
+  .ui-nav a.on { background: var(--plate); color: var(--ink); font-weight: 600; }
+  .ui-spacer { flex: 1; }
+  .ui-credit { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--gold); background: var(--gold-glow); border: 1px solid var(--rule-gold); padding: 6px 12px; border-radius: 30px; }
+  .ui-credit svg { width: 13px; height: 13px; }
+  .ui-av { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, var(--paper-3), var(--gold-bright)); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 14px; color: var(--white); }
+
+  /* avatars + tags */
+  .av { border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--serif); color: var(--white); flex: none; }
+  .av.g1{background:linear-gradient(135deg,#caa46a,#8a6b34);} .av.g2{background:linear-gradient(135deg,#b9876a,#7d4f33);}
+  .av.g3{background:linear-gradient(135deg,#9aa97f,#5f7a45);} .av.g4{background:linear-gradient(135deg,#a98fa0,#6f4f63);}
+  .av.g5{background:linear-gradient(135deg,#7f97a9,#455f7a);}
+  .tag { display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; font-weight: 600; letter-spacing: 0.02em; color: var(--ink-2); background: var(--paper-2); padding: 3px 9px; border-radius: 20px; }
+  .tag .d { width: 6px; height: 6px; border-radius: 50%; }
+  .tag.prof .d{background:#7f97a9;} .tag.care .d{background:#9aa97f;} .tag.know .d{background:#caa46a;} .tag.craft .d{background:#a98fa0;}
+  .hpill { font-family: var(--mono); font-size: 10.5px; font-weight: 500; color: var(--gold); border: 1px solid var(--rule-gold); border-radius: 20px; padding: 3px 8px; }
+
+  /* dashboard body */
+  .ui-body { display: grid; grid-template-columns: 1.55fr 1fr; gap: 16px; padding: 18px 20px 22px; }
+  .ui-greet { font-family: var(--serif); font-size: 22px; color: var(--ink); margin-bottom: 4px; }
+  .ui-greet em { font-style: italic; color: var(--gold-bright); }
+  .ui-sub { font-size: 12px; color: var(--ink-3); margin-bottom: 16px; }
+  .bal-card { background: linear-gradient(145deg, var(--ink) 0%, #2a261d 100%); border-radius: 13px; padding: 18px 20px; color: var(--paper); position: relative; overflow: hidden; margin-bottom: 18px; }
+  .bal-card .glyph { position: absolute; right: -20px; top: -20px; width: 110px; height: 110px; opacity: 0.18; }
+  .bal-card .l { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #c9bfa6; }
+  .bal-card .v { font-family: var(--serif); font-size: 44px; line-height: 1; margin-top: 6px; color: var(--paper); }
+  .bal-card .v small { font-size: 16px; color: var(--gold-bright); font-family: var(--sans); font-weight: 500; }
+  .bal-card .spark { display: flex; align-items: flex-end; gap: 3px; height: 28px; margin-top: 14px; }
+  .bal-card .spark i { flex: 1; background: linear-gradient(var(--gold-bright), var(--gold)); border-radius: 2px; opacity: 0.85; }
+  .sec-label { display: flex; align-items: center; justify-content: space-between; margin-bottom: 11px; }
+  .sec-label .t { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+  .sec-label .a { font-size: 11px; color: var(--gold); }
+  .offer { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--white); border: 1px solid var(--rule-soft); border-radius: 11px; margin-bottom: 9px; transition: transform 200ms var(--ease), box-shadow 200ms var(--ease); }
+  .offer:hover { transform: translateY(-2px); box-shadow: var(--shadow-soft); }
+  .offer .av { width: 38px; height: 38px; font-size: 16px; }
+  .offer .info { flex: 1; min-width: 0; }
+  .offer .info .nm { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .offer .info .sk { font-size: 12px; color: var(--ink-2); margin: 1px 0 5px; }
+  .offer .req { font-size: 11px; font-weight: 600; color: var(--white); background: var(--gold-bright); padding: 7px 13px; border-radius: 8px; }
+  .ui-side { background: var(--white); border: 1px solid var(--rule-soft); border-radius: 13px; padding: 16px; }
+  .feed-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--rule-soft); }
+  .feed-item:last-child { border-bottom: none; }
+  .feed-item .av { width: 28px; height: 28px; font-size: 12px; }
+  .feed-item .ft { font-size: 11.5px; color: var(--ink-2); line-height: 1.4; }
+  .feed-item .ft b { color: var(--ink); font-weight: 600; }
+  .feed-item .fm { font-family: var(--mono); font-size: 10px; color: var(--ink-3); }
+
+  /* ════════ HERO ════════ */
+  .hero { position: relative; overflow: hidden; background: var(--band); }
+  .hero .mesh { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+  .hero .mesh i { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.5; }
+  .hero .mesh i:nth-child(1){ width:420px;height:420px;background:rgba(176,134,63,0.22);top:-120px;right:6%;animation:drift 18s ease-in-out infinite; }
+  .hero .mesh i:nth-child(2){ width:360px;height:360px;background:rgba(155,169,127,0.18);bottom:-140px;left:-60px;animation:drift 22s ease-in-out infinite reverse; }
+  @keyframes drift { 0%,100%{transform:translate(0,0);} 50%{transform:translate(30px,-26px);} }
+  .hero-bridge { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.5; }
+  .hero-bridge path { fill: none; stroke: var(--gold-bright); stroke-width: 1.4; stroke-linecap: round; stroke-dasharray: 1400; stroke-dashoffset: 1400; animation: draw 3s var(--ease) 0.3s forwards; opacity: 0.4; }
+  .hero-bridge circle { opacity: 0; animation: pop 0.5s var(--ease) forwards; }
+  .hero-bridge circle:nth-of-type(1){ animation-delay: 1.4s; } .hero-bridge circle:nth-of-type(2){ animation-delay: 2.9s; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes pop { 0%{transform:scale(0);opacity:0;} 70%{transform:scale(1.4);} 100%{transform:scale(1);opacity:1;} }
+
+  .hero-grid { max-width: var(--maxw); margin: 0 auto; padding: 72px var(--pad) 96px; display: grid; grid-template-columns: 1.02fr 1.1fr; gap: 56px; align-items: center; position: relative; z-index: 2; }
+  .hero-tag { display: inline-flex; align-items: center; gap: 11px; font-size: 11.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-bright); font-weight: 600; margin-bottom: 26px; }
+  .hero-tag::before { content: ""; width: 28px; height: 1px; background: var(--gold-bright); }
+  .hero-tag .vol { font-family: var(--mono); color: var(--ink-3); letter-spacing: 0.04em; font-weight: 400; text-transform: none; padding-left: 11px; border-left: 1px solid var(--rule); }
+  .hero h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(46px, 6.6vw, 84px); line-height: 0.98; letter-spacing: -0.035em; color: var(--ink); }
+  .hero h1 .line { display: block; overflow: hidden; }
+  .hero h1 .line span { display: block; transform: translateY(105%); animation: rise 0.9s var(--ease) forwards; }
+  .hero h1 .line:nth-child(1) span{ animation-delay: 0.05s; } .hero h1 .line:nth-child(2) span{ animation-delay: 0.16s; } .hero h1 .line:nth-child(3) span{ animation-delay: 0.27s; }
+  @keyframes rise { to { transform: none; } }
+  .hero h1 em { font-style: italic; color: var(--gold-bright); font-weight: 400; }
+  .hero-lede { margin-top: 28px; font-family: var(--sans); font-size: clamp(17px, 2vw, 20px); color: var(--ink-2); max-width: 48ch; line-height: 1.55; opacity: 0; animation: fadeUp 0.8s var(--ease) 0.5s forwards; }
+  .hero-lede strong { color: var(--ink); font-weight: 500; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(18px);} to{opacity:1;transform:none;} }
+  .hero-actions { margin-top: 34px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.8s var(--ease) 0.62s forwards; }
+  .hero-meta { margin-top: 18px; display: flex; align-items: center; gap: 14px; opacity: 0; animation: fadeUp 0.8s var(--ease) 0.74s forwards; }
+  .hero-faces { display: flex; }
+  .hero-faces .av { width: 32px; height: 32px; font-size: 13px; border: 2px solid var(--band); margin-left: -9px; }
+  .hero-faces .av:first-child { margin-left: 0; }
+  .hero-meta .mt { font-size: 12.5px; color: var(--ink-2); }
+  .hero-meta .mt b { color: var(--gold-bright); }
+
+  /* hero product stage */
+  .stage { position: relative; perspective: 1600px; }
+  .stage .browser { transform: rotateY(-9deg) rotateX(3deg) rotateZ(0.4deg); transition: transform 400ms var(--ease); will-change: transform; }
+  .stage:hover .browser { transform: rotateY(-5deg) rotateX(2deg); }
+  .float-card { position: absolute; z-index: 4; background: var(--white); border: 1px solid var(--rule-gold); border-radius: 12px; padding: 12px 14px; box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 11px; opacity: 0; }
+  .float-card .ic { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex: none; }
+  .float-card .ic.gold { background: var(--gold-glow); color: var(--gold-bright); } .float-card .ic.green { background: rgba(155,169,127,0.2); color: #5f7a45; }
+  .float-card .ic svg { width: 18px; height: 18px; }
+  .float-card .ct .a { font-size: 12.5px; font-weight: 700; color: var(--ink); } .float-card .ct .b { font-size: 11px; color: var(--ink-3); }
+  .fc-1 { top: 8%; left: -7%; animation: floatIn 0.7s var(--ease) 1.4s forwards, bob 5s ease-in-out 2.1s infinite; }
+  .fc-2 { bottom: 14%; right: -6%; animation: floatIn 0.7s var(--ease) 1.8s forwards, bob 6s ease-in-out 2.5s infinite; }
+  .fc-3 { bottom: -4%; left: 8%; animation: floatIn 0.7s var(--ease) 2.2s forwards, bob 5.5s ease-in-out 2.9s infinite; }
+  @keyframes floatIn { from{opacity:0;transform:translateY(16px) scale(0.94);} to{opacity:1;transform:none;} }
+  @keyframes bob { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-9px);} }
+
+  /* ════════ STAT STRIP ════════ */
+  .strip { border-bottom: 1px solid var(--rule); background: var(--paper); }
+  .strip-inner { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--pad); display: grid; grid-template-columns: repeat(4, 1fr); }
+  .strip-item { padding: 30px 24px; border-right: 1px solid var(--rule-soft); }
+  .strip-item:last-child { border-right: none; }
+  .strip-item .fig { font-size: 38px; }
+  .strip-item .lbl { font-size: 12.5px; color: var(--ink-2); margin-top: 6px; }
+
+  /* ════════ INTERACTIVE DEMO ════════ */
+  .demo { display: grid; grid-template-columns: 1fr 1.15fr; gap: 56px; align-items: center; }
+  .demo-stage { background: var(--white); border: 1px solid var(--rule-gold); border-radius: 18px; padding: 30px; box-shadow: var(--shadow-card); position: relative; overflow: hidden; }
+  .demo-stage .glyph { position: absolute; right: -34px; bottom: -34px; width: 170px; height: 170px; opacity: 0.12; }
+  .demo-bal { text-align: center; padding: 14px 0 8px; position: relative; z-index: 2; }
+  .demo-bal .l { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); }
+  .demo-bal .coin-stack { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 8px; }
+  .demo-coin { width: 86px; height: 86px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, var(--plate), var(--paper-3)); border: 1px solid var(--rule-gold); box-shadow: 0 0 0 7px var(--gold-glow); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 40px; color: var(--gold-bright); }
+  .demo-bal .u { font-size: 12px; color: var(--ink-2); margin-top: 6px; }
+  .demo-btns { display: flex; gap: 12px; margin: 22px 0 4px; position: relative; z-index: 2; }
+  .demo-btns button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; border-radius: 11px; font-size: 13.5px; font-weight: 600; transition: transform 160ms var(--ease), box-shadow 160ms, background 160ms, opacity 160ms; }
+  .demo-btns button svg { width: 17px; height: 17px; }
+  .btn-give { background: var(--gold-bright); color: var(--white); box-shadow: 0 8px 18px -10px var(--gold-glow); }
+  .btn-give:hover { transform: translateY(-2px); }
+  .btn-spend { background: var(--paper-2); color: var(--ink); border: 1px solid var(--rule); }
+  .btn-spend:hover { transform: translateY(-2px); border-color: var(--gold-bright); }
+  .btn-spend:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+  .demo-ledger { margin-top: 18px; position: relative; z-index: 2; max-height: 168px; overflow: hidden; }
+  .demo-ledger .row { display: flex; align-items: center; gap: 11px; padding: 9px 0; border-bottom: 1px solid var(--rule-soft); animation: slideIn 0.4s var(--ease); }
+  .demo-ledger .row:last-child { border-bottom: none; }
+  @keyframes slideIn { from{opacity:0;transform:translateX(-12px);} to{opacity:1;transform:none;} }
+  .demo-ledger .av { width: 30px; height: 30px; font-size: 13px; }
+  .demo-ledger .tx { flex: 1; font-size: 12.5px; color: var(--ink-2); } .demo-ledger .tx b { color: var(--ink); }
+  .demo-ledger .amt { font-family: var(--serif); font-size: 18px; } .amt.plus{color:#5f7a45;} .amt.minus{color:var(--gold);}
+  .demo-empty { font-size: 12.5px; color: var(--ink-3); text-align: center; padding: 16px; font-style: italic; font-family: var(--sans); }
+  /* toast */
+  .toast { position: absolute; left: 50%; top: 16px; transform: translateX(-50%) translateY(-18px); background: var(--ink); color: var(--paper); font-size: 12.5px; font-weight: 500; padding: 9px 16px; border-radius: 30px; opacity: 0; pointer-events: none; transition: opacity 240ms, transform 240ms var(--ease); z-index: 6; white-space: nowrap; box-shadow: var(--shadow-card); }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .toast b { color: var(--gold-bright); }
+
+  /* ════════ TABBED PRODUCT TOUR ════════ */
+  .tour-tabs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 36px; }
+  .tour-tab { display: inline-flex; align-items: center; gap: 9px; font-size: 13.5px; font-weight: 600; color: var(--ink-2); padding: 11px 20px; border-radius: 30px; border: 1px solid var(--rule); background: var(--white); transition: all 200ms var(--ease); }
+  .tour-tab svg { width: 16px; height: 16px; }
+  .tour-tab.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .tour-tab:not(.on):hover { border-color: var(--gold-bright); color: var(--gold-bright); }
+  .tour-stage { margin-top: 36px; position: relative; max-width: 1000px; margin-left: auto; margin-right: auto; }
+  .tour-panel { display: none; }
+  .tour-panel.on { display: block; animation: tourIn 0.5s var(--ease); }
+  @keyframes tourIn { from{opacity:0;transform:translateY(20px) scale(0.985);} to{opacity:1;transform:none;} }
+  .tour-cap { text-align: center; margin-top: 22px; font-family: var(--sans); font-style: italic; font-size: 15px; color: var(--ink-2); }
+
+  /* chat panel */
+  .chat-ui { display: grid; grid-template-columns: 0.85fr 1.4fr; min-height: 360px; }
+  .chat-list { border-right: 1px solid var(--rule-soft); padding: 14px; background: var(--white); }
+  .chat-li { display: flex; gap: 10px; padding: 10px; border-radius: 10px; margin-bottom: 4px; }
+  .chat-li.on { background: var(--plate); }
+  .chat-li .av { width: 36px; height: 36px; font-size: 15px; }
+  .chat-li .nm { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .chat-li .pv { font-size: 11.5px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px; }
+  .chat-thread { display: flex; flex-direction: column; background: var(--paper); }
+  .chat-head { display: flex; align-items: center; gap: 11px; padding: 13px 18px; border-bottom: 1px solid var(--rule-soft); background: var(--white); }
+  .chat-head .av { width: 34px; height: 34px; font-size: 14px; }
+  .chat-head .nm { font-size: 13.5px; font-weight: 600; } .chat-head .st { font-size: 11px; color: #5f7a45; }
+  .chat-msgs { flex: 1; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .bubble { max-width: 74%; font-size: 13px; line-height: 1.45; padding: 10px 14px; border-radius: 14px; }
+  .bubble.them { align-self: flex-start; background: var(--white); border: 1px solid var(--rule-soft); border-bottom-left-radius: 5px; color: var(--ink); }
+  .bubble.me { align-self: flex-end; background: var(--gold-bright); color: var(--white); border-bottom-right-radius: 5px; }
+  .chat-card { align-self: flex-start; max-width: 74%; background: var(--white); border: 1px solid var(--rule-gold); border-radius: 14px; padding: 13px; }
+  .chat-card .ch { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+  .chat-card .cb { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+  .chat-card .cc { display: flex; gap: 8px; margin-top: 10px; }
+  .chat-card .cc span { font-size: 11.5px; font-weight: 600; padding: 7px 12px; border-radius: 8px; }
+  .chat-card .acc { background: var(--gold-bright); color: var(--white); } .chat-card .dec { border: 1px solid var(--rule); color: var(--ink-2); }
+  .chat-input { display: flex; gap: 10px; padding: 12px 16px; border-top: 1px solid var(--rule-soft); background: var(--white); }
+  .chat-input .box { flex: 1; font-size: 12.5px; color: var(--ink-3); background: var(--paper); border: 1px solid var(--rule-soft); border-radius: 20px; padding: 10px 15px; }
+  .chat-input .snd { width: 36px; height: 36px; border-radius: 50%; background: var(--gold-bright); color: var(--white); display: flex; align-items: center; justify-content: center; }
+  .chat-input .snd svg { width: 16px; height: 16px; }
+
+  /* bridges panel */
+  .bridges-ui { padding: 20px; background: var(--paper); }
+  .bridges-head { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .chip { font-size: 11.5px; font-weight: 600; color: var(--ink-2); padding: 7px 14px; border-radius: 20px; border: 1px solid var(--rule); background: var(--white); }
+  .chip.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .bridges-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .bcard { background: var(--white); border: 1px solid var(--rule-soft); border-radius: 13px; padding: 16px; transition: transform 200ms var(--ease), box-shadow 200ms; }
+  .bcard:hover { transform: translateY(-3px); box-shadow: var(--shadow-soft); }
+  .bcard .top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .bcard .av { width: 40px; height: 40px; font-size: 17px; }
+  .bcard .nm { font-size: 13px; font-weight: 600; } .bcard .lc { font-size: 11px; color: var(--ink-3); }
+  .bcard h5 { font-family: var(--serif); font-size: 18px; font-weight: 500; margin-bottom: 6px; }
+  .bcard .row2 { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+  .bcard .req { font-size: 11.5px; font-weight: 600; color: var(--white); background: var(--gold-bright); padding: 7px 14px; border-radius: 8px; }
+
+  /* profile panel */
+  .me-ui { padding: 24px; background: var(--paper); display: grid; grid-template-columns: 0.9fr 1.4fr; gap: 24px; }
+  .me-card { background: var(--white); border: 1px solid var(--rule-gold); border-radius: 14px; padding: 24px; text-align: center; }
+  .me-card .av { width: 78px; height: 78px; font-size: 34px; margin: 0 auto 14px; box-shadow: 0 0 0 6px var(--gold-glow); }
+  .me-card h4 { font-family: var(--serif); font-size: 24px; font-weight: 500; }
+  .me-card .role { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+  .me-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--gold-bright); background: var(--gold-glow); border: 1px solid var(--rule-gold); padding: 5px 12px; border-radius: 20px; margin-top: 14px; }
+  .me-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+  .me-stat { background: var(--white); border: 1px solid var(--rule-soft); border-radius: 12px; padding: 16px; text-align: center; }
+  .me-stat .fig { font-size: 30px; } .me-stat .d { font-size: 11px; color: var(--ink-2); margin-top: 3px; }
+  .me-skills { background: var(--white); border: 1px solid var(--rule-soft); border-radius: 12px; padding: 18px; margin-top: 12px; }
+  .me-skills .t { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 12px; }
+  .me-skills .wrap2 { display: flex; flex-wrap: wrap; gap: 8px; }
+  .skillchip { font-size: 12.5px; color: var(--ink); background: var(--plate); border: 1px solid var(--rule-gold); border-radius: 8px; padding: 7px 12px; }
+
+  /* ════════ generic marketing sections reused ════════ */
+  .equiv-band { background: var(--band); }
+  .pillars { margin-top: 52px; display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--rule); border-radius: 14px; overflow: hidden; background: var(--paper-2); }
+  .pillar { padding: 34px 30px; border-right: 1px solid var(--rule); position: relative; transition: background 220ms; }
+  .pillar:last-child { border-right: none; }
+  .pillar:hover { background: var(--plate); }
+  .pillar .pico { width: 46px; height: 46px; border-radius: 12px; background: var(--gold-glow); color: var(--gold-bright); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+  .pillar .pico svg { width: 23px; height: 23px; }
+  .pillar-n { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-bottom: 8px; }
+  .pillar h3 { font-family: var(--serif); font-size: 27px; font-weight: 500; line-height: 1.12; margin-bottom: 10px; }
+  .pillar h3 em { font-style: italic; color: var(--gold); }
+  .pillar p { font-size: 14px; color: var(--ink-2); }
+
+  .quotes { margin-top: 48px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .quote { background: var(--white); border: 1px solid var(--rule-soft); border-radius: 14px; padding: 28px 26px; display: flex; flex-direction: column; }
+  .quote .stars { color: var(--gold-bright); letter-spacing: 3px; font-size: 13px; margin-bottom: 14px; }
+  .quote blockquote { font-family: var(--sans); font-size: 16px; font-style: italic; line-height: 1.5; color: var(--ink); flex: 1; }
+  .quote .by { margin-top: 20px; display: flex; align-items: center; gap: 12px; }
+  .quote .av { width: 40px; height: 40px; font-size: 17px; }
+  .quote .meta strong { display: block; font-size: 14px; font-weight: 600; } .quote .meta span { font-size: 12px; color: var(--ink-3); }
+
+  .found { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .found-left blockquote { font-family: var(--sans); font-size: 18px; font-style: italic; color: var(--ink-2); border-left: 2px solid var(--gold); padding: 4px 0 4px 22px; margin: 24px 0; max-width: 48ch; }
+  .found-left p { color: var(--ink-2); max-width: 50ch; margin-top: 14px; } .found-left p strong { color: var(--gold); font-weight: 600; }
+  .progress { padding: 34px 32px; position: relative; overflow: hidden; }
+  .progress .glyph { position: absolute; top: -28px; right: -28px; width: 130px; height: 130px; opacity: 0.22; }
+  .progress .ptag { display: inline-block; font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold-bright); font-weight: 600; padding: 5px 11px; border: 1px solid var(--rule-soft); border-radius: 5px; margin-bottom: 24px; }
+  .progress .plabel { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--ink-3); margin-bottom: 11px; } .progress .plabel strong { color: var(--gold-bright); font-family: var(--mono); }
+  .progress .ptrack { height: 7px; background: var(--track); border-radius: 4px; overflow: hidden; }
+  .progress .pfill { width: 0; height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); border-radius: 4px; transition: width 1.4s var(--ease); }
+  .progress.in .pfill { width: 40%; }
+  .progress .pstats { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin: 28px 0; }
+  .progress .pstat .fig { font-size: 36px; } .progress .pstat .d { font-size: 12px; color: var(--ink-2); margin-top: 5px; }
+
+  .final { background: var(--band); text-align: center; position: relative; overflow: hidden; }
+  .final h2 { max-width: 22ch; margin: 0 auto 20px; }
+  .final p { color: var(--ink-2); max-width: 54ch; margin: 0 auto 34px; font-size: 17px; }
+  .final-form { max-width: 470px; margin: 0 auto; display: flex; box-shadow: var(--shadow-soft); border-radius: 6px; }
+  .final-form input { flex: 1; font: inherit; font-size: 14px; padding: 16px 18px; background: var(--white); border: 1px solid var(--rule); border-right: none; border-radius: 6px 0 0 6px; outline: none; }
+  .final-form button { font: inherit; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; padding: 16px 24px; background: var(--gold-bright); color: var(--white); border-radius: 0 6px 6px 0; }
+  .final-form button:hover { background: var(--gold); }
+
+  /* ════════ CONVERSION MECHANICS ════════ */
+  /* Urgency chip + live countdown */
+  .urgency { display: inline-flex; align-items: center; gap: 14px; background: var(--white); border: 1px solid var(--rule-gold); border-radius: 30px; padding: 7px 8px 7px 16px; margin-bottom: 22px; box-shadow: var(--shadow-soft); }
+  .urgency .u-dot { width: 7px; height: 7px; border-radius: 50%; background: #c0533f; animation: pulse 1.6s ease-out infinite; box-shadow: 0 0 0 0 rgba(192,83,63,0.5); }
+  .urgency .u-txt { font-size: 12.5px; color: var(--ink-2); } .urgency .u-txt b { color: var(--ink); }
+  .urgency .u-clock { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--gold); background: var(--gold-glow); border-radius: 22px; padding: 6px 12px; letter-spacing: 0.02em; }
+
+  /* Hero conversion form */
+  .cta-form { margin-top: 30px; max-width: 480px; }
+  .cta-form .field-line { display: flex; box-shadow: var(--shadow-card); border-radius: 8px; }
+  .cta-form input { flex: 1; font: inherit; font-size: 15px; padding: 17px 18px; background: var(--white); color: var(--ink); border: 1px solid var(--rule); border-right: none; border-radius: 8px 0 0 8px; outline: none; transition: border-color 160ms; }
+  .cta-form input::placeholder { color: var(--ink-3); }
+  .cta-form input:focus { border-color: var(--gold-bright); }
+  .cta-form button { font: inherit; font-size: 14px; font-weight: 600; letter-spacing: 0.02em; padding: 17px 24px; background: var(--gold-bright); color: var(--white); border-radius: 0 8px 8px 0; transition: background 160ms, transform 160ms; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; }
+  .cta-form button:hover { background: var(--gold); }
+  .cta-form button .arr { transition: transform 200ms var(--ease); } .cta-form button:hover .arr { transform: translateX(3px); }
+  .cta-reassure { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+  .cta-reassure span { display: inline-flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--ink-2); }
+  .cta-reassure svg { width: 14px; height: 14px; color: #5f7a45; flex: none; }
+  .cta-success { display: none; background: var(--white); border: 1px solid var(--rule-gold); border-radius: 12px; padding: 20px 22px; max-width: 480px; box-shadow: var(--shadow-card); align-items: center; gap: 14px; }
+  .cta-success.show { display: flex; animation: floatIn 0.5s var(--ease); }
+  .cta-success .tick { width: 40px; height: 40px; border-radius: 50%; background: rgba(155,169,127,0.22); color: #5f7a45; display: flex; align-items: center; justify-content: center; flex: none; }
+  .cta-success .tick svg { width: 20px; height: 20px; }
+  .cta-success .st-a { font-size: 14.5px; font-weight: 700; color: var(--ink); } .cta-success .st-b { font-size: 12.5px; color: var(--ink-3); margin-top: 2px; }
+
+  /* Sticky CTA bar */
+  .sticky-cta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; background: rgba(20,18,14,0.96); backdrop-filter: blur(10px); border-top: 1px solid var(--gold); transform: translateY(110%); transition: transform 360ms var(--ease); }
+  .sticky-cta.show { transform: none; }
+  .sticky-cta-inner { max-width: var(--maxw); margin: 0 auto; padding: 12px var(--pad); display: flex; align-items: center; gap: 20px; }
+  .sticky-cta .sc-txt { color: var(--paper); font-size: 14px; flex: 1; } .sticky-cta .sc-txt b { color: var(--gold-bright); }
+  .sticky-cta .sc-txt .sc-sub { display: block; font-size: 11.5px; color: #c9bfa6; margin-top: 1px; }
+  .sticky-cta .sc-seats { font-family: var(--mono); font-size: 12px; color: var(--gold-bright); border: 1px solid var(--ink-3); border-radius: 20px; padding: 6px 13px; white-space: nowrap; }
+  .sticky-cta .btn-gold { padding: 12px 22px; }
+  @media (max-width: 720px) { .sticky-cta .sc-seats { display: none; } .sticky-cta .sc-txt .sc-sub { display: none; } }
+
+  /* Outcomes / value section */
+  .outcomes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 52px; }
+  .outcome { background: var(--white); border: 1px solid var(--rule-soft); border-radius: 14px; padding: 32px 28px; position: relative; transition: transform 220ms var(--ease), box-shadow 220ms; }
+  .outcome:hover { transform: translateY(-4px); box-shadow: var(--shadow-card); }
+  .outcome .oic { width: 50px; height: 50px; border-radius: 13px; background: linear-gradient(145deg, var(--plate), var(--paper-3)); border: 1px solid var(--rule-gold); color: var(--gold-bright); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+  .outcome .oic svg { width: 25px; height: 25px; }
+  .outcome h4 { font-family: var(--serif); font-size: 24px; font-weight: 500; line-height: 1.15; margin-bottom: 10px; }
+  .outcome h4 em { font-style: italic; color: var(--gold); }
+  .outcome p { font-size: 14.5px; color: var(--ink-2); }
+
+  /* Conversion block (value stack + seat meter + form) */
+  .convert { background: var(--ink); color: var(--paper); position: relative; overflow: hidden; }
+  .convert::before { content: ""; position: absolute; top: -160px; right: -120px; width: 520px; height: 520px; border-radius: 50%; background: radial-gradient(circle, rgba(176,134,63,0.28), transparent 70%); pointer-events: none; }
+  .convert::after { content: "समय"; position: absolute; left: -2%; bottom: -10vw; font-family: var(--serif); font-size: 26vw; line-height: 1; color: rgba(244,236,219,0.03); user-select: none; pointer-events: none; }
+  .convert-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 64px; align-items: center; position: relative; z-index: 2; }
+  .convert .eyebrow { color: var(--gold-bright); }
+  .convert h2 { font-family: var(--serif); font-size: clamp(38px, 5vw, 60px); font-weight: 600; line-height: 1.04; letter-spacing: -0.03em; color: var(--paper); margin-top: 18px; }
+  .convert h2 em { font-style: italic; color: var(--gold-bright); }
+  .value-stack { list-style: none; margin-top: 28px; }
+  .value-stack li { display: flex; align-items: flex-start; gap: 13px; padding: 12px 0; border-bottom: 1px solid rgba(244,236,219,0.1); font-size: 15px; color: var(--paper); }
+  .value-stack li:last-child { border-bottom: none; }
+  .value-stack li .vt { width: 24px; height: 24px; border-radius: 50%; background: var(--gold-glow); color: var(--gold-bright); display: flex; align-items: center; justify-content: center; flex: none; margin-top: 1px; }
+  .value-stack li .vt svg { width: 13px; height: 13px; }
+  .value-stack li b { color: var(--gold-bright); font-weight: 600; }
+  /* seat meter card */
+  .seatcard { background: rgba(244,236,219,0.04); border: 1px solid rgba(220,201,146,0.3); border-radius: 18px; padding: 34px 32px; backdrop-filter: blur(4px); }
+  .seatcard .sc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .seatcard .sc-head .l { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #c9bfa6; }
+  .seatcard .sc-head .n { font-family: var(--serif); font-size: 22px; color: var(--gold-bright); }
+  .seatcard .meter { height: 9px; background: rgba(244,236,219,0.12); border-radius: 5px; overflow: hidden; margin: 12px 0 8px; }
+  .seatcard .meter i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); border-radius: 5px; transition: width 1.5s var(--ease); }
+  .seatcard.in .meter i { width: 40%; }
+  .seatcard .sc-foot { font-size: 12px; color: #c9bfa6; }
+  .seatcard .sc-foot b { color: var(--paper); }
+  .seatcard form { margin-top: 24px; }
+  .seatcard .field-line { display: flex; border-radius: 9px; overflow: hidden; box-shadow: 0 10px 30px -16px rgba(0,0,0,0.5); }
+  .seatcard input { flex: 1; font: inherit; font-size: 14.5px; padding: 15px 16px; background: var(--paper); color: var(--ink); border: none; outline: none; }
+  .seatcard button { font: inherit; font-size: 13.5px; font-weight: 600; padding: 15px 20px; background: var(--gold-bright); color: var(--white); white-space: nowrap; transition: background 160ms; }
+  .seatcard button:hover { background: var(--gold); }
+  .seatcard .micro { font-size: 11.5px; color: #9a917e; margin-top: 12px; text-align: center; }
+  .seatcard .success { display: none; text-align: center; padding: 10px 0; }
+  .seatcard .success.show { display: block; animation: floatIn 0.5s var(--ease); }
+  .seatcard .success .tick { width: 46px; height: 46px; border-radius: 50%; background: var(--gold-glow); color: var(--gold-bright); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+  .seatcard .success .tick svg { width: 22px; height: 22px; }
+  .seatcard .success .a { font-family: var(--serif); font-size: 22px; color: var(--paper); } .seatcard .success .b { font-size: 13px; color: #c9bfa6; margin-top: 4px; }
+
+  /* Recent-activity social-proof toast */
+  .social-toast { position: fixed; left: 22px; bottom: 22px; z-index: 35; background: var(--white); border: 1px solid var(--rule-gold); border-radius: 12px; padding: 12px 16px 12px 12px; box-shadow: var(--shadow-card); display: flex; align-items: center; gap: 12px; max-width: 320px; transform: translateY(140%); opacity: 0; transition: transform 420ms var(--ease), opacity 320ms; }
+  .social-toast.show { transform: none; opacity: 1; }
+  .social-toast .av { width: 38px; height: 38px; font-size: 16px; }
+  .social-toast .stx { font-size: 12.5px; color: var(--ink-2); line-height: 1.35; } .social-toast .stx b { color: var(--ink); }
+  .social-toast .stx .sm { font-size: 11px; color: var(--ink-3); margin-top: 1px; }
+  .social-toast .x { margin-left: auto; color: var(--ink-3); font-size: 16px; line-height: 1; align-self: flex-start; padding: 2px 4px; }
+  @media (max-width: 600px) { .social-toast { left: 12px; right: 12px; bottom: 84px; max-width: none; } }
+
+  @media (max-width: 980px) {
+    .outcomes { grid-template-columns: 1fr; }
+    .convert-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 56px; }
+    .stage .browser { transform: none; } .stage:hover .browser { transform: none; }
+    .float-card { display: none; }
+    .demo { grid-template-columns: 1fr; gap: 36px; }
+    .tour-stage { overflow-x: auto; } .chat-ui, .me-ui { min-width: 640px; } .bridges-grid { grid-template-columns: repeat(2,1fr); }
+    .pillars { grid-template-columns: 1fr; } .pillar { border-right: none; border-bottom: 1px solid var(--rule); } .pillar:last-child { border-bottom: none; }
+    .quotes { grid-template-columns: 1fr; } .found { grid-template-columns: 1fr; gap: 40px; }
+    .strip-inner { grid-template-columns: 1fr 1fr; } .strip-item:nth-child(2){border-right:none;} .strip-item:nth-child(-n+2){border-bottom:1px solid var(--rule-soft);}
   }
-  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
-  body { font-family:var(--sans); background:var(--paper); color:var(--text); min-height:100vh; -webkit-font-smoothing:antialiased; line-height:1.55; overflow-x:hidden; }
-  a { color:inherit; text-decoration:none; }
-  button { font-family:inherit; cursor:pointer; }
 
-  /* Topbar */
-  .top { max-width:1280px; margin:0 auto; padding:22px 48px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--rule-dark); }
-  .brand { display:flex; align-items:center; gap:12px; color:var(--text); }
-  .brand svg { width:32px; height:32px; }
-  .brand .word { font-family:var(--serif); font-size:22px; }
-  .brand .word em { font-style:italic; color:var(--gold-bright); font-weight:500; }
-  .top-tag { display:inline-flex; align-items:center; gap:8px; font-size:10.5px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold-bright); font-weight:600; padding:6px 12px; border:1px solid var(--rule-dark); border-radius:4px; }
-  .top-tag::before { content:""; width:6px; height:6px; border-radius:50%; background:var(--gold-bright); }
+  @media (max-width: 640px) {
+    .section { padding: 56px 0; }
 
-  /* Hero */
-  .hero { max-width:1280px; margin:0 auto; padding:88px 48px 64px; position:relative; }
-  .hero::before { content:""; position:absolute; right:-160px; top:-40px; width:560px; height:560px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23b8924c' stroke-width='0.3' stroke-linecap='round'/></svg>"); background-size:contain; opacity:0.18; pointer-events:none; }
-  .eyebrow { display:inline-flex; align-items:center; gap:10px; font-size:11.5px; letter-spacing:0.22em; text-transform:uppercase; color:var(--gold-bright); font-weight:600; margin-bottom:28px; position:relative; z-index:1; }
-  .eyebrow::before { content:""; width:30px; height:1px; background:var(--gold-bright); }
-  .eyebrow .vol { font-family:var(--mono); color:var(--muted); letter-spacing:0.04em; font-weight:400; text-transform:none; padding-left:10px; border-left:1px solid var(--rule-dark); margin-left:4px; }
-  h1 { font-family:var(--serif); font-size:clamp(48px,6vw,80px); font-weight:300; line-height:1.02; letter-spacing:-0.03em; max-width:18ch; position:relative; z-index:1; }
-  h1 em { font-style:italic; color:var(--gold-bright); font-weight:400; }
-  .lede { margin-top:28px; font-family:var(--serif); font-size:21px; color:var(--text-2); max-width:60ch; line-height:1.5; position:relative; z-index:1; }
-  .lede strong { color:var(--gold-bright); font-weight:500; }
+    /* Hero */
+    .hero-grid { padding-top: 46px; padding-bottom: 58px; }
+    .hero h1 { font-size: clamp(38px, 11vw, 54px); }
+    .urgency { flex-wrap: wrap; border-radius: 14px; }
+    .hero-actions { width: 100%; }
 
-  /* Walkthrough button */
-  .start { margin-top:36px; display:inline-flex; align-items:center; gap:10px; padding:14px 22px; background:var(--gold-bright); color:var(--ink); border-radius:6px; font-size:14px; font-weight:600; transition:background 160ms, transform 160ms; position:relative; z-index:1; }
-  .start:hover { background:var(--gold); transform:translateY(-2px); }
-  .start svg { width:16px; height:16px; }
+    /* Product UI mockups: stack and breathe, no horizontal scroll */
+    .ui-body { grid-template-columns: 1fr; gap: 14px; padding: 14px 14px 18px; }
+    .ui-top { padding: 12px 14px; gap: 10px; }
+    .ui-nav { display: none; }
+    .ui-greet { font-size: 19px; }
+    .bal-card .v { font-size: 38px; }
+    .offer .info .sk { white-space: normal; }
+    .tour-stage { overflow: visible; }
+    .chat-ui, .me-ui { min-width: 0; grid-template-columns: 1fr; }
+    .chat-list { display: none; }
+    .chat-msgs { padding: 16px; }
+    .bridges-grid { grid-template-columns: 1fr; }
+    .tour-tabs { gap: 6px; } .tour-tab { padding: 9px 13px; font-size: 12.5px; }
 
-  /* Sections */
-  .sec { max-width:1280px; margin:0 auto; padding:48px 48px 0; }
-  .sec-head { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--rule-dark); }
-  .sec-head h2 { font-family:var(--serif); font-size:28px; font-weight:500; letter-spacing:-0.015em; color:var(--text); line-height:1.15; }
-  .sec-head h2 em { font-style:italic; color:var(--gold-bright); }
-  .sec-head .num { font-family:var(--mono); font-size:11px; color:var(--muted); letter-spacing:0.06em; }
-  .sec-sub { font-size:14px; color:var(--text-2); max-width:64ch; margin-bottom:24px; }
+    /* Stats: keep 2×2 but tighter */
+    .strip-item { padding: 22px 14px; } .strip-item .fig { font-size: 32px; }
 
-  /* Card grid */
-  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; }
+    /* Forms: stack field + button so neither is crushed */
+    .cta-form .field-line, .final-form, .seatcard .field-line { flex-direction: column; }
+    .seatcard .field-line { overflow: visible; }
+    .cta-form input, .final-form input, .seatcard input { border-right: 1px solid var(--rule); border-radius: 8px; }
+    .cta-form button, .final-form button, .seatcard button { border-radius: 8px; margin-top: 8px; width: 100%; justify-content: center; }
 
-  a.card {
-    display:flex; flex-direction:column;
-    background:var(--plate);
-    border:1px solid var(--rule-gold); border-radius:10px;
-    overflow:hidden;
-    transition:transform 220ms, border-color 220ms;
-    position:relative;
-  }
-  a.card:hover { border-color:var(--gold-bright); transform:translateY(-3px); }
-  a.card::before { content:""; position:absolute; top:-10px; right:-10px; width:60px; height:60px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23a07f3f' stroke-width='0.5' stroke-linecap='round'/></svg>"); background-size:contain; opacity:0.35; pointer-events:none; z-index:1; }
-
-  .card-preview {
-    height:140px;
-    background:var(--band);
-    position:relative; overflow:hidden;
-    border-bottom:1px solid var(--rule-gold);
-  }
-  .card-preview .pv-art {
-    position:absolute; inset:0;
-    display:flex; align-items:center; justify-content:center;
-    font-family:var(--serif);
-  }
-  .card-preview .pv-num {
-    font-size:64px; font-weight:300; color:var(--gold);
-    letter-spacing:-0.02em; line-height:1; opacity:0.5;
-  }
-  .card-preview.pv-landing { background:linear-gradient(135deg, var(--paper-3) 0%, var(--band) 100%); }
-  .card-preview.pv-landing::after { content:""; position:absolute; inset:0; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23a07f3f' stroke-width='0.6' stroke-linecap='round'/><circle cx='8' cy='24' r='2.5' fill='%23a07f3f'/><circle cx='28' cy='12' r='2.5' fill='%2314120e'/></svg>"); background-position:center; background-repeat:no-repeat; background-size:60% auto; opacity:0.5; }
-  .card-preview.pv-gate { background:linear-gradient(135deg, var(--band) 0%, var(--paper-3) 100%); }
-  .card-preview.pv-gate::after { content:"🔐"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:48px; opacity:0.5; }
-  .card-preview.pv-contest { background:linear-gradient(135deg, var(--gold-bright) 0%, var(--band) 70%); }
-  .card-preview.pv-contest::after { content:"🏆"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:64px; }
-
-  .card-body { padding:22px 22px 20px; flex:1; display:flex; flex-direction:column; position:relative; z-index:2; }
-  .card-tag { display:inline-block; font-family:var(--mono); font-size:10.5px; letter-spacing:0.04em; color:var(--gold-bright); margin-bottom:10px; }
-  .card-body h3 { font-family:var(--serif); font-size:22px; font-weight:500; letter-spacing:-0.005em; line-height:1.15; color:var(--text); margin-bottom:6px; }
-  .card-body p { font-size:13px; color:var(--text-2); line-height:1.55; flex:1; }
-  .card-arrow { margin-top:14px; font-size:12.5px; color:var(--gold-bright); font-weight:600; display:inline-flex; align-items:center; gap:4px; }
-
-  /* Featured contest banner */
-  .featured {
-    background:linear-gradient(135deg, var(--gold-bright) 0%, var(--band) 70%);
-    border:1px solid var(--rule-gold);
-    border-radius:14px;
-    padding:0;
-    margin-bottom:48px;
-    overflow:hidden;
-    position:relative;
-    display:grid; grid-template-columns:1fr auto;
-    gap:0;
-    transition:transform 220ms;
-  }
-  .featured:hover { transform:translateY(-3px); }
-  .featured::after { content:""; position:absolute; top:-40px; right:-40px; width:280px; height:280px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23a07f3f' stroke-width='0.4' stroke-linecap='round'/></svg>"); background-size:contain; opacity:0.18; pointer-events:none; }
-  .featured-body { padding:32px 36px; color:var(--ink); position:relative; z-index:1; }
-  .featured-tag { display:inline-flex; align-items:center; gap:8px; font-size:10.5px; letter-spacing:0.2em; text-transform:uppercase; color:var(--ink); background:rgba(20,18,14,0.12); padding:5px 11px; border-radius:4px; font-weight:700; margin-bottom:16px; }
-  .featured-tag::before { content:""; width:6px; height:6px; border-radius:50%; background:var(--ink); animation:f-pulse 1.6s ease-out infinite; }
-  @keyframes f-pulse { 0% { box-shadow:0 0 0 0 rgba(20,18,14,0.5); } 70% { box-shadow:0 0 0 8px rgba(20,18,14,0); } 100% { box-shadow:0 0 0 0 rgba(20,18,14,0); } }
-  .featured h3 { font-family:var(--serif); font-size:36px; font-weight:400; letter-spacing:-0.02em; line-height:1.1; color:var(--ink); margin-bottom:8px; }
-  .featured h3 em { font-style:italic; }
-  .featured p { font-size:14px; color:rgba(20,18,14,0.78); max-width:50ch; line-height:1.55; }
-  .featured-cta {
-    display:flex; align-items:center; justify-content:center;
-    padding:0 36px;
-    background:var(--gold);
-    color:#fff;
-    font-family:var(--serif);
-    font-size:30px;
-    font-weight:500;
-    position:relative; z-index:1;
-    letter-spacing:-0.01em;
-  }
-  .featured-cta em { font-style:italic; }
-  .featured-cta::after { content:" →"; color:#fff; }
-
-  /* Deprecated archive */
-  .archive { opacity:0.6; }
-  .archive a.card { background:transparent; }
-  .archive a.card .card-preview { background:var(--paper-3); }
-  .archive .card-tag { color:var(--muted); }
-
-  /* Footer */
-  .foot { max-width:1280px; margin:80px auto 0; padding:32px 48px; border-top:1px solid var(--rule-dark); display:flex; justify-content:space-between; align-items:baseline; font-size:12.5px; color:var(--muted); }
-  .foot em { font-family:var(--serif); font-style:italic; color:var(--gold-bright); font-size:14px; }
-
-  /* Responsive */
-  @media (max-width:720px) {
-    .top, .hero, .sec, .foot { padding-left:22px; padding-right:22px; }
-    .top { padding-top:16px; padding-bottom:16px; }
-    .hero { padding-top:48px; padding-bottom:32px; }
-    .featured { grid-template-columns:1fr; }
-    .featured-body { padding:24px 22px; }
-    .featured-cta { padding:18px; font-size:20px; }
+    /* Tighter cards */
+    .demo-stage { padding: 22px 20px; }
+    .seatcard { padding: 26px 22px; }
+    .convert h2 { font-size: clamp(34px, 9vw, 48px); }
   }
 </style>
 </head>
 <body>
+<div class="page">
 
-<header class="top">
-  <a class="brand" href="index.html">
-    <svg viewBox="0 0 36 36" fill="none">
-      <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2" stroke-linecap="round" />
-      <circle cx="8" cy="24" r="2.5" fill="#a07f3f" />
-      <circle cx="28" cy="12" r="2.5" fill="#14120e" />
-    </svg>
-    <span class="word">samay <em>setu</em></span>
-  </a>
-  <span class="top-tag">Mockup · Walkthrough</span>
-</header>
-
-<section class="hero">
-  <p class="eyebrow">The full product, in seven screens <span class="vol">Direction C · applied end-to-end</span></p>
-  <h1>The whole thing, <em>laid out.</em></h1>
-  <p class="lede">
-    Marketing site, sign-in, onboarding wizard, dashboard, bridges inbox, chats, profile manager, and the Founding 50 Race contest. <strong>Two visual systems, one design language</strong> — the marketing pages feel like a magazine, the software feels like a tool, and the bridge curve threads through both.
-  </p>
-  <a class="start" href="landing.html">
-    Start at the landing page
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-  </a>
-</section>
-
-<!-- Featured: contest -->
-<section class="sec">
-  <a class="featured" href="contest.html">
-    <div class="featured-body">
-      <span class="featured-tag">Live · This week's centrepiece</span>
-      <h3>The <em>Founding 50 Race</em> — leaderboard &amp; tracker.</h3>
-      <p>Cinematic hero, prize card, live leaderboard with rank movement indicators, your-rank highlight, copy-link block, Instagram &amp; LinkedIn share. Built for the contest you described.</p>
+  <!-- Announcement -->
+  <a class="topbar" href="membership.html#founding">
+    <div class="topbar-inner">
+      <span class="live"><span class="dot"></span> Live · 3d 14h left</span>
+      <span>🏆 The <em>Founding 50 Race</em> — five Lifetime VIP Passes for the top referrers.</span>
+      <span class="go">See leaderboard →</span>
     </div>
-    <div class="featured-cta">View race</div>
   </a>
-</section>
 
-<!-- Section: Marketing -->
-<section class="sec">
-  <div class="sec-head">
-    <h2><em>01</em> &nbsp;Marketing</h2>
-    <span class="num">PUBLIC · UNAUTHENTICATED</span>
-  </div>
-  <p class="sec-sub">Bigger swings, alternating bands, hero with emblem panel. The pages a stranger sees before they're verified.</p>
-  <div class="grid">
-    <a class="card" href="landing.html">
-      <div class="card-preview pv-landing"></div>
-      <div class="card-body">
-        <span class="card-tag">01 · /</span>
-        <h3>Landing page</h3>
-        <p>Hero with live contest strip · Three pillars · Ethics blockquote · Founding circle progress · Waitlist CTA.</p>
-        <span class="card-arrow">Open →</span>
+  <!-- Nav -->
+  <div class="nav-wrap">
+    <nav class="nav">
+      <a class="brand" href="index.html">
+        <svg viewBox="0 0 36 36" fill="none"><path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="24" r="2.5" fill="#a07f3f"/><circle cx="28" cy="12" r="2.5" fill="#14120e"/></svg>
+        <span class="word">samay <em>setu</em></span>
+      </a>
+      <div class="nav-links">
+        <a href="how-it-works.html">How it works</a>
+        <a href="about.html">Our story</a>
+        <a href="membership.html">Membership</a>
+        <a href="#">Sign in</a>
+        <a href="membership.html#apply" class="btn btn-gold">Apply for a seat <span class="arr">→</span></a>
       </div>
-    </a>
-    <a class="card" href="bridge-passport.html">
-      <div class="card-preview pv-gate"></div>
-      <div class="card-body">
-        <span class="card-tag">02 · /live-bridge</span>
-        <h3>Bridge Passport</h3>
-        <p>Instagram→site gate. Shows the locked bounty preview &amp; demands LinkedIn verification before any action. Trust copy below.</p>
-        <span class="card-arrow">Open →</span>
-      </div>
-    </a>
+      <button class="nav-toggle" aria-label="Menu"><span></span></button>
+    </nav>
   </div>
-</section>
 
-<!-- Section: Sign-in -->
-<section class="sec">
-  <div class="sec-head">
-    <h2><em>02</em> &nbsp;Sign-in &amp; verification</h2>
-    <span class="num">GATED · AUTH FLOW</span>
+  <!-- Sticky conversion bar -->
+  <div class="sticky-cta" id="sticky-cta">
+    <div class="sticky-cta-inner">
+      <div class="sc-txt"><b>Join the Founding Circle.</b><span class="sc-sub">An hour given, an hour received — plus a 5-hour Trust Bonus to start.</span></div>
+      <span class="sc-seats" id="sticky-seats">12 / 20 seats left</span>
+      <a href="#join" class="btn btn-gold">Get your invite <span class="arr">→</span></a>
+    </div>
   </div>
-  <p class="sec-sub">First contact with the software. Ink topbar, single ink card on paper. Same chrome carries into the dashboard so the transition feels continuous.</p>
-  <div class="grid">
-    <a class="card" href="login.html">
-      <div class="card-preview"><div class="pv-art"><span class="pv-num">03</span></div></div>
-      <div class="card-body">
-        <span class="card-tag">03 · /login</span>
-        <h3>Sign in</h3>
-        <p>LinkedIn + magic-link. Centered ink card with bridge-curve motif. "Not a member? Apply →" footer link.</p>
-        <span class="card-arrow">Open →</span>
-      </div>
-    </a>
-    <a class="card" href="onboarding.html">
-      <div class="card-preview"><div class="pv-art"><span class="pv-num">04</span></div></div>
-      <div class="card-body">
-        <span class="card-tag">04 · /onboarding</span>
-        <h3>Verified Architect wizard</h3>
-        <p>Identity strip pulled from LinkedIn · 3-step rail · Active step card with serif title and prompt. Showing step 2 of 3.</p>
-        <span class="card-arrow">Open →</span>
-      </div>
-    </a>
-  </div>
-</section>
 
-<!-- Section: Member -->
-<section class="sec">
-  <div class="sec-head">
-    <h2><em>03</em> &nbsp;Member surfaces</h2>
-    <span class="num">AUTHENTICATED · PRODUCT</span>
-  </div>
-  <p class="sec-sub">Sticky ink topbar with the five tabs. Each surface has its own hero band, bridge-curve divider, then dense content below. Ink card plates float on paper.</p>
-  <div class="grid">
-    <a class="card" href="dashboard.html">
-      <div class="card-preview"><div class="pv-art"><span class="pv-num">05</span></div></div>
-      <div class="card-body">
-        <span class="card-tag">05 · /dashboard</span>
-        <h3>Live Bridge feed</h3>
-        <p>Contest banner up top · Editorial hero · Pillar pills + search · Grid of trade cards with mutual matches surfacing first.</p>
-        <span class="card-arrow">Open →</span>
+  <!-- ════════ HERO ════════ -->
+  <section class="hero" id="hero">
+    <div class="mesh" aria-hidden="true"><i></i><i></i></div>
+    <svg class="hero-bridge" viewBox="0 0 1200 700" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M60 540 C 200 540, 380 200, 600 360 C 820 520, 1000 180, 1140 180" />
+      <circle cx="60" cy="540" r="9" fill="#b0863f"/>
+      <circle cx="1140" cy="180" r="9" fill="#14120e"/>
+    </svg>
+    <div class="hero-grid">
+      <div>
+        <p class="hero-tag">Launching in North Kolkata <span class="vol">Pilot · Vol. I</span></p>
+        <h1>
+          <span class="line"><span>Your time is</span></span>
+          <span class="line"><span>the only</span></span>
+          <span class="line"><span><em>currency that matters.</em></span></span>
+        </h1>
+        <p class="hero-lede">A private exchange for your neighbourhood. Trade an hour of your <strong>skill</strong> for an hour of someone else's help — no money, just minutes.</p>
+        <div class="urgency" style="opacity:0;animation:fadeUp 0.8s var(--ease) 0.56s forwards;">
+          <span class="u-dot"></span>
+          <span class="u-txt"><b>12 founding seats left</b> · Wave II closes in</span>
+          <span class="u-clock" id="countdown">3d 14h 00m</span>
+        </div>
+        <form class="cta-form" id="hero-form" style="opacity:0;animation:fadeUp 0.8s var(--ease) 0.66s forwards;" onsubmit="return heroSignup(event)">
+          <div class="field-line">
+            <input type="email" required placeholder="Your email address" aria-label="Email address" />
+            <button type="submit">Get your invite <span class="arr">→</span></button>
+          </div>
+          <div class="cta-reassure">
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5 9-9"/></svg> Free forever — no money, ever</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5 9-9"/></svg> Verified neighbours only</span>
+            <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5 9-9"/></svg> No spam · leave anytime</span>
+          </div>
+        </form>
+        <div class="cta-success" id="hero-success">
+          <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg></span>
+          <div><div class="st-a">You're on the list.</div><div class="st-b">Check your inbox — we'll be in touch within 2 days to verify your seat.</div></div>
+        </div>
+        <div class="hero-meta" style="margin-top:22px;opacity:0;animation:fadeUp 0.8s var(--ease) 0.78s forwards;">
+          <div class="hero-faces"><span class="av g1">R</span><span class="av g3">A</span><span class="av g2">K</span><span class="av g5">S</span></div>
+          <span class="mt"><b>8 neighbours</b> already verified — be one of the first 20.</span>
+        </div>
       </div>
-    </a>
-    <a class="card" href="bridges.html">
-      <div class="card-preview"><div class="pv-art"><span class="pv-num">06</span></div></div>
-      <div class="card-body">
-        <span class="card-tag">06 · /dashboard/bridges</span>
-        <h3>Bridges inbox</h3>
-        <p>Incoming / Outgoing / Accepted / Archived tabs. Accept-decline-open. Status pills colour-coded.</p>
-        <span class="card-arrow">Open →</span>
-      </div>
-    </a>
-    <a class="card" href="chats.html">
-      <div class="card-preview"><div class="pv-art"><span class="pv-num">07</span></div></div>
-      <div class="card-body">
-        <span class="card-tag">07 · /dashboard/chats</span>
-        <h3>Chats</h3>
-        <p>Two-pane: thread list + active conversation. Active-bridge context strip at the top. Composer at the bottom.</p>
-        <span class="card-arrow">Open →</span>
-      </div>
-    </a>
-    <a class="card" href="me.html">
-      <div class="card-preview"><div class="pv-art"><span class="pv-num">08</span></div></div>
-      <div class="card-body">
-        <span class="card-tag">08 · /dashboard/me</span>
-        <h3>Me — profile &amp; trades</h3>
-        <p>Credit balance hero · Profile preview (what others see) · Trade manager with live indicators &amp; "Add new trade".</p>
-        <span class="card-arrow">Open →</span>
-      </div>
-    </a>
-    <a class="card" href="contest.html">
-      <div class="card-preview pv-contest"></div>
-      <div class="card-body">
-        <span class="card-tag">09 · /dashboard/contest</span>
-        <h3>Founding 50 Race</h3>
-        <p>Your rank &amp; invite link · Live leaderboard with up/down arrows · Prize card · Share buttons · How-it-works strip.</p>
-        <span class="card-arrow">Open →</span>
-      </div>
-    </a>
-  </div>
-</section>
 
-<!-- Section: Archive -->
-<section class="sec archive">
-  <div class="sec-head">
-    <h2><em>—</em> &nbsp;Archive</h2>
-    <span class="num">DEPRECATED · REFERENCE</span>
-  </div>
-  <p class="sec-sub">The three early direction variants (A / B / C). C became the applied direction and grew into the screens above. A and B kept for reference.</p>
-  <div class="grid">
-    <a class="card" href="archive/a-editorial.html">
-      <div class="card-preview"><div class="pv-art"><span class="pv-num" style="color:var(--muted);">A</span></div></div>
-      <div class="card-body">
-        <span class="card-tag">A · DEPRECATED</span>
-        <h3>Editorial Gallery</h3>
-        <p>Warm parchment everywhere, gallery-plate cards.</p>
+      <!-- Product mockup -->
+      <div class="stage" id="hero-stage">
+        <div class="float-card fc-1">
+          <span class="ic gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span>
+          <span class="ct"><span class="a">+1 credit earned</span><span class="b">You taught Excel · 1h</span></span>
+        </div>
+        <div class="float-card fc-2">
+          <span class="ic green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></span>
+          <span class="ct"><span class="a">Bridge confirmed</span><span class="b">Sourav will fix your tap</span></span>
+        </div>
+        <div class="float-card fc-3">
+          <span class="ic gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span>
+          <span class="ct"><span class="a">Anjali messaged you</span><span class="b">"Tiffin ready at 1pm 🍲"</span></span>
+        </div>
+        <div class="browser">
+          <div class="browser-bar">
+            <div class="browser-dots"><i></i><i></i><i></i></div>
+            <div class="browser-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg> app.samaysetu.in/dashboard</div>
+          </div>
+          <div class="ui">
+            <div class="ui-top">
+              <span class="brand-mini"><svg viewBox="0 0 36 36" fill="none"><path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2.4" stroke-linecap="round"/><circle cx="8" cy="24" r="2.6" fill="#a07f3f"/><circle cx="28" cy="12" r="2.6" fill="#14120e"/></svg> samay</span>
+              <nav class="ui-nav"><a class="on">Dashboard</a><a>Bridges</a><a>Chats</a><a>Me</a></nav>
+              <span class="ui-spacer"></span>
+              <span class="ui-credit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 12 credits</span>
+              <span class="ui-av">R</span>
+            </div>
+            <div class="ui-body">
+              <div>
+                <div class="ui-greet">Good morning, <em>Riya</em>.</div>
+                <div class="ui-sub">3 neighbours need an hour you can give.</div>
+                <div class="bal-card">
+                  <div class="glyph"></div>
+                  <div class="l">Your time balance</div>
+                  <div class="v">12<small> credits</small></div>
+                  <div class="spark"><i style="height:40%"></i><i style="height:65%"></i><i style="height:50%"></i><i style="height:80%"></i><i style="height:60%"></i><i style="height:95%"></i><i style="height:75%"></i></div>
+                </div>
+                <div class="sec-label"><span class="t">Bridges near you</span><span class="a">See all →</span></div>
+                <div class="offer">
+                  <span class="av g3">S</span>
+                  <div class="info"><div class="nm">Sourav Ghosh <span class="hpill">1h</span></div><div class="sk">Plumbing & small home repairs</div><span class="tag care"><span class="d"></span> Home &amp; care</span></div>
+                  <button class="req">Request</button>
+                </div>
+                <div class="offer">
+                  <span class="av g4">M</span>
+                  <div class="info"><div class="nm">Megha Roy <span class="hpill">1h</span></div><div class="sk">Class 10 maths tutoring</div><span class="tag know"><span class="d"></span> Knowledge</span></div>
+                  <button class="req">Request</button>
+                </div>
+                <div class="offer">
+                  <span class="av g2">A</span>
+                  <div class="info"><div class="nm">Anjali Sen <span class="hpill">1h</span></div><div class="sk">Home-cooked Bengali tiffin</div><span class="tag care"><span class="d"></span> Home &amp; care</span></div>
+                  <button class="req">Request</button>
+                </div>
+              </div>
+              <aside class="ui-side">
+                <div class="sec-label"><span class="t">Recent activity</span></div>
+                <div class="feed-item"><span class="av g1">R</span><div><div class="ft"><b>You</b> earned a credit teaching <b>Megha</b></div><div class="fm">+1 · 2h ago</div></div></div>
+                <div class="feed-item"><span class="av g3">S</span><div><div class="ft"><b>Sourav</b> accepted your bridge</div><div class="fm">5h ago</div></div></div>
+                <div class="feed-item"><span class="av g2">A</span><div><div class="ft"><b>Anjali</b> sent you a tiffin</div><div class="fm">−1 · 1d ago</div></div></div>
+                <div class="feed-item"><span class="av g5">K</span><div><div class="ft"><b>Kabir</b> joined the circle</div><div class="fm">2d ago</div></div></div>
+              </aside>
+            </div>
+          </div>
+        </div>
       </div>
-    </a>
-    <a class="card" href="archive/b-premium-dark.html">
-      <div class="card-preview"><div class="pv-art"><span class="pv-num" style="color:var(--muted);">B</span></div></div>
-      <div class="card-body">
-        <span class="card-tag">B · DEPRECATED</span>
-        <h3>Premium Dark</h3>
-        <p>All-dark surface, glass nav, gold accents.</p>
-      </div>
-    </a>
-    <a class="card" href="archive/c-crafted-bicolor.html">
-      <div class="card-preview"><div class="pv-art"><span class="pv-num" style="color:var(--gold-bright);">C</span></div></div>
-      <div class="card-body">
-        <span class="card-tag">C · APPLIED</span>
-        <h3>Crafted Bicolor (early)</h3>
-        <p>The original single-screen that became the full mockup above.</p>
-      </div>
-    </a>
-  </div>
-</section>
+    </div>
+  </section>
 
-<footer class="foot">
-  <span>Samay Setu · Mockup walkthrough · 2026</span>
-  <em>One hour given, one hour received.</em>
-</footer>
+  <!-- STAT STRIP -->
+  <div class="strip">
+    <div class="strip-inner">
+      <div class="strip-item"><div class="fig"><span data-count="8" data-pad="1">08</span></div><div class="lbl">Neighbours verified</div></div>
+      <div class="strip-item"><div class="fig"><span data-count="60">60</span>+</div><div class="lbl">Skills already offered</div></div>
+      <div class="strip-item"><div class="fig">1 : 1</div><div class="lbl">Every hour, equal</div></div>
+      <div class="strip-item"><div class="fig">₹0</div><div class="lbl">Money ever exchanged</div></div>
+    </div>
+  </div>
 
+  <!-- ════════ INTERACTIVE DEMO ════════ -->
+  <section class="section equiv-band">
+    <div class="wrap demo">
+      <div>
+        <p class="eyebrow reveal" style="color:var(--gold-bright);">Try it yourself</p>
+        <h2 class="h2 reveal" data-d="1" style="margin-top:20px;">See the exchange<br/><em>actually happen.</em></h2>
+        <p class="lede reveal" data-d="1" style="margin-top:18px;">No theory. Give an hour and watch a credit land in your balance. Spend it and watch a neighbour show up for you. This is the whole product, in one little loop.</p>
+        <p class="reveal" data-d="2" style="margin-top:18px;color:var(--ink-3);font-size:13.5px;">↓ Tap the buttons. It's interactive.</p>
+      </div>
+      <div class="demo-stage reveal" data-d="1">
+        <div class="glyph"></div>
+        <div class="toast" id="demo-toast"></div>
+        <div class="demo-bal">
+          <div class="l">Your time balance</div>
+          <div class="coin-stack"><div class="demo-coin" id="demo-coin">5</div></div>
+          <div class="u">Samay Credits · 1 credit = 1 hour</div>
+        </div>
+        <div class="demo-btns">
+          <button class="btn-give" id="btn-give"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg> Give an hour</button>
+          <button class="btn-spend" id="btn-spend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg> Receive an hour</button>
+        </div>
+        <div class="demo-ledger" id="demo-ledger">
+          <div class="demo-empty">Your exchanges will appear here.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ PRODUCT TOUR (tabs) ════════ -->
+  <section class="section band-paper" id="tour">
+    <div class="wrap">
+      <p class="eyebrow center reveal" style="justify-content:center;">A real product, not a promise</p>
+      <h2 class="h2 reveal" data-d="1" style="margin-top:20px;text-align:center;">Take a tour of<br/><em>the circle.</em></h2>
+      <div class="tour-tabs reveal" data-d="1">
+        <button class="tour-tab on" data-tab="dash"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg> Dashboard</button>
+        <button class="tour-tab" data-tab="bridges"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 18c0-6 4-9 8-9s8 3 8 9"/><circle cx="4" cy="18" r="1.6"/><circle cx="20" cy="18" r="1.6"/></svg> Bridges</button>
+        <button class="tour-tab" data-tab="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg> Chats</button>
+        <button class="tour-tab" data-tab="me"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg> Profile</button>
+      </div>
+
+      <div class="tour-stage reveal" data-d="1">
+        <!-- Dashboard -->
+        <div class="tour-panel on" data-panel="dash">
+          <div class="browser">
+            <div class="browser-bar"><div class="browser-dots"><i></i><i></i><i></i></div><div class="browser-url">app.samaysetu.in/dashboard</div></div>
+            <div class="ui">
+              <div class="ui-top">
+                <span class="brand-mini"><svg viewBox="0 0 36 36" fill="none"><path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2.4" stroke-linecap="round"/><circle cx="8" cy="24" r="2.6" fill="#a07f3f"/><circle cx="28" cy="12" r="2.6" fill="#14120e"/></svg> samay</span>
+                <nav class="ui-nav"><a class="on">Dashboard</a><a>Bridges</a><a>Chats</a><a>Me</a></nav>
+                <span class="ui-spacer"></span><span class="ui-credit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 12 credits</span><span class="ui-av">R</span>
+              </div>
+              <div class="ui-body">
+                <div>
+                  <div class="ui-greet">Good morning, <em>Riya</em>.</div>
+                  <div class="ui-sub">3 neighbours need an hour you can give.</div>
+                  <div class="bal-card"><div class="glyph"></div><div class="l">Your time balance</div><div class="v">12<small> credits</small></div><div class="spark"><i style="height:40%"></i><i style="height:65%"></i><i style="height:50%"></i><i style="height:80%"></i><i style="height:60%"></i><i style="height:95%"></i><i style="height:75%"></i></div></div>
+                  <div class="sec-label"><span class="t">Bridges near you</span><span class="a">See all →</span></div>
+                  <div class="offer"><span class="av g3">S</span><div class="info"><div class="nm">Sourav Ghosh <span class="hpill">1h</span></div><div class="sk">Plumbing &amp; small home repairs</div><span class="tag care"><span class="d"></span> Home &amp; care</span></div><button class="req">Request</button></div>
+                  <div class="offer"><span class="av g4">M</span><div class="info"><div class="nm">Megha Roy <span class="hpill">1h</span></div><div class="sk">Class 10 maths tutoring</div><span class="tag know"><span class="d"></span> Knowledge</span></div><button class="req">Request</button></div>
+                  <div class="offer"><span class="av g2">A</span><div class="info"><div class="nm">Anjali Sen <span class="hpill">1h</span></div><div class="sk">Home-cooked Bengali tiffin</div><span class="tag care"><span class="d"></span> Home &amp; care</span></div><button class="req">Request</button></div>
+                </div>
+                <aside class="ui-side">
+                  <div class="sec-label"><span class="t">Live activity</span></div>
+                  <div id="live-feed">
+                    <div class="feed-item"><span class="av g1">R</span><div><div class="ft"><b>You</b> earned a credit teaching <b>Megha</b></div><div class="fm">+1 · just now</div></div></div>
+                    <div class="feed-item"><span class="av g3">S</span><div><div class="ft"><b>Sourav</b> accepted your bridge</div><div class="fm">5m ago</div></div></div>
+                    <div class="feed-item"><span class="av g2">A</span><div><div class="ft"><b>Anjali</b> sent you a tiffin</div><div class="fm">−1 · 1h ago</div></div></div>
+                  </div>
+                </aside>
+              </div>
+            </div>
+          </div>
+          <p class="tour-cap">Your balance, your neighbours, your bridges — one calm home screen.</p>
+        </div>
+
+        <!-- Bridges -->
+        <div class="tour-panel" data-panel="bridges">
+          <div class="browser">
+            <div class="browser-bar"><div class="browser-dots"><i></i><i></i><i></i></div><div class="browser-url">app.samaysetu.in/bridges</div></div>
+            <div class="ui">
+              <div class="ui-top"><span class="brand-mini"><svg viewBox="0 0 36 36" fill="none"><path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2.4" stroke-linecap="round"/><circle cx="8" cy="24" r="2.6" fill="#a07f3f"/><circle cx="28" cy="12" r="2.6" fill="#14120e"/></svg> samay</span><nav class="ui-nav"><a>Dashboard</a><a class="on">Bridges</a><a>Chats</a><a>Me</a></nav><span class="ui-spacer"></span><span class="ui-credit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 12 credits</span><span class="ui-av">R</span></div>
+              <div class="bridges-ui">
+                <div class="bridges-head"><span class="chip on">All</span><span class="chip">Professional</span><span class="chip">Home &amp; care</span><span class="chip">Knowledge</span><span class="chip">Craft</span></div>
+                <div class="bridges-grid">
+                  <div class="bcard"><div class="top"><span class="av g3">S</span><div><div class="nm">Sourav Ghosh</div><div class="lc">Bagbazar · 0.4km</div></div></div><h5>Plumbing &amp; repairs</h5><span class="tag care"><span class="d"></span> Home &amp; care</span><div class="row2"><span class="hpill">1h · offered</span><span class="req">Request</span></div></div>
+                  <div class="bcard"><div class="top"><span class="av g4">M</span><div><div class="nm">Megha Roy</div><div class="lc">Shyambazar · 0.8km</div></div></div><h5>Maths tutoring</h5><span class="tag know"><span class="d"></span> Knowledge</span><div class="row2"><span class="hpill">1h · offered</span><span class="req">Request</span></div></div>
+                  <div class="bcard"><div class="top"><span class="av g2">A</span><div><div class="nm">Anjali Sen</div><div class="lc">Hatibagan · 1.1km</div></div></div><h5>Bengali tiffin</h5><span class="tag care"><span class="d"></span> Home &amp; care</span><div class="row2"><span class="hpill">1h · offered</span><span class="req">Request</span></div></div>
+                  <div class="bcard"><div class="top"><span class="av g5">K</span><div><div class="nm">Kabir M.</div><div class="lc">Maniktala · 1.4km</div></div></div><h5>Website design</h5><span class="tag prof"><span class="d"></span> Professional</span><div class="row2"><span class="hpill">1h · offered</span><span class="req">Request</span></div></div>
+                  <div class="bcard"><div class="top"><span class="av g1">D</span><div><div class="nm">Devika P.</div><div class="lc">Shobhabazar · 0.6km</div></div></div><h5>Saree tailoring</h5><span class="tag craft"><span class="d"></span> Craft</span><div class="row2"><span class="hpill">1h · offered</span><span class="req">Request</span></div></div>
+                  <div class="bcard"><div class="top"><span class="av g3">T</span><div><div class="nm">Tarun B.</div><div class="lc">Bagbazar · 0.9km</div></div></div><h5>Tax &amp; ITR filing</h5><span class="tag prof"><span class="d"></span> Professional</span><div class="row2"><span class="hpill">1h · offered</span><span class="req">Request</span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="tour-cap">Every offered hour in the circle — filter by what you need, request in a tap.</p>
+        </div>
+
+        <!-- Chat -->
+        <div class="tour-panel" data-panel="chat">
+          <div class="browser">
+            <div class="browser-bar"><div class="browser-dots"><i></i><i></i><i></i></div><div class="browser-url">app.samaysetu.in/chats</div></div>
+            <div class="ui">
+              <div class="ui-top"><span class="brand-mini"><svg viewBox="0 0 36 36" fill="none"><path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2.4" stroke-linecap="round"/><circle cx="8" cy="24" r="2.6" fill="#a07f3f"/><circle cx="28" cy="12" r="2.6" fill="#14120e"/></svg> samay</span><nav class="ui-nav"><a>Dashboard</a><a>Bridges</a><a class="on">Chats</a><a>Me</a></nav><span class="ui-spacer"></span><span class="ui-credit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 12 credits</span><span class="ui-av">R</span></div>
+              <div class="chat-ui">
+                <div class="chat-list">
+                  <div class="chat-li on"><span class="av g3">S</span><div><div class="nm">Sourav Ghosh</div><div class="pv">Great, see you at 4!</div></div></div>
+                  <div class="chat-li"><span class="av g2">A</span><div><div class="nm">Anjali Sen</div><div class="pv">Tiffin ready at 1pm 🍲</div></div></div>
+                  <div class="chat-li"><span class="av g4">M</span><div><div class="nm">Megha Roy</div><div class="pv">Thank you for the class!</div></div></div>
+                </div>
+                <div class="chat-thread">
+                  <div class="chat-head"><span class="av g3">S</span><div><div class="nm">Sourav Ghosh</div><div class="st">● Online · Bagbazar</div></div></div>
+                  <div class="chat-msgs">
+                    <div class="bubble them">Hi Riya! I saw you requested an hour. The kitchen tap, is it?</div>
+                    <div class="bubble me">Yes! It's been dripping for a week. Could you come by this evening?</div>
+                    <div class="chat-card"><div class="ch">Bridge request · 1 hour</div><div class="cb">Plumbing — kitchen tap repair</div><span class="tag care"><span class="d"></span> Home &amp; care · costs 1 credit</span><div class="cc"><span class="acc">Accept bridge</span><span class="dec">Suggest a time</span></div></div>
+                    <div class="bubble them">Accepted 👍 I'll be there at 4. No tools needed from your side.</div>
+                    <div class="bubble me">You're a lifesaver. See you at 4!</div>
+                  </div>
+                  <div class="chat-input"><span class="box">Write a message…</span><span class="snd"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="tour-cap">Arrange the hour, accept the bridge, and the credit moves automatically.</p>
+        </div>
+
+        <!-- Profile -->
+        <div class="tour-panel" data-panel="me">
+          <div class="browser">
+            <div class="browser-bar"><div class="browser-dots"><i></i><i></i><i></i></div><div class="browser-url">app.samaysetu.in/me</div></div>
+            <div class="ui">
+              <div class="ui-top"><span class="brand-mini"><svg viewBox="0 0 36 36" fill="none"><path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2.4" stroke-linecap="round"/><circle cx="8" cy="24" r="2.6" fill="#a07f3f"/><circle cx="28" cy="12" r="2.6" fill="#14120e"/></svg> samay</span><nav class="ui-nav"><a>Dashboard</a><a>Bridges</a><a>Chats</a><a class="on">Me</a></nav><span class="ui-spacer"></span><span class="ui-credit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> 12 credits</span><span class="ui-av">R</span></div>
+              <div class="me-ui">
+                <div class="me-card"><span class="av g1">R</span><h4>Riya Das</h4><div class="role">Accountant · Shyambazar</div><div class="me-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M12 2l2.4 5.5L20 8l-4 4 1 6-5-3-5 3 1-6-4-4 5.6-.5z"/></svg> Founding Member</div></div>
+                <div>
+                  <div class="me-stats"><div class="me-stat"><div class="fig">23</div><div class="d">Hours given</div></div><div class="me-stat"><div class="fig">16</div><div class="d">Hours received</div></div><div class="me-stat"><div class="fig">12</div><div class="d">Credits</div></div></div>
+                  <div class="me-skills"><div class="t">Hours I offer</div><div class="wrap2"><span class="skillchip">Spreadsheet help</span><span class="skillchip">Tax &amp; ITR filing</span><span class="skillchip">Budget planning</span><span class="skillchip">Excel coaching</span></div></div>
+                  <div class="me-skills"><div class="t">Recent bridges</div><div class="wrap2"><span class="skillchip">Taught Megha — maths funds 📈</span><span class="skillchip">Received tap repair 🔧</span><span class="skillchip">Received tiffin 🍲</span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="tour-cap">A reputation built from real hours given and received — never bought.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUTCOMES / WHAT YOU GET -->
+  <section class="section band-paper">
+    <div class="wrap">
+      <p class="eyebrow reveal">Why people join</p>
+      <h2 class="h2 reveal" data-d="1" style="margin-top:20px;">What an hour<br/><em>gives back.</em></h2>
+      <div class="outcomes">
+        <div class="outcome reveal" data-d="1">
+          <div class="oic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 7L9 18l-5-5"/><path d="M3 12h.01"/></svg></div>
+          <h4>Get help you<br/><em>couldn't otherwise afford.</em></h4>
+          <p>Tutoring, repairs, legal advice, home-cooked meals — receive the hours you need without spending a rupee. Your time is enough.</p>
+        </div>
+        <div class="outcome reveal" data-d="2">
+          <div class="oic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.4 5.5L20 8l-4 4 1 6-5-3-5 3 1-6-4-4 5.6-.5z"/></svg></div>
+          <h4>Make your skill<br/><em>matter again.</em></h4>
+          <p>Whatever you're good at has real value here — the same value as everyone else's. Retired, working, or studying: your hour counts fully.</p>
+        </div>
+        <div class="outcome reveal" data-d="3">
+          <div class="oic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2 4 4 0 017 2c0 5.5-7 10-7 10z"/></svg></div>
+          <h4>Belong to your<br/><em>neighbourhood again.</em></h4>
+          <p>Meet the people two doors down you'd never otherwise know. Every bridge is a new, real relationship — not another transaction.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS (pillars) -->
+  <section class="section equiv-band">
+    <div class="wrap">
+      <p class="eyebrow reveal">The Three Movements</p>
+      <h2 class="h2 reveal" data-d="1" style="margin-top:20px;">Simple by design.<br/><em>Profound by nature.</em></h2>
+      <div class="pillars">
+        <div class="pillar reveal" data-d="1">
+          <div class="pico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <div class="pillar-n">01 — Verify</div><h3>You're <em>welcomed</em>, not signed up.</h3><p>Apply for a seat. We verify every neighbour personally — by call, often by visit — so the circle stays small enough that trust holds.</p>
+        </div>
+        <div class="pillar reveal" data-d="2">
+          <div class="pico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 19V5M5 12l7-7 7 7"/></svg></div>
+          <div class="pillar-n">02 — Give</div><h3>Your <em>hour earns</em> a credit.</h3><p>Share an hour of a skill you love. One Samay Credit lands in your account. Your expertise — whatever it is — weighs the same as everyone else's.</p>
+        </div>
+        <div class="pillar reveal" data-d="3">
+          <div class="pico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 12v7a2 2 0 01-2 2H6a2 2 0 01-2-2v-7"/><path d="M12 3v14M7 8l5-5 5 5"/></svg></div>
+          <div class="pillar-n">03 — Receive</div><h3>Spend it on <em>any other hour</em>.</h3><p>A web designer can receive home cooking. A tutor can receive plant care. Inside the circle, time is the great equaliser.</p>
+        </div>
+      </div>
+      <div class="reveal" data-d="2" style="margin-top:34px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+        <a href="how-it-works.html" class="btn btn-ghost btn-lg">See exactly how it works <span class="arr">→</span></a>
+        <span style="font-size:13.5px;color:var(--ink-3);">~3 minutes to read.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section band-paper">
+    <div class="wrap">
+      <p class="eyebrow center reveal" style="justify-content:center;">From the first circle</p>
+      <h2 class="h2 reveal" data-d="1" style="margin-top:20px;text-align:center;">Neighbours, in their<br/><em>own words.</em></h2>
+      <div class="quotes">
+        <div class="quote reveal" data-d="1"><div class="stars">★★★★★</div><blockquote>I taught two hours of spreadsheet work and got my leaking tap fixed by a retired engineer down the lane. We'd never have met otherwise.</blockquote><div class="by"><span class="av g1">R</span><div class="meta"><strong>Riya D.</strong><span>Accountant · Shyambazar</span></div></div></div>
+        <div class="quote reveal" data-d="2"><div class="stars">★★★★★</div><blockquote>At 71 my cooking finally feels valuable again. I earn credits with tiffins and spend them learning to video-call my grandchildren.</blockquote><div class="by"><span class="av g2">A</span><div class="meta"><strong>Anjali S.</strong><span>Home cook · Hatibagan</span></div></div></div>
+        <div class="quote reveal" data-d="3"><div class="stars">★★★★★</div><blockquote>No invoices, no awkward money talk. Just an honest hour for an honest hour. It's how the neighbourhood used to feel.</blockquote><div class="by"><span class="av g5">K</span><div class="meta"><strong>Kabir M.</strong><span>Web designer · Maniktala</span></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOUNDING -->
+  <section class="section equiv-band">
+    <div class="wrap found">
+      <div class="found-left">
+        <p class="eyebrow reveal">Founding Circle</p>
+        <h2 class="h2 reveal" data-d="1" style="margin-top:18px;">The pilot circle<br/><em>is now open.</em></h2>
+        <blockquote class="reveal" data-d="1">"We are hand-selecting the first 20 neighbours to bridge the gap between skills and needs."</blockquote>
+        <p class="reveal" data-d="2">As a Founding Member you don't just join — you help write the rules. Join now to receive a <strong>5-hour Trust Bonus</strong> from day one.</p>
+      </div>
+      <aside class="progress card reveal" data-d="2" id="progress">
+        <div class="glyph"></div>
+        <span class="ptag">5h Trust Bonus</span>
+        <div class="plabel"><span>Founding Seats</span><span><strong>08 / 20</strong></span></div>
+        <div class="ptrack"><div class="pfill"></div></div>
+        <div class="pstats"><div class="pstat"><div class="fig"><span data-count="8" data-pad="1">08</span></div><div class="d">Members verified</div></div><div class="pstat"><div class="fig"><span data-count="12" data-pad="1">12</span></div><div class="d">Seats remaining</div></div></div>
+        <a href="membership.html#apply" class="btn btn-gold btn-lg" style="width:100%;">Claim your founding seat <span class="arr">→</span></a>
+      </aside>
+    </div>
+  </section>
+
+  <!-- CONVERSION BLOCK -->
+  <section class="section convert" id="join">
+    <div class="wrap convert-grid">
+      <div>
+        <p class="eyebrow reveal">Claim your founding seat</p>
+        <h2 class="reveal" data-d="1">Be one of the<br/>first <em>20.</em></h2>
+        <ul class="value-stack reveal" data-d="1">
+          <li><span class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span><span>A <b>5-hour Trust Bonus</b> in your account from day one — receive help before you've given any.</span></li>
+          <li><span class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span><span>A <b>permanent Founding Member badge</b> and a real voice in the rules of the circle.</span></li>
+          <li><span class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span><span>Entry into the <b>Founding 50 Race</b> — five Lifetime VIP Passes for top referrers.</span></li>
+          <li><span class="vt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></span><span>Priority in every future wave, forever. <b>Always free — no money, ever.</b></span></li>
+        </ul>
+      </div>
+      <aside class="seatcard reveal" data-d="2" id="seatcard">
+        <div class="sc-head"><span class="l">Founding seats claimed</span><span class="n">08 / 20</span></div>
+        <div class="meter"><i></i></div>
+        <div class="sc-foot"><b>12 seats remain.</b> Wave II closes in <span id="countdown-2">3d 14h</span>.</div>
+        <form id="join-form" onsubmit="return joinSignup(event)">
+          <div class="field-line">
+            <input type="email" required placeholder="Your email address" aria-label="Email address" />
+            <button type="submit">Claim my seat →</button>
+          </div>
+          <div class="micro">We reply within 2 days for a short verification call. No spam, ever.</div>
+        </form>
+        <div class="success" id="join-success">
+          <div class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <div class="a">Seat request received.</div>
+          <div class="b">Watch your inbox — a real person will reach out within two days.</div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="index.html"><svg viewBox="0 0 36 36" fill="none"><path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="24" r="2.5" fill="#a07f3f"/><circle cx="28" cy="12" r="2.5" fill="#14120e"/></svg><span class="word">samay <em>setu</em></span></a>
+        <p>One hour given, one hour received. A bridge of time between neighbours.</p>
+      </div>
+      <div class="footer-col"><h4>Explore</h4><a href="how-it-works.html">How it works</a><a href="about.html">Our story</a><a href="membership.html">Membership</a><a href="membership.html#faq">FAQ</a></div>
+      <div class="footer-col"><h4>The Circle</h4><a href="membership.html#apply">Apply for a seat</a><a href="membership.html#founding">Founding 50 Race</a><a href="#">Sign in</a></div>
+      <div class="footer-col"><h4>Contact</h4><a href="mailto:hello@samaysetu.in">hello@samaysetu.in</a><a href="#">North Kolkata</a><a href="#">Instagram</a></div>
+    </div>
+    <div class="footer-bottom"><span>Samay Setu · North Kolkata · 2026</span><em>One hour given, one hour received.</em></div>
+  </footer>
+
+  <!-- Recent-activity social proof -->
+  <div class="social-toast" id="social-toast">
+    <span class="av g3" id="st-av">S</span>
+    <div class="stx" id="st-body"><b>Sourav G.</b> from Bagbazar<div class="sm">just claimed a founding seat · 2m ago</div></div>
+    <button class="x" id="st-close" aria-label="Dismiss">×</button>
+  </div>
+
+</div>
+
+<script src="site.js"></script>
+<script>
+/* Global form handlers (referenced by inline onsubmit) */
+function heroSignup(e) {
+  e.preventDefault();
+  var f = document.getElementById("hero-form");
+  var s = document.getElementById("hero-success");
+  f.style.display = "none";
+  s.classList.add("show");
+  return false;
+}
+function joinSignup(e) {
+  e.preventDefault();
+  document.getElementById("join-form").style.display = "none";
+  document.getElementById("join-success").classList.add("show");
+  return false;
+}
+
+(function () {
+  "use strict";
+
+  /* ── Hero parallax ── */
+  var stage = document.getElementById("hero-stage");
+  var hero = document.getElementById("hero");
+  if (stage && hero && window.matchMedia("(min-width: 981px)").matches) {
+    hero.addEventListener("mousemove", function (e) {
+      var r = hero.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - 0.5;
+      var y = (e.clientY - r.top) / r.height - 0.5;
+      stage.querySelector(".browser").style.transform =
+        "rotateY(" + (-9 + x * 6) + "deg) rotateX(" + (3 - y * 5) + "deg)";
+      stage.querySelectorAll(".float-card").forEach(function (c, i) {
+        var d = (i + 1) * 8;
+        c.style.marginLeft = (x * d) + "px";
+        c.style.marginTop = (y * d) + "px";
+      });
+    });
+  }
+
+  /* ── Product tour tabs ── */
+  var tabs = document.querySelectorAll(".tour-tab");
+  var panels = document.querySelectorAll(".tour-panel");
+  tabs.forEach(function (t) {
+    t.addEventListener("click", function () {
+      tabs.forEach(function (x) { x.classList.remove("on"); });
+      panels.forEach(function (p) { p.classList.remove("on"); });
+      t.classList.add("on");
+      var panel = document.querySelector('.tour-panel[data-panel="' + t.dataset.tab + '"]');
+      if (panel) panel.classList.add("on");
+    });
+  });
+
+  /* ── Interactive credit demo ── */
+  var coin = document.getElementById("demo-coin");
+  var ledger = document.getElementById("demo-ledger");
+  var toast = document.getElementById("demo-toast");
+  var btnGive = document.getElementById("btn-give");
+  var btnSpend = document.getElementById("btn-spend");
+  var balance = 5, toastTimer = null, empty = true;
+
+  var gives = [
+    { who: "Megha", init: "M", cls: "g4", txt: "taught Class-10 maths" },
+    { who: "Aritra", init: "A", cls: "g2", txt: "fixed a résumé" },
+    { who: "Priya", init: "P", cls: "g4", txt: "gave Excel coaching" },
+    { who: "Bikash", init: "B", cls: "g5", txt: "translated a letter" }
+  ];
+  var spends = [
+    { who: "Sourav", init: "S", cls: "g3", txt: "fixed your kitchen tap" },
+    { who: "Anjali", init: "A", cls: "g2", txt: "sent a Bengali tiffin" },
+    { who: "Devika", init: "D", cls: "g1", txt: "hemmed your saree" },
+    { who: "Tarun", init: "T", cls: "g3", txt: "filed your taxes" }
+  ];
+  var gi = 0, si = 0;
+
+  function setBalance(n) {
+    balance = n;
+    coin.textContent = n;
+    coin.animate(
+      [{ transform: "scale(1)" }, { transform: "scale(1.18)" }, { transform: "scale(1)" }],
+      { duration: 380, easing: "cubic-bezier(.22,.61,.36,1)" }
+    );
+    btnSpend.disabled = balance <= 0;
+  }
+  function showToast(html) {
+    toast.innerHTML = html;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 2200);
+  }
+  function addRow(item, sign) {
+    if (empty) { ledger.innerHTML = ""; empty = false; }
+    var row = document.createElement("div");
+    row.className = "row";
+    row.innerHTML =
+      '<span class="av ' + item.cls + '">' + item.init + '</span>' +
+      '<span class="tx">' + (sign > 0 ? "You " + item.txt + " for <b>" + item.who + "</b>"
+                                       : "<b>" + item.who + "</b> " + item.txt) + '</span>' +
+      '<span class="amt ' + (sign > 0 ? "plus\">+1" : "minus\">−1") + '</span>';
+    ledger.insertBefore(row, ledger.firstChild);
+    while (ledger.children.length > 4) ledger.removeChild(ledger.lastChild);
+  }
+  if (btnGive) btnGive.addEventListener("click", function () {
+    var item = gives[gi % gives.length]; gi++;
+    setBalance(balance + 1);
+    addRow(item, 1);
+    showToast('<b>+1 credit</b> — you helped ' + item.who);
+  });
+  if (btnSpend) btnSpend.addEventListener("click", function () {
+    if (balance <= 0) return;
+    var item = spends[si % spends.length]; si++;
+    setBalance(balance - 1);
+    addRow(item, -1);
+    showToast('<b>−1 credit</b> — ' + item.who + ' helped you');
+  });
+
+  /* ── Progress bar fill on scroll ── */
+  var prog = document.getElementById("progress");
+  if (prog && "IntersectionObserver" in window) {
+    new IntersectionObserver(function (es, ob) {
+      es.forEach(function (e) { if (e.isIntersecting) { prog.classList.add("in"); ob.disconnect(); } });
+    }, { threshold: 0.4 }).observe(prog);
+  }
+
+  /* ── Live activity feed (auto-cycling) ── */
+  var feed = document.getElementById("live-feed");
+  var feedData = [
+    { i: "K", c: "g5", t: "<b>Kabir</b> offered an hour of web design" },
+    { i: "D", c: "g1", t: "<b>Devika</b> earned a credit tailoring" },
+    { i: "T", c: "g3", t: "<b>Tarun</b> filed taxes for a neighbour" },
+    { i: "M", c: "g4", t: "<b>Megha</b> received a tiffin" },
+    { i: "S", c: "g3", t: "<b>Sourav</b> accepted a bridge" },
+    { i: "A", c: "g2", t: "<b>Anjali</b> joined the circle" }
+  ];
+  var fi = 0;
+  if (feed) {
+    setInterval(function () {
+      var d = feedData[fi % feedData.length]; fi++;
+      var el = document.createElement("div");
+      el.className = "feed-item";
+      el.style.animation = "slideIn 0.45s var(--ease)";
+      el.innerHTML = '<span class="av ' + d.c + '">' + d.i + '</span><div><div class="ft">' + d.t + '</div><div class="fm">just now</div></div>';
+      feed.insertBefore(el, feed.firstChild);
+      while (feed.children.length > 3) feed.removeChild(feed.lastChild);
+    }, 2600);
+  }
+
+  /* ── Sticky CTA bar: show after hero scrolls past, hide near the join block ── */
+  var sticky = document.getElementById("sticky-cta");
+  var heroEl = document.getElementById("hero");
+  var joinEl = document.getElementById("join");
+  if (sticky && heroEl) {
+    var onScrollSticky = function () {
+      var heroBottom = heroEl.getBoundingClientRect().bottom;
+      var joinNear = joinEl ? joinEl.getBoundingClientRect().top < window.innerHeight : false;
+      var show = heroBottom < 0 && !joinNear;
+      sticky.classList.toggle("show", show);
+    };
+    window.addEventListener("scroll", onScrollSticky, { passive: true });
+    onScrollSticky();
+  }
+
+  /* ── Live countdown to Wave II close ── */
+  var target = Date.now() + (3 * 24 * 60 + 14 * 60) * 60 * 1000; // ~3d 14h out
+  var cd1 = document.getElementById("countdown");
+  var cd2 = document.getElementById("countdown-2");
+  var top = document.querySelector(".topbar .live");
+  function tick() {
+    var diff = Math.max(0, target - Date.now());
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+    if (cd1) cd1.textContent = d + "d " + h + "h " + (m < 10 ? "0" : "") + m + "m";
+    if (cd2) cd2.textContent = d + "d " + h + "h";
+    if (top) top.innerHTML = '<span class="dot"></span> Live · ' + d + "d " + h + "h " + (s < 10 ? "0" : "") + s + "s left";
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  /* ── Seat meter fill on scroll ── */
+  var seatcard = document.getElementById("seatcard");
+  if (seatcard && "IntersectionObserver" in window) {
+    new IntersectionObserver(function (es, ob) {
+      es.forEach(function (e) { if (e.isIntersecting) { seatcard.classList.add("in"); ob.disconnect(); } });
+    }, { threshold: 0.35 }).observe(seatcard);
+  }
+
+  /* ── Recent-activity social-proof toast (cycles a few times, dismissible) ── */
+  var toast = document.getElementById("social-toast");
+  var stAv = document.getElementById("st-av");
+  var stBody = document.getElementById("st-body");
+  var stClose = document.getElementById("st-close");
+  var people = [
+    { i: "S", c: "g3", n: "Sourav G.", p: "Bagbazar", a: "claimed a founding seat", t: "2m ago" },
+    { i: "M", c: "g4", n: "Megha R.", p: "Shyambazar", a: "requested an invite", t: "9m ago" },
+    { i: "K", c: "g5", n: "Kabir M.", p: "Maniktala", a: "joined the waitlist", t: "21m ago" },
+    { i: "D", c: "g1", n: "Devika P.", p: "Shobhabazar", a: "claimed a founding seat", t: "38m ago" },
+    { i: "T", c: "g3", n: "Tarun B.", p: "Bagbazar", a: "requested an invite", t: "1h ago" }
+  ];
+  var pi = 0, dismissed = false, toastTimer2 = null;
+  function showSocial() {
+    if (dismissed || !toast) return;
+    var p = people[pi % people.length]; pi++;
+    stAv.className = "av " + p.c;
+    stAv.textContent = p.i;
+    stBody.innerHTML = "<b>" + p.n + "</b> from " + p.p + '<div class="sm">' + p.a + " · " + p.t + "</div>";
+    toast.classList.add("show");
+    toastTimer2 = setTimeout(function () {
+      toast.classList.remove("show");
+      if (pi < 5) setTimeout(showSocial, 9000);
+    }, 5000);
+  }
+  if (stClose) stClose.addEventListener("click", function () {
+    dismissed = true; toast.classList.remove("show"); clearTimeout(toastTimer2);
+  });
+  setTimeout(showSocial, 4500);
+})();
+</script>
 </body>
 </html>

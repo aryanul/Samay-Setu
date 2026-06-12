@@ -119,6 +119,20 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Every new member must start visible in the Live Bridge. The feed is driven
+  // by the `trades` table, so carry their profile over into a starter trade
+  // (mirrors the one-time backfill in ensureSchema). Guarded so a trade-insert
+  // hiccup never costs us the account that was just created.
+  try {
+    await pool.execute(
+      `INSERT INTO trades (member_id, skill_offered, skill_needed, pillar, status)
+       VALUES (?, ?, ?, 'general', 'open')`,
+      [memberId, primaryExpertise.slice(0, 255), currentNeed.slice(0, 255)]
+    );
+  } catch (tradeErr) {
+    console.error("[onboarding/architect] starter trade creation failed:", tradeErr);
+  }
+
   const displayName = draft.name;
   await clearArchitectDraft();
   await createMemberSession({ memberId, name: displayName });

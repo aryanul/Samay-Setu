@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>How it works — Samay Setu</title>
+<meta name="description" content="How the Samay Setu neighbourhood time-bank works: get verified, give an hour, earn a credit, and spend it on any hour you need. No money — just minutes." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* ── Page header ── */
+  .ph { background: var(--band); position: relative; overflow: hidden; }
+  .ph::after { content: ""; position: absolute; right: -180px; top: 50%; transform: translateY(-50%); width: 720px; height: 720px; opacity: 0.16; pointer-events: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23b0863f' stroke-width='0.3' stroke-linecap='round'/></svg>"); background-size: contain; background-repeat: no-repeat; }
+  .ph-inner { max-width: var(--maxw); margin: 0 auto; padding: 84px var(--pad) 76px; position: relative; z-index: 2; }
+  .ph h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(44px, 6.4vw, 78px); line-height: 1.0; letter-spacing: -0.035em; margin-top: 24px; }
+  .ph h1 em { font-style: italic; color: var(--gold-bright); }
+  .ph .sub { font-family: var(--sans); font-size: clamp(17px, 2vw, 20px); color: var(--ink-2); max-width: 56ch; margin-top: 24px; line-height: 1.55; }
+  .crumb { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; color: var(--ink-3); }
+  .crumb a:hover { color: var(--gold-bright); }
+
+  /* ── Journey (vertical timeline) ── */
+  .journey { max-width: 920px; margin: 0 auto; position: relative; }
+  .journey::before { content: ""; position: absolute; left: 39px; top: 30px; bottom: 30px; width: 1px; background: linear-gradient(var(--rule-gold), var(--rule-gold)); }
+  .step { display: grid; grid-template-columns: 80px 1fr; gap: 32px; padding: 28px 0; position: relative; }
+  .step-num { width: 80px; }
+  .step-num .ring { width: 64px; height: 64px; border-radius: 50%; background: var(--plate); border: 1px solid var(--rule-gold); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 28px; color: var(--gold-bright); box-shadow: 0 0 0 6px var(--paper); position: relative; z-index: 2; }
+  .step-body h3 { font-family: var(--serif); font-size: clamp(26px, 3vw, 34px); font-weight: 500; letter-spacing: -0.015em; line-height: 1.1; }
+  .step-body h3 em { font-style: italic; color: var(--gold); }
+  .step-body > p { color: var(--ink-2); margin-top: 12px; max-width: 56ch; font-size: 15.5px; }
+  .step-detail { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .step-chip { background: var(--white); border: 1px solid var(--rule-soft); border-radius: 9px; padding: 16px 18px; }
+  .step-chip .k { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); margin-bottom: 7px; }
+  .step-chip .v { font-size: 14px; color: var(--ink-2); line-height: 1.5; }
+
+  /* ── Credit explainer ── */
+  .credit { display: grid; grid-template-columns: 1.1fr 1fr; gap: 56px; align-items: center; }
+  .credit-card { padding: 40px 36px; text-align: center; position: relative; overflow: hidden; }
+  .credit-card .glyph { position: absolute; bottom: -30px; left: -30px; width: 150px; height: 150px; opacity: 0.18; }
+  .coin { width: 150px; height: 150px; margin: 0 auto 20px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, var(--plate), var(--paper-3)); border: 1px solid var(--rule-gold); box-shadow: 0 0 0 10px var(--gold-glow), var(--shadow-soft); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .coin .c-num { font-family: var(--serif); font-size: 54px; color: var(--gold-bright); line-height: 1; }
+  .coin .c-lbl { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-2); margin-top: 6px; }
+  .credit-card h4 { font-family: var(--serif); font-size: 26px; font-weight: 500; margin-bottom: 8px; }
+  .credit-card p { color: var(--ink-2); font-size: 14.5px; max-width: 34ch; margin: 0 auto; }
+  .credit-list { list-style: none; }
+  .credit-list li { display: flex; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--rule-soft); }
+  .credit-list li:last-child { border-bottom: none; }
+  .credit-list .num { font-family: var(--serif); font-size: 28px; color: var(--gold-bright); line-height: 1; flex: none; width: 40px; }
+  .credit-list h5 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .credit-list p { font-size: 14px; color: var(--ink-2); }
+
+  /* ── Day in the life ── */
+  .ledger { max-width: 760px; margin: 48px auto 0; border: 1px solid var(--rule-gold); border-radius: 12px; overflow: hidden; background: var(--white); box-shadow: var(--shadow-soft); }
+  .ledger-head { display: grid; grid-template-columns: 1fr auto auto; gap: 20px; padding: 16px 26px; background: var(--plate); border-bottom: 1px solid var(--rule-gold); font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+  .ledger-row { display: grid; grid-template-columns: 1fr auto auto; gap: 20px; align-items: center; padding: 18px 26px; border-bottom: 1px solid var(--rule-soft); }
+  .ledger-row:last-child { border-bottom: none; }
+  .ledger-row .what { display: flex; flex-direction: column; }
+  .ledger-row .what strong { font-size: 15px; font-weight: 600; }
+  .ledger-row .what span { font-size: 12.5px; color: var(--ink-3); }
+  .ledger-row .when { font-family: var(--mono); font-size: 12px; color: var(--ink-3); }
+  .ledger-row .amt { font-family: var(--serif); font-size: 22px; min-width: 56px; text-align: right; }
+  .amt.plus { color: #4f7a3f; } .amt.minus { color: var(--gold); }
+  .ledger-foot { display: grid; grid-template-columns: 1fr auto; gap: 20px; padding: 18px 26px; background: var(--plate); align-items: center; }
+  .ledger-foot .bal-l { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); }
+  .ledger-foot .bal { font-family: var(--serif); font-size: 30px; color: var(--gold-bright); }
+
+  /* ── Trust grid ── */
+  .trust-grid { margin-top: 52px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .trust-cell { background: var(--white); border: 1px solid var(--rule-soft); border-radius: 11px; padding: 28px 26px; }
+  .trust-cell .ic { width: 36px; height: 36px; color: var(--gold-bright); margin-bottom: 16px; }
+  .trust-cell h4 { font-family: var(--serif); font-size: 22px; font-weight: 500; margin-bottom: 8px; }
+  .trust-cell p { font-size: 14px; color: var(--ink-2); }
+
+  /* ── CTA banner ── */
+  .cta-band { background: var(--band); text-align: center; }
+  .cta-band h2 { margin: 0 auto 18px; max-width: 22ch; }
+  .cta-band p { color: var(--ink-2); max-width: 50ch; margin: 0 auto 34px; font-size: 17px; }
+
+  @media (max-width: 900px) {
+    .step { grid-template-columns: 56px 1fr; gap: 22px; }
+    .journey::before { left: 27px; }
+    .step-num { width: 56px; } .step-num .ring { width: 56px; height: 56px; font-size: 24px; }
+    .step-detail { grid-template-columns: 1fr; }
+    .credit { grid-template-columns: 1fr; gap: 40px; }
+    .trust-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .ph-inner { padding-top: 56px; padding-bottom: 52px; }
+    .ph h1 { font-size: clamp(34px, 10vw, 48px); }
+    .ledger-head, .ledger-row { grid-template-columns: 1fr auto; padding-left: 16px; padding-right: 16px; gap: 12px; }
+    .ledger-foot { padding-left: 16px; padding-right: 16px; }
+    .ledger-row .when { display: none; }
+    .ledger-head span:nth-child(2) { display: none; }
+    .step { grid-template-columns: 46px 1fr; gap: 16px; }
+    .journey::before { left: 22px; }
+    .step-num { width: 46px; } .step-num .ring { width: 46px; height: 46px; font-size: 20px; box-shadow: 0 0 0 4px var(--paper); }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Nav -->
+  <div class="nav-wrap">
+    <nav class="nav">
+      <a class="brand" href="index.html">
+        <svg viewBox="0 0 36 36" fill="none"><path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="24" r="2.5" fill="#a07f3f"/><circle cx="28" cy="12" r="2.5" fill="#14120e"/></svg>
+        <span class="word">samay <em>setu</em></span>
+      </a>
+      <div class="nav-links">
+        <a href="how-it-works.html" class="active">How it works</a>
+        <a href="about.html">Our story</a>
+        <a href="membership.html">Membership</a>
+        <a href="#">Sign in</a>
+        <a href="membership.html#apply" class="btn btn-gold">Apply for a seat <span class="arr">→</span></a>
+      </div>
+      <button class="nav-toggle" aria-label="Menu"><span></span></button>
+    </nav>
+  </div>
+
+  <!-- Header -->
+  <header class="ph">
+    <div class="ph-inner">
+      <p class="crumb"><a href="index.html">Home</a> &nbsp;/&nbsp; How it works</p>
+      <p class="eyebrow reveal in" style="margin-top:18px;">The whole idea in four steps</p>
+      <h1 class="reveal in" data-d="1">Give an hour.<br/>Earn a credit.<br/><em>Spend it anywhere.</em></h1>
+      <p class="sub reveal in" data-d="2">No money moves inside Samay Setu. The only thing that changes hands is time — and every hour is worth exactly one hour, no matter whose it is.</p>
+    </div>
+  </header>
+
+  <!-- Journey -->
+  <section class="section band-paper">
+    <div class="wrap">
+      <div class="journey">
+        <div class="step reveal">
+          <div class="step-num"><div class="ring">1</div></div>
+          <div class="step-body">
+            <h3>Apply, and get <em>verified</em>.</h3>
+            <p>You don't sign up — you're welcomed in. Tell us who you are and what you'd love to share. We verify every neighbour personally by call, and often with a short visit, before a seat opens.</p>
+            <div class="step-detail">
+              <div class="step-chip"><div class="k">Takes</div><div class="v">A short call within 48 hours of applying.</div></div>
+              <div class="step-chip"><div class="k">Why</div><div class="v">A small, verified circle is what keeps trust real.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step reveal">
+          <div class="step-num"><div class="ring">2</div></div>
+          <div class="step-body">
+            <h3>Offer an hour of <em>something you love</em>.</h3>
+            <p>List a skill — tax filing, tutoring, cooking, plant care, anything. When a neighbour books it and you complete the hour, one Samay Credit lands in your account. That's it.</p>
+            <div class="step-detail">
+              <div class="step-chip"><div class="k">You earn</div><div class="v">1 credit for every hour you give.</div></div>
+              <div class="step-chip"><div class="k">Day one</div><div class="v">Founding members start with a 5-hour Trust Bonus.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step reveal">
+          <div class="step-num"><div class="ring">3</div></div>
+          <div class="step-body">
+            <h3>Spend it on <em>any hour you need</em>.</h3>
+            <p>Your credit isn't tied to your trade. The designer who gave an hour can receive home cooking; the cook can receive a tutoring session. Browse the circle, request an hour, and spend a credit.</p>
+            <div class="step-detail">
+              <div class="step-chip"><div class="k">1 credit</div><div class="v">= any one hour offered in the circle.</div></div>
+              <div class="step-chip"><div class="k">No expiry games</div><div class="v">Credits are yours to spend when you need them.</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="step reveal">
+          <div class="step-num"><div class="ring">4</div></div>
+          <div class="step-body">
+            <h3>The bridge <em>holds itself up</em>.</h3>
+            <p>Every completed hour leaves a small, honest record both sides can see. Over time the circle becomes a living web of who helped whom — the quiet accountability that lets strangers become neighbours.</p>
+            <div class="step-detail">
+              <div class="step-chip"><div class="k">After each hour</div><div class="v">Both people confirm it happened. The ledger updates.</div></div>
+              <div class="step-chip"><div class="k">Result</div><div class="v">Reputation built on hours, not reviews-for-hire.</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Credit system -->
+  <section class="section equiv-band">
+    <div class="wrap credit">
+      <div>
+        <p class="eyebrow reveal" style="color:var(--gold-bright);">The Samay Credit</p>
+        <h2 class="h2 reveal" data-d="1" style="margin-top:20px;">One currency,<br/><em>everyone equal.</em></h2>
+        <ul class="credit-list reveal" data-d="2" style="margin-top:28px;">
+          <li><span class="num">01</span><div><h5>It's earned, not bought</h5><p>You can only get credits by giving your time. Money can't buy them and they can't be cashed out.</p></div></li>
+          <li><span class="num">02</span><div><h5>It's flat</h5><p>A surgeon's hour and a student's hour are both one credit. The platform refuses to price one person above another.</p></div></li>
+          <li><span class="num">03</span><div><h5>It circulates</h5><p>Credits move through the circle, not into a company's pocket. Value stays inside the neighbourhood.</p></div></li>
+        </ul>
+      </div>
+      <aside class="credit-card card reveal" data-d="2">
+        <div class="glyph"></div>
+        <div class="coin"><div class="c-num">1</div><div class="c-lbl">Samay Credit</div></div>
+        <h4>= one hour</h4>
+        <p>The smallest, fairest unit of help there is. Give one, get one.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Day in the life / ledger -->
+  <section class="section band-paper">
+    <div class="wrap">
+      <p class="eyebrow center reveal" style="justify-content:center;">A week in one account</p>
+      <h2 class="h2 reveal" data-d="1" style="margin-top:20px;text-align:center;">What it looks<br/><em>like in practice.</em></h2>
+      <div class="ledger reveal" data-d="2">
+        <div class="ledger-head"><span>Activity</span><span>When</span><span style="text-align:right;">Credits</span></div>
+        <div class="ledger-row"><div class="what"><strong>Joined the Founding Circle</strong><span>Trust Bonus added</span></div><div class="when">Mon</div><div class="amt plus">+5</div></div>
+        <div class="ledger-row"><div class="what"><strong>Gave: 1h spreadsheet help</strong><span>to Riya, Shyambazar</span></div><div class="when">Tue</div><div class="amt plus">+1</div></div>
+        <div class="ledger-row"><div class="what"><strong>Received: tap repair</strong><span>from Sourav, retired engineer</span></div><div class="when">Wed</div><div class="amt minus">−1</div></div>
+        <div class="ledger-row"><div class="what"><strong>Gave: 1h résumé review</strong><span>to Megha, fresh graduate</span></div><div class="when">Fri</div><div class="amt plus">+1</div></div>
+        <div class="ledger-row"><div class="what"><strong>Received: 2 tiffin meals</strong><span>from Anjali, home cook</span></div><div class="when">Sat</div><div class="amt minus">−2</div></div>
+        <div class="ledger-foot"><span class="bal-l">Balance, end of week</span><span class="bal">4 credits</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust -->
+  <section class="section equiv-band">
+    <div class="wrap">
+      <p class="eyebrow reveal" style="color:var(--gold-bright);">Why it stays safe</p>
+      <h2 class="h2 reveal" data-d="1" style="margin-top:20px;">Trust isn't a feature.<br/><em>It's the architecture.</em></h2>
+      <div class="trust-grid">
+        <div class="trust-cell reveal" data-d="1">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+          <h4>Verified, one by one</h4>
+          <p>No anonymous sign-ups. Every member is a real, confirmed neighbour before they ever appear in the circle.</p>
+        </div>
+        <div class="trust-cell reveal" data-d="2">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <h4>A small, capped circle</h4>
+          <p>We grow in waves, not floods. A bounded community means people actually know — and answer to — one another.</p>
+        </div>
+        <div class="trust-cell reveal" data-d="3">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 5h16v14H4z"/><path d="M4 9h16M9 5v14"/></svg>
+          <h4>An honest ledger</h4>
+          <p>Every exchange is logged and mutually confirmed. Reputation is earned through completed hours, never bought.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta-band">
+    <div class="wrap">
+      <p class="eyebrow center reveal" style="justify-content:center;color:var(--gold-bright);">Ready when you are</p>
+      <h2 class="h2 reveal" data-d="1" style="margin-top:20px;">Your first hour is<br/><em>worth giving.</em></h2>
+      <p class="reveal" data-d="1">Apply for a founding seat and we'll be in touch within two days. Bring an hour — we'll help you find where it's needed.</p>
+      <div class="reveal" data-d="2" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <a href="membership.html#apply" class="btn btn-gold btn-lg">Apply for a seat <span class="arr">→</span></a>
+        <a href="about.html" class="btn btn-ghost btn-lg">Read our story</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <svg viewBox="0 0 36 36" fill="none"><path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="24" r="2.5" fill="#a07f3f"/><circle cx="28" cy="12" r="2.5" fill="#14120e"/></svg>
+          <span class="word">samay <em>setu</em></span>
+        </a>
+        <p>One hour given, one hour received. A bridge of time between neighbours.</p>
+      </div>
+      <div class="footer-col"><h4>Explore</h4><a href="how-it-works.html">How it works</a><a href="about.html">Our story</a><a href="membership.html">Membership</a><a href="membership.html#faq">FAQ</a></div>
+      <div class="footer-col"><h4>The Circle</h4><a href="membership.html#apply">Apply for a seat</a><a href="membership.html#founding">Founding 50 Race</a><a href="#">Sign in</a></div>
+      <div class="footer-col"><h4>Contact</h4><a href="mailto:hello@samaysetu.in">hello@samaysetu.in</a><a href="#">North Kolkata</a><a href="#">Instagram</a></div>
+    </div>
+    <div class="footer-bottom">
+      <span>Samay Setu · North Kolkata · 2026</span>
+      <em>One hour given, one hour received.</em>
+    </div>
+  </footer>
+
+</div>
+<script src="site.js"></script>
+</body>
+</html>

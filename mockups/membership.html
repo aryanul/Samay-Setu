@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Membership & FAQ — Samay Setu</title>
+<meta name="description" content="What membership in Samay Setu means, the Founding Member benefits, the Founding 50 Race, how to apply, and answers to every honest question." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .ph { background: var(--band); position: relative; overflow: hidden; }
+  .ph-inner { max-width: var(--maxw); margin: 0 auto; padding: 84px var(--pad) 76px; position: relative; z-index: 2; }
+  .crumb { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; color: var(--ink-3); }
+  .crumb a:hover { color: var(--gold-bright); }
+  .ph h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(46px, 6.6vw, 82px); line-height: 1.0; letter-spacing: -0.035em; margin-top: 22px; }
+  .ph h1 em { font-style: italic; color: var(--gold-bright); }
+  .ph .sub { font-family: var(--sans); font-size: clamp(17px, 2vw, 20px); color: var(--ink-2); max-width: 56ch; margin-top: 24px; line-height: 1.55; }
+
+  /* Membership tiers */
+  .tiers { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 8px; }
+  .tier { border-radius: 16px; padding: 38px 34px; position: relative; overflow: hidden; }
+  .tier.basic { background: var(--white); border: 1px solid var(--rule-soft); }
+  .tier.founding { background: linear-gradient(160deg, var(--plate), var(--paper-2)); border: 1px solid var(--rule-gold); box-shadow: var(--shadow-card); }
+  .tier .glyph { position: absolute; top: -30px; right: -30px; width: 140px; height: 140px; opacity: 0.16; }
+  .tier .badge { display: inline-block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; padding: 5px 11px; border-radius: 5px; margin-bottom: 22px; }
+  .tier.basic .badge { color: var(--ink-3); border: 1px solid var(--rule); }
+  .tier.founding .badge { color: var(--white); background: var(--gold-bright); }
+  .tier h3 { font-family: var(--serif); font-size: 34px; font-weight: 500; letter-spacing: -0.015em; }
+  .tier .price { display: flex; align-items: baseline; gap: 8px; margin: 14px 0 24px; }
+  .tier .price .big { font-family: var(--serif); font-size: 52px; color: var(--gold-bright); line-height: 1; }
+  .tier .price .unit { font-size: 14px; color: var(--ink-3); }
+  .tier ul { list-style: none; margin-bottom: 28px; }
+  .tier li { display: flex; gap: 12px; padding: 11px 0; font-size: 14.5px; color: var(--ink-2); border-bottom: 1px solid var(--rule-soft); }
+  .tier li:last-child { border-bottom: none; }
+  .tier li svg { flex: none; width: 19px; height: 19px; color: var(--gold-bright); margin-top: 1px; }
+  .tier li.muted { color: var(--ink-3); }
+  .tier li.muted svg { color: var(--ink-3); }
+  .tier .btn { width: 100%; }
+
+  /* Founding 50 Race */
+  .race { background: var(--band); }
+  .race-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+  .race h2 { margin-bottom: 18px; }
+  .race p { color: var(--ink-2); max-width: 48ch; margin-bottom: 16px; font-size: 16px; }
+  .race .prize-row { display: flex; gap: 14px; margin-top: 24px; flex-wrap: wrap; }
+  .prize { background: var(--white); border: 1px solid var(--rule-soft); border-radius: 10px; padding: 16px 20px; }
+  .prize .fig { font-size: 30px; } .prize .d { font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+  /* leaderboard */
+  .board { background: var(--white); border: 1px solid var(--rule-gold); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow-soft); }
+  .board-head { padding: 16px 24px; background: var(--plate); border-bottom: 1px solid var(--rule-gold); display: flex; align-items: center; justify-content: space-between; }
+  .board-head .t { font-family: var(--serif); font-size: 19px; font-weight: 500; }
+  .board-head .live { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); font-weight: 600; }
+  .board-head .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold-bright); animation: pulse 1.8s ease-out infinite; }
+  .lb-row { display: grid; grid-template-columns: 36px 1fr auto; gap: 16px; align-items: center; padding: 14px 24px; border-bottom: 1px solid var(--rule-soft); }
+  .lb-row:last-child { border-bottom: none; }
+  .lb-row .rk { font-family: var(--serif); font-size: 22px; color: var(--ink-3); width: 36px; }
+  .lb-row.top .rk { color: var(--gold-bright); }
+  .lb-row .who { display: flex; align-items: center; gap: 12px; }
+  .lb-row .av { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--paper-3), var(--gold-bright)); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 15px; color: var(--white); }
+  .lb-row .nm { font-size: 14.5px; font-weight: 600; } .lb-row .pl { font-size: 12px; color: var(--ink-3); }
+  .lb-row .pts { font-family: var(--mono); font-size: 14px; color: var(--gold); font-weight: 500; }
+  .lb-row.you { background: var(--plate); }
+
+  /* Apply form */
+  .apply-wrap { background: var(--band); }
+  .apply { max-width: 720px; margin: 0 auto; }
+  .apply-card { padding: 44px 40px; background: var(--white); border: 1px solid var(--rule-gold); border-radius: 16px; box-shadow: var(--shadow-card); margin-top: 36px; }
+  .field { margin-bottom: 20px; }
+  .field label { display: block; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 9px; }
+  .field input, .field textarea, .field select { width: 100%; font: inherit; font-size: 14.5px; padding: 13px 15px; background: var(--paper); border: 1px solid var(--rule); border-radius: 8px; color: var(--ink); outline: none; transition: border-color 160ms, background 160ms; }
+  .field input:focus, .field textarea:focus, .field select:focus { border-color: var(--gold-bright); background: var(--white); }
+  .field textarea { resize: vertical; min-height: 92px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .apply-note { font-size: 12.5px; color: var(--ink-3); margin-top: 14px; text-align: center; }
+
+  /* FAQ */
+  .faq-cats { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 36px; justify-content: center; }
+  .faq-cat { font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); padding: 8px 16px; border: 1px solid var(--rule); border-radius: 30px; }
+  .faq-group { max-width: 860px; margin: 40px auto 0; }
+  .faq-group h3 { font-family: var(--serif); font-size: 26px; font-weight: 500; margin: 40px 0 6px; color: var(--gold); }
+  .faq-item { border-bottom: 1px solid var(--rule-soft); }
+  .faq-q { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 22px 4px; text-align: left; font-family: var(--serif); font-size: 21px; font-weight: 500; color: var(--ink); }
+  .faq-q .pm { flex: none; width: 22px; height: 22px; position: relative; }
+  .faq-q .pm::before, .faq-q .pm::after { content: ""; position: absolute; background: var(--gold-bright); transition: transform 240ms var(--ease); }
+  .faq-q .pm::before { top: 50%; left: 0; right: 0; height: 1.5px; transform: translateY(-50%); }
+  .faq-q .pm::after { left: 50%; top: 0; bottom: 0; width: 1.5px; transform: translateX(-50%); }
+  .faq-item.open .pm::after { transform: translateX(-50%) scaleY(0); }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height 340ms var(--ease); }
+  .faq-item.open .faq-a { max-height: 420px; }
+  .faq-a p { padding: 0 4px 24px; color: var(--ink-2); font-size: 15px; max-width: 74ch; }
+
+  .cta-band { background: var(--band); text-align: center; }
+  .cta-band h2 { margin: 0 auto 18px; max-width: 24ch; }
+  .cta-band p { color: var(--ink-2); max-width: 50ch; margin: 0 auto 22px; font-size: 17px; }
+
+  @media (max-width: 900px) {
+    .tiers { grid-template-columns: 1fr; }
+    .race-grid { grid-template-columns: 1fr; gap: 40px; }
+    .field-row { grid-template-columns: 1fr; }
+    .apply-card { padding: 32px 22px; }
+  }
+  @media (max-width: 560px) {
+    .ph-inner { padding-top: 56px; padding-bottom: 52px; }
+    .ph h1 { font-size: clamp(34px, 10vw, 48px); }
+    .bridges-grid { grid-template-columns: 1fr; }
+    .lb-row { padding-left: 16px; padding-right: 16px; gap: 12px; }
+    .lb-row .pl { display: none; }
+    .faq-q { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Nav -->
+  <div class="nav-wrap">
+    <nav class="nav">
+      <a class="brand" href="index.html">
+        <svg viewBox="0 0 36 36" fill="none"><path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="24" r="2.5" fill="#a07f3f"/><circle cx="28" cy="12" r="2.5" fill="#14120e"/></svg>
+        <span class="word">samay <em>setu</em></span>
+      </a>
+      <div class="nav-links">
+        <a href="how-it-works.html">How it works</a>
+        <a href="about.html">Our story</a>
+        <a href="membership.html" class="active">Membership</a>
+        <a href="#">Sign in</a>
+        <a href="#apply" class="btn btn-gold">Apply for a seat <span class="arr">→</span></a>
+      </div>
+      <button class="nav-toggle" aria-label="Menu"><span></span></button>
+    </nav>
+  </div>
+
+  <!-- Header -->
+  <header class="ph">
+    <div class="ph-inner">
+      <p class="crumb"><a href="index.html">Home</a> &nbsp;/&nbsp; Membership</p>
+      <p class="eyebrow reveal in" style="margin-top:18px;">Membership &amp; questions</p>
+      <h1 class="reveal in" data-d="1">A seat, not<br/>a <em>subscription.</em></h1>
+      <p class="sub reveal in" data-d="2">Samay Setu isn't something you buy. It's a circle you're welcomed into — and right now, it's small enough that every member shapes it.</p>
+    </div>
+  </header>
+
+  <!-- Tiers -->
+  <section class="section band-paper">
+    <div class="wrap">
+      <p class="eyebrow reveal">What membership means</p>
+      <h2 class="h2 reveal" data-d="1" style="margin-top:20px;">Always free. The only<br/><em>question is when.</em></h2>
+      <div class="tiers">
+        <div class="tier basic reveal" data-d="1">
+          <span class="badge">Open later</span>
+          <h3>Neighbour</h3>
+          <div class="price"><span class="big">₹0</span><span class="unit">forever</span></div>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5 9-9"/></svg> Give and receive hours in the circle</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5 9-9"/></svg> Personally verified before joining</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5 9-9"/></svg> Your honest ledger of exchanges</li>
+            <li class="muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg> Joins in a later wave</li>
+            <li class="muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg> No Trust Bonus</li>
+          </ul>
+          <a href="#apply" class="btn btn-ghost btn-lg">Join the waitlist</a>
+        </div>
+        <div class="tier founding reveal" data-d="2">
+          <div class="glyph"></div>
+          <span class="badge">12 seats left</span>
+          <h3>Founding Member</h3>
+          <div class="price"><span class="big">₹0</span><span class="unit">+ a 5-hour head start</span></div>
+          <ul>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5 9-9"/></svg> Everything in Neighbour, first</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5 9-9"/></svg> <strong style="color:var(--ink)">5-hour Trust Bonus</strong> on day one</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5 9-9"/></svg> A voice in the rules of the circle</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5 9-9"/></svg> Permanent Founding Member badge</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5 9-9"/></svg> Entry into the Founding 50 Race</li>
+          </ul>
+          <a href="#apply" class="btn btn-gold btn-lg">Claim a founding seat <span class="arr">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Founding 50 Race -->
+  <section class="section race" id="founding">
+    <div class="wrap race-grid">
+      <div>
+        <p class="eyebrow reveal" style="color:var(--gold-bright);">Live · 3d 14h left</p>
+        <h2 class="h2 reveal" data-d="1">The Founding<br/><em>50 Race.</em></h2>
+        <p class="reveal" data-d="2">Founding members who invite the most verified neighbours win the only privilege we'll ever sell: a permanent place at the centre of the circle.</p>
+        <p class="reveal" data-d="2">The top five referrers earn a <strong style="color:var(--gold)">Lifetime VIP Pass</strong> — priority in every future wave, a founder's badge, and a standing seat at our community councils.</p>
+        <div class="prize-row reveal" data-d="3">
+          <div class="prize"><div class="fig">5</div><div class="d">Lifetime VIP Passes</div></div>
+          <div class="prize"><div class="fig">50</div><div class="d">founding referrers</div></div>
+          <div class="prize"><div class="fig">∞</div><div class="d">priority access</div></div>
+        </div>
+      </div>
+      <aside class="board reveal" data-d="2">
+        <div class="board-head"><span class="t">Leaderboard</span><span class="live"><span class="dot"></span> Live</span></div>
+        <div class="lb-row top"><div class="rk">1</div><div class="who"><div class="av">R</div><div><div class="nm">Riya D.</div><div class="pl">Shyambazar</div></div></div><div class="pts">7 invites</div></div>
+        <div class="lb-row top"><div class="rk">2</div><div class="who"><div class="av">K</div><div><div class="nm">Kabir M.</div><div class="pl">Maniktala</div></div></div><div class="pts">5 invites</div></div>
+        <div class="lb-row top"><div class="rk">3</div><div class="who"><div class="av">A</div><div><div class="nm">Anjali S.</div><div class="pl">Hatibagan</div></div></div><div class="pts">4 invites</div></div>
+        <div class="lb-row"><div class="rk">4</div><div class="who"><div class="av">S</div><div><div class="nm">Sourav G.</div><div class="pl">Bagbazar</div></div></div><div class="pts">3 invites</div></div>
+        <div class="lb-row you"><div class="rk">—</div><div class="who"><div class="av">?</div><div><div class="nm">You</div><div class="pl">Apply to enter</div></div></div><div class="pts">0 invites</div></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Apply -->
+  <section class="section apply-wrap" id="apply">
+    <div class="wrap">
+      <div class="apply">
+        <p class="eyebrow center reveal" style="justify-content:center;color:var(--gold-bright);">Apply for a seat</p>
+        <h2 class="h2 reveal" data-d="1" style="margin-top:20px;text-align:center;">Tell us who<br/><em>you are.</em></h2>
+        <p class="lede reveal" data-d="1" style="text-align:center;margin:18px auto 0;">We read every application and reply within two days. No bots, no auto-rejections — a real person, a real conversation.</p>
+        <form class="apply-card reveal" data-d="2" onsubmit="return false">
+          <div class="field-row">
+            <div class="field"><label for="nm">Your name</label><input id="nm" type="text" placeholder="e.g. Riya Das" /></div>
+            <div class="field"><label for="loc">Neighbourhood</label><input id="loc" type="text" placeholder="e.g. Shyambazar" /></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label for="em">Email</label><input id="em" type="email" placeholder="you@example.com" /></div>
+            <div class="field"><label for="ph">Phone (for verification)</label><input id="ph" type="tel" placeholder="+91 ..." /></div>
+          </div>
+          <div class="field"><label for="give">An hour you'd love to give</label><input id="give" type="text" placeholder="e.g. spreadsheet help, home cooking, maths tutoring" /></div>
+          <div class="field"><label for="why">Why do you want to join the circle?</label><textarea id="why" placeholder="A sentence or two is plenty."></textarea></div>
+          <button class="btn btn-gold btn-lg" style="width:100%;">Send my application <span class="arr">→</span></button>
+          <p class="apply-note">By applying you agree to a short verification call. We never share your details. No spam, ever.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section band-paper" id="faq">
+    <div class="wrap">
+      <p class="eyebrow center reveal" style="justify-content:center;">Every honest question</p>
+      <h2 class="h2 reveal" data-d="1" style="margin-top:20px;text-align:center;">Ask us anything.</h2>
+      <div class="faq-cats reveal" data-d="1">
+        <span class="faq-cat">The basics</span>
+        <span class="faq-cat">Credits &amp; fairness</span>
+        <span class="faq-cat">Trust &amp; safety</span>
+        <span class="faq-cat">Joining</span>
+      </div>
+
+      <div class="faq-group reveal" data-d="1">
+        <h3>The basics</h3>
+        <div class="faq-list">
+          <div class="faq-item"><button class="faq-q" aria-expanded="false">Is this really free? <span class="pm"></span></button><div class="faq-a"><p>Completely. No money ever changes hands between members, and there's no subscription. The only currency is time: one hour given earns one credit, redeemable for any hour offered in the circle.</p></div></div>
+          <div class="faq-item"><button class="faq-q" aria-expanded="false">What exactly can I exchange? <span class="pm"></span></button><div class="faq-a"><p>Almost any hour of help — professional skills (tax, legal, design, tutoring), home and care (cooking, elder check-ins, childcare, repairs), knowledge, and craft. If it's a legal, safe hour of your time, it belongs here.</p></div></div>
+          <div class="faq-item"><button class="faq-q" aria-expanded="false">What if I don't have a "professional" skill? <span class="pm"></span></button><div class="faq-a"><p>Then you're exactly who this is for. Cooking, listening, gardening, walking a dog, sitting with an elder — every hour is equal. There is no hierarchy of skill in Samay Setu.</p></div></div>
+        </div>
+      </div>
+
+      <div class="faq-group reveal" data-d="1">
+        <h3>Credits &amp; fairness</h3>
+        <div class="faq-list">
+          <div class="faq-item"><button class="faq-q" aria-expanded="false">Why is every hour worth the same? <span class="pm"></span></button><div class="faq-a"><p>Because pricing one person's hour above another's is exactly the inequality we set out to remove. A surgeon's hour and a student's hour are both one credit. Equality isn't a slogan here — it's built into the math.</p></div></div>
+          <div class="faq-item"><button class="faq-q" aria-expanded="false">Can I buy or cash out credits? <span class="pm"></span></button><div class="faq-a"><p>No. Credits can only be earned by giving your time, and they can't be converted to money. This keeps value circulating inside the neighbourhood instead of leaking out of it.</p></div></div>
+          <div class="faq-item"><button class="faq-q" aria-expanded="false">What's the 5-hour Trust Bonus? <span class="pm"></span></button><div class="faq-a"><p>Founding Members start with five credits already in their account, so you can receive help before you've given any. It's our thank-you for helping build the first circle.</p></div></div>
+        </div>
+      </div>
+
+      <div class="faq-group reveal" data-d="1">
+        <h3>Trust &amp; safety</h3>
+        <div class="faq-list">
+          <div class="faq-item"><button class="faq-q" aria-expanded="false">How do you keep it safe? <span class="pm"></span></button><div class="faq-a"><p>Every member is verified personally before joining — by call and often an in-person visit. The circle is intentionally small and capped, so accountability is real and people genuinely know one another.</p></div></div>
+          <div class="faq-item"><button class="faq-q" aria-expanded="false">What stops someone from taking and never giving? <span class="pm"></span></button><div class="faq-a"><p>Credits. You can only receive an hour if you hold a credit, and credits are only earned by giving. Every exchange is logged and confirmed by both sides, so reputation is built on real, completed hours.</p></div></div>
+          <div class="faq-item"><button class="faq-q" aria-expanded="false">What happens to my data? <span class="pm"></span></button><div class="faq-a"><p>It stays yours. We don't run ads and we don't sell your information. We collect only what's needed to verify you and run the circle — nothing more.</p></div></div>
+        </div>
+      </div>
+
+      <div class="faq-group reveal" data-d="1">
+        <h3>Joining</h3>
+        <div class="faq-list">
+          <div class="faq-item"><button class="faq-q" aria-expanded="false">How do I get in? <span class="pm"></span></button><div class="faq-a"><p>Apply using the form above. We'll reach out within two days for a short verification call, and if it's a fit, a seat opens. We add members in small waves to keep the circle healthy.</p></div></div>
+          <div class="faq-item"><button class="faq-q" aria-expanded="false">I'm not in North Kolkata. Can I still join? <span class="pm"></span></button><div class="faq-a"><p>Not yet — the pilot is focused on a few North Kolkata neighbourhoods so we can keep it tight and trusted. Join the waitlist and we'll tell you the moment your area opens.</p></div></div>
+          <div class="faq-item"><button class="faq-q" aria-expanded="false">What's the Founding 50 Race? <span class="pm"></span></button><div class="faq-a"><p>A friendly contest for Founding Members: invite the most verified neighbours and win one of five Lifetime VIP Passes — priority in every future wave plus a permanent founder's badge. See the live leaderboard above.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta-band">
+    <div class="wrap">
+      <p class="eyebrow center reveal" style="justify-content:center;color:var(--gold-bright);">Still have a question?</p>
+      <h2 class="h2 reveal" data-d="1" style="margin-top:20px;">We'd rather <em>talk</em><br/>than sell.</h2>
+      <p class="reveal" data-d="1">Write to a real person. We answer every message.</p>
+      <div class="reveal" data-d="2" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:14px;">
+        <a href="mailto:hello@samaysetu.in" class="btn btn-gold btn-lg">hello@samaysetu.in</a>
+        <a href="#apply" class="btn btn-ghost btn-lg">Apply for a seat</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <svg viewBox="0 0 36 36" fill="none"><path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="24" r="2.5" fill="#a07f3f"/><circle cx="28" cy="12" r="2.5" fill="#14120e"/></svg>
+          <span class="word">samay <em>setu</em></span>
+        </a>
+        <p>One hour given, one hour received. A bridge of time between neighbours.</p>
+      </div>
+      <div class="footer-col"><h4>Explore</h4><a href="how-it-works.html">How it works</a><a href="about.html">Our story</a><a href="membership.html">Membership</a><a href="#faq">FAQ</a></div>
+      <div class="footer-col"><h4>The Circle</h4><a href="#apply">Apply for a seat</a><a href="#founding">Founding 50 Race</a><a href="#">Sign in</a></div>
+      <div class="footer-col"><h4>Contact</h4><a href="mailto:hello@samaysetu.in">hello@samaysetu.in</a><a href="#">North Kolkata</a><a href="#">Instagram</a></div>
+    </div>
+    <div class="footer-bottom">
+      <span>Samay Setu · North Kolkata · 2026</span>
+      <em>One hour given, one hour received.</em>
+    </div>
+  </footer>
+
+</div>
+<script src="site.js"></script>
+</body>
+</html>

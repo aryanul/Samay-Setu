@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Our story — Samay Setu</title>
+<meta name="description" content="Why we built Samay Setu — a neighbourhood time-bank for North Kolkata, founded on a single principle: an hour is an hour, and everyone's time is equal." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* Page header — large editorial */
+  .ph { background: var(--band); position: relative; overflow: hidden; }
+  .ph::after { content: "सेतु"; position: absolute; right: 1%; bottom: -7vw; font-family: var(--serif); font-size: 24vw; line-height: 1; color: rgba(176,134,63,0.05); user-select: none; pointer-events: none; }
+  .ph-inner { max-width: var(--maxw); margin: 0 auto; padding: 84px var(--pad) 80px; position: relative; z-index: 2; }
+  .crumb { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; color: var(--ink-3); }
+  .crumb a:hover { color: var(--gold-bright); }
+  .ph h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(46px, 7vw, 84px); line-height: 1.0; letter-spacing: -0.035em; margin-top: 22px; max-width: 16ch; }
+  .ph h1 em { font-style: italic; color: var(--gold-bright); }
+  .ph .sub { font-family: var(--sans); font-size: clamp(17px, 2vw, 20px); color: var(--ink-2); max-width: 56ch; margin-top: 24px; line-height: 1.55; }
+
+  /* Origin — two column narrative with drop cap */
+  .origin { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  .origin .colA p { font-size: 16.5px; color: var(--ink-2); margin-bottom: 18px; max-width: 52ch; line-height: 1.65; }
+  .origin .colA p:first-of-type::first-letter { font-family: var(--serif); float: left; font-size: 76px; line-height: 0.74; font-weight: 400; color: var(--gold-bright); padding: 8px 14px 0 0; }
+  .origin .colA strong { color: var(--ink); font-weight: 600; }
+  .name-meaning { background: var(--plate); border: 1px solid var(--rule-gold); border-radius: 12px; padding: 30px 28px; box-shadow: var(--shadow-soft); position: sticky; top: 96px; }
+  .name-meaning .glyph-lg { width: 44px; height: 44px; margin-bottom: 18px; }
+  .name-meaning .term { display: flex; align-items: baseline; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--rule-soft); }
+  .name-meaning .term:last-child { border-bottom: none; }
+  .name-meaning .deva { font-family: var(--serif); font-size: 32px; color: var(--gold-bright); width: 70px; }
+  .name-meaning .gloss strong { display: block; font-size: 15px; }
+  .name-meaning .gloss span { font-size: 13.5px; color: var(--ink-2); }
+  .name-meaning .whole { margin-top: 18px; font-family: var(--sans); font-style: italic; font-size: 16px; color: var(--ink); }
+
+  /* Principle band */
+  .principle { background: var(--band); text-align: center; }
+  .principle blockquote { font-family: var(--serif); font-size: clamp(30px, 4.6vw, 54px); font-weight: 600; line-height: 1.12; letter-spacing: -0.03em; max-width: 18ch; margin: 0 auto; color: var(--ink); }
+  .principle blockquote em { color: var(--gold-bright); font-style: italic; }
+  .principle .attr { margin-top: 26px; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold-bright); font-weight: 600; }
+
+  /* Values */
+  .values { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 52px; }
+  .value { padding: 32px 28px; background: var(--white); border: 1px solid var(--rule-soft); border-radius: 12px; }
+  .value .n { font-family: var(--mono); font-size: 11px; color: var(--gold); letter-spacing: 0.08em; margin-bottom: 18px; }
+  .value h4 { font-family: var(--serif); font-size: 25px; font-weight: 500; margin-bottom: 10px; }
+  .value h4 em { font-style: italic; color: var(--gold); }
+  .value p { font-size: 14.5px; color: var(--ink-2); }
+
+  /* Why here — split image-ish + stats */
+  .why { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+  .why-art { aspect-ratio: 4/5; border-radius: 14px; border: 1px solid var(--rule-gold); background: radial-gradient(circle at 70% 20%, var(--plate), var(--paper-3) 70%); position: relative; overflow: hidden; box-shadow: var(--shadow-card); display: flex; align-items: flex-end; padding: 30px; }
+  .why-art::before { content: ""; position: absolute; inset: 0; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23b0863f' stroke-width='0.4' stroke-linecap='round'/></svg>"); background-size: 80%; background-position: center; background-repeat: no-repeat; opacity: 0.3; }
+  .why-art .cap { position: relative; z-index: 2; font-family: var(--sans); font-style: italic; font-size: 16px; color: var(--ink); background: rgba(255,253,246,0.7); backdrop-filter: blur(2px); padding: 10px 16px; border-radius: 8px; border: 1px solid var(--rule-soft); }
+  .why h2 { margin-bottom: 22px; }
+  .why p { color: var(--ink-2); margin-bottom: 16px; max-width: 50ch; font-size: 16px; line-height: 1.65; }
+  .why-stats { display: flex; gap: 36px; margin-top: 28px; flex-wrap: wrap; }
+  .why-stats .s .fig { font-size: 40px; }
+  .why-stats .s .d { font-size: 13px; color: var(--ink-2); margin-top: 4px; }
+
+  /* Timeline */
+  .tl { max-width: 760px; margin: 48px auto 0; }
+  .tl-row { display: grid; grid-template-columns: 120px 1fr; gap: 28px; padding: 22px 0; border-bottom: 1px solid var(--rule-soft); }
+  .tl-row:last-child { border-bottom: none; }
+  .tl-when { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; color: var(--gold); padding-top: 4px; }
+  .tl-what h4 { font-family: var(--serif); font-size: 22px; font-weight: 500; margin-bottom: 6px; }
+  .tl-what p { font-size: 14.5px; color: var(--ink-2); max-width: 54ch; }
+  .tl-row.future .tl-what h4 { color: var(--ink-3); }
+
+  /* Founders */
+  .team { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 52px; }
+  .member { text-align: center; }
+  .member .face { width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 16px; background: radial-gradient(circle at 35% 30%, var(--plate), var(--gold-bright)); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 38px; color: var(--white); border: 1px solid var(--rule-gold); box-shadow: 0 0 0 6px var(--gold-glow); }
+  .member h4 { font-family: var(--serif); font-size: 22px; font-weight: 500; }
+  .member .role { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); margin: 4px 0 10px; }
+  .member p { font-size: 13.5px; color: var(--ink-2); max-width: 32ch; margin: 0 auto; }
+
+  /* CTA */
+  .cta-band { background: var(--band); text-align: center; }
+  .cta-band h2 { margin: 0 auto 18px; max-width: 22ch; }
+  .cta-band p { color: var(--ink-2); max-width: 50ch; margin: 0 auto 34px; font-size: 17px; }
+
+  @media (max-width: 900px) {
+    .origin { grid-template-columns: 1fr; gap: 40px; }
+    .name-meaning { position: static; }
+    .values { grid-template-columns: 1fr; }
+    .why { grid-template-columns: 1fr; gap: 40px; }
+    .why-art { order: -1; aspect-ratio: 16/10; }
+    .tl-row { grid-template-columns: 90px 1fr; gap: 18px; }
+    .team { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 560px) {
+    .ph-inner { padding-top: 56px; padding-bottom: 52px; }
+    .ph h1 { font-size: clamp(34px, 10vw, 48px); }
+    .origin .colA p:first-of-type::first-letter { font-size: 60px; padding: 6px 12px 0 0; }
+    .tl-row { grid-template-columns: 1fr; gap: 6px; }
+    .tl-when { padding-top: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Nav -->
+  <div class="nav-wrap">
+    <nav class="nav">
+      <a class="brand" href="index.html">
+        <svg viewBox="0 0 36 36" fill="none"><path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="24" r="2.5" fill="#a07f3f"/><circle cx="28" cy="12" r="2.5" fill="#14120e"/></svg>
+        <span class="word">samay <em>setu</em></span>
+      </a>
+      <div class="nav-links">
+        <a href="how-it-works.html">How it works</a>
+        <a href="about.html" class="active">Our story</a>
+        <a href="membership.html">Membership</a>
+        <a href="#">Sign in</a>
+        <a href="membership.html#apply" class="btn btn-gold">Apply for a seat <span class="arr">→</span></a>
+      </div>
+      <button class="nav-toggle" aria-label="Menu"><span></span></button>
+    </nav>
+  </div>
+
+  <!-- Header -->
+  <header class="ph">
+    <div class="ph-inner">
+      <p class="crumb"><a href="index.html">Home</a> &nbsp;/&nbsp; Our story</p>
+      <p class="eyebrow reveal in" style="margin-top:18px;">Why we built this</p>
+      <h1 class="reveal in" data-d="1">A bridge built<br/>from <em>hours.</em></h1>
+      <p class="sub reveal in" data-d="2">We started Samay Setu because the most valuable thing a neighbourhood has — its people's time — was the one thing no one had a fair way to share.</p>
+    </div>
+  </header>
+
+  <!-- Origin -->
+  <section class="section band-paper">
+    <div class="wrap origin">
+      <div class="colA">
+        <p class="reveal">Cities are full of people standing on opposite banks of the same river. On one side, a retired teacher with afternoons to spare. On the other, a working parent who can't find an hour for their child's maths. They live streets apart and never meet — because there was no bridge between what one could give and what the other needed.</p>
+        <p class="reveal">Money was supposed to be that bridge. But money decides that some hours are worth more than others, and quietly tells too many people their time isn't worth much at all. <strong>We didn't believe that.</strong></p>
+        <p class="reveal">So we built an exchange with one rule money could never follow: an hour is an hour. The surgeon and the student, the coder and the cook — inside the circle, their time carries exactly the same weight.</p>
+        <p class="reveal">We're starting where we live: a few streets of North Kolkata, twenty neighbours, hand-verified one at a time. Small enough that trust is real. Honest enough that it lasts.</p>
+      </div>
+      <aside class="name-meaning reveal" data-d="1">
+        <div class="glyph-lg glyph"></div>
+        <p style="font-family:var(--mono);font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:8px;">The name</p>
+        <div class="term"><span class="deva">समय</span><div class="gloss"><strong>Samay</strong><span>time — the one thing we all spend</span></div></div>
+        <div class="term"><span class="deva">सेतु</span><div class="gloss"><strong>Setu</strong><span>a bridge — between need and gift</span></div></div>
+        <p class="whole">"A bridge of time." Cross it in either direction — give an hour, or receive one.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Principle -->
+  <section class="section principle">
+    <div class="wrap">
+      <p class="eyebrow center reveal" style="justify-content:center;color:var(--gold-bright);">The founding principle</p>
+      <blockquote class="reveal" data-d="1" style="margin-top:30px;">We trade in <em>humanity,</em> not hierarchy.</blockquote>
+      <p class="attr reveal" data-d="1">— Written into Samay Setu on day one</p>
+    </div>
+  </section>
+
+  <!-- Values -->
+  <section class="section band-paper">
+    <div class="wrap">
+      <p class="eyebrow reveal">What we hold to</p>
+      <h2 class="h2 reveal" data-d="1" style="margin-top:20px;">Three things we<br/><em>won't compromise.</em></h2>
+      <div class="values">
+        <div class="value reveal" data-d="1"><div class="n">i.</div><h4>Equal <em>by design</em></h4><p>The platform structurally refuses to price one person's hour above another's. Equality isn't a slogan here — it's the math.</p></div>
+        <div class="value reveal" data-d="2"><div class="n">ii.</div><h4>Small <em>on purpose</em></h4><p>We grow in waves, not floods. A circle people can actually know is worth more than a crowd they can't trust.</p></div>
+        <div class="value reveal" data-d="3"><div class="n">iii.</div><h4>Human <em>first</em></h4><p>No ads, no selling your data, no engagement traps. The product is the relationship between neighbours — nothing else.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why North Kolkata -->
+  <section class="section equiv-band">
+    <div class="wrap why">
+      <div class="why-art reveal"><span class="cap">North Kolkata — where the lanes still remember everyone's name.</span></div>
+      <div>
+        <p class="eyebrow reveal" style="color:var(--gold-bright);">Why North Kolkata</p>
+        <h2 class="h2 reveal" data-d="1">We started where<br/><em>community already lived.</em></h2>
+        <p class="reveal" data-d="2">North Kolkata's paras have shared, lent, and looked after one another for generations. The instinct to help a neighbour is already here — it just lost its bridge somewhere along the way.</p>
+        <p class="reveal" data-d="2">We're not importing a Silicon Valley idea. We're giving an old, local habit a fair and modern shape — and then we'll let the next neighbourhood decide if it wants one too.</p>
+        <div class="why-stats reveal" data-d="3">
+          <div class="s"><div class="fig">1</div><div class="d">neighbourhood, fully focused</div></div>
+          <div class="s"><div class="fig"><span data-count="20">20</span></div><div class="d">founding seats, hand-verified</div></div>
+          <div class="s"><div class="fig">∞</div><div class="d">hours waiting to be shared</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="section band-paper">
+    <div class="wrap">
+      <p class="eyebrow center reveal" style="justify-content:center;">The road so far</p>
+      <h2 class="h2 reveal" data-d="1" style="margin-top:20px;text-align:center;">A bridge, built<br/><em>one plank at a time.</em></h2>
+      <div class="tl reveal" data-d="1">
+        <div class="tl-row"><div class="tl-when">Late 2025</div><div class="tl-what"><h4>An idea over chai</h4><p>A conversation about why a retired engineer two doors down had nothing to do, and a neighbour who badly needed his help, never crossed paths.</p></div></div>
+        <div class="tl-row"><div class="tl-when">Early 2026</div><div class="tl-what"><h4>The first eight</h4><p>We verified our first eight neighbours by hand — calls, visits, tea — and watched the first hours change hands.</p></div></div>
+        <div class="tl-row"><div class="tl-when">Now</div><div class="tl-what"><h4>The Founding Circle opens</h4><p>Twelve seats remain in the pilot. Founding members help write the rules and start with a 5-hour Trust Bonus.</p></div></div>
+        <div class="tl-row future"><div class="tl-when">Next</div><div class="tl-what"><h4>The second para</h4><p>Once the first circle holds steady, a neighbouring locality gets its own. Bridges, then a network of bridges.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Founders -->
+  <section class="section equiv-band">
+    <div class="wrap">
+      <p class="eyebrow center reveal" style="justify-content:center;color:var(--gold-bright);">The people behind it</p>
+      <h2 class="h2 reveal" data-d="1" style="margin-top:20px;text-align:center;">Neighbours, building<br/><em>for neighbours.</em></h2>
+      <div class="team">
+        <div class="member reveal" data-d="1"><div class="face">A</div><h4>Arundhati Bose</h4><div class="role">Founder · Community</div><p>Spent a decade in local non-profits. Knocks on the doors so the circle stays human.</p></div>
+        <div class="member reveal" data-d="2"><div class="face">D</div><h4>Dev Chatterjee</h4><div class="role">Founder · Product</div><p>Builds the bridge itself. Believes software should disappear behind the relationship.</p></div>
+        <div class="member reveal" data-d="3"><div class="face">M</div><h4>Mitra & the eight</h4><div class="role">Founding members</div><p>The first verified neighbours — equal partners who help write every rule.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section cta-band">
+    <div class="wrap">
+      <p class="eyebrow center reveal" style="justify-content:center;color:var(--gold-bright);">Be part of the first circle</p>
+      <h2 class="h2 reveal" data-d="1" style="margin-top:20px;">Help us write<br/><em>the rules.</em></h2>
+      <p class="reveal" data-d="1">Twelve founding seats remain. Bring an hour, bring your voice, and help shape what a neighbourhood can be.</p>
+      <div class="reveal" data-d="2" style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <a href="membership.html#apply" class="btn btn-gold btn-lg">Apply for a seat <span class="arr">→</span></a>
+        <a href="how-it-works.html" class="btn btn-ghost btn-lg">See how it works</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="index.html">
+          <svg viewBox="0 0 36 36" fill="none"><path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="24" r="2.5" fill="#a07f3f"/><circle cx="28" cy="12" r="2.5" fill="#14120e"/></svg>
+          <span class="word">samay <em>setu</em></span>
+        </a>
+        <p>One hour given, one hour received. A bridge of time between neighbours.</p>
+      </div>
+      <div class="footer-col"><h4>Explore</h4><a href="how-it-works.html">How it works</a><a href="about.html">Our story</a><a href="membership.html">Membership</a><a href="membership.html#faq">FAQ</a></div>
+      <div class="footer-col"><h4>The Circle</h4><a href="membership.html#apply">Apply for a seat</a><a href="membership.html#founding">Founding 50 Race</a><a href="#">Sign in</a></div>
+      <div class="footer-col"><h4>Contact</h4><a href="mailto:hello@samaysetu.in">hello@samaysetu.in</a><a href="#">North Kolkata</a><a href="#">Instagram</a></div>
+    </div>
+    <div class="footer-bottom">
+      <span>Samay Setu · North Kolkata · 2026</span>
+      <em>One hour given, one hour received.</em>
+    </div>
+  </footer>
+
+</div>
+<script src="site.js"></script>
+</body>
+</html>

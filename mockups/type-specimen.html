@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Samay Setu — Type Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,400&family=Spline+Sans+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Yrsa:ital,wght@0,400;0,500;0,600;1,400&family=Mukta:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --ink:#14120e; --ink-2:#4a4436; --ink-3:#6e6552;
+    --paper:#f4ecdb; --paper-2:#ebe1cc; --paper-3:#e3d7bd; --band:#ece0c6; --plate:#f8eed0; --white:#fffdf6;
+    --rule:#c5b899; --rule-soft:#d3c7a8; --rule-gold:#dcc992;
+    --gold:#a07f3f; --gold-bright:#b0863f; --gold-glow:rgba(176,134,63,0.14);
+    --ui:"Hanken Grotesk", system-ui, sans-serif;
+    --shadow:0 24px 60px -36px rgba(20,18,14,0.34);
+  }
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; }
+  body { font-family:var(--ui); background:var(--paper); color:var(--ink); line-height:1.6; -webkit-font-smoothing:antialiased; }
+  ::selection { background:var(--gold-bright); color:var(--white); }
+
+  .wrap { max-width:1120px; margin:0 auto; padding:0 40px; }
+
+  /* page intro */
+  .intro { padding:80px 0 36px; }
+  .kicker { font-family:"IBM Plex Mono", monospace; font-size:11.5px; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); }
+  .intro h1 { font-family:"Fraunces", serif; font-weight:300; font-size:clamp(40px,6vw,68px); line-height:1.02; letter-spacing:-0.02em; margin:18px 0 0; }
+  .intro h1 em { font-style:italic; color:var(--gold-bright); }
+  .intro p { max-width:62ch; color:var(--ink-2); font-size:16.5px; margin-top:20px; }
+  .intro .how { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:36px; }
+  .how-card { background:var(--white); border:1px solid var(--rule-soft); border-radius:12px; padding:18px 20px; }
+  .how-card .r { font-family:"IBM Plex Mono", monospace; font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+  .how-card .t { font-size:15px; font-weight:700; margin-bottom:4px; }
+  .how-card .d { font-size:13px; color:var(--ink-2); }
+
+  /* sticky jump nav */
+  .jump { position:sticky; top:0; z-index:10; background:rgba(244,236,219,0.9); backdrop-filter:blur(10px); border-bottom:1px solid var(--rule); }
+  .jump-inner { max-width:1120px; margin:0 auto; padding:14px 40px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .jump .lbl { font-family:"IBM Plex Mono", monospace; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-3); margin-right:6px; }
+  .jump a { font-size:13px; font-weight:600; color:var(--ink-2); padding:7px 14px; border:1px solid var(--rule); border-radius:30px; transition:all .18s; }
+  .jump a:hover { border-color:var(--gold-bright); color:var(--gold-bright); }
+
+  /* system card */
+  .sys { padding:64px 0; border-top:1px solid var(--rule); }
+  .sys-head { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap; margin-bottom:8px; }
+  .sys-opt { font-family:"IBM Plex Mono", monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold); }
+  .sys-name { font-family:"Fraunces", serif; font-size:34px; font-weight:400; letter-spacing:-0.01em; margin-top:4px; }
+  .sys-vibe { font-size:14px; color:var(--ink-2); max-width:44ch; }
+
+  /* role legend */
+  .legend { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:24px 0 34px; }
+  .role { background:var(--plate); border:1px solid var(--rule-gold); border-radius:12px; padding:16px 18px; }
+  .role .role-tag { font-family:"IBM Plex Mono", monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); }
+  .role .role-font { font-size:23px; margin-top:8px; line-height:1.1; }
+  .role .role-use { font-size:12.5px; color:var(--ink-2); margin-top:8px; }
+  .role .role-weights { font-family:"IBM Plex Mono", monospace; font-size:10.5px; color:var(--ink-3); margin-top:8px; }
+
+  /* specimen */
+  .spec { background:var(--white); border:1px solid var(--rule-gold); border-radius:18px; padding:46px 48px; box-shadow:var(--shadow); position:relative; overflow:hidden; }
+  .spec::after { content:""; position:absolute; right:-40px; bottom:-40px; width:200px; height:200px; opacity:0.1; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23b0863f' stroke-width='1.4' stroke-linecap='round'/></svg>"); background-size:contain; background-repeat:no-repeat; }
+  .spec-eyebrow { font-family:var(--lab); font-size:12px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold); display:inline-flex; align-items:center; gap:11px; }
+  .spec-eyebrow::before { content:""; width:28px; height:1px; background:var(--gold); }
+  .spec h2 { font-family:var(--disp); font-weight:var(--disp-w,300); font-size:clamp(42px,5.6vw,78px); line-height:0.99; letter-spacing:var(--disp-ls,-0.025em); margin:22px 0 0; }
+  .spec h2 em { font-style:italic; color:var(--gold-bright); font-weight:var(--disp-w,400); }
+  .spec .lede { font-family:var(--text); font-size:21px; color:var(--ink-2); max-width:50ch; margin-top:26px; line-height:1.5; }
+  .spec .lede strong { color:var(--ink); font-weight:600; }
+  .spec .body { font-family:var(--text); font-size:16px; color:var(--ink-2); max-width:64ch; margin-top:22px; }
+  .spec hr { border:none; border-top:1px solid var(--rule-soft); margin:34px 0; }
+  .spec-row { display:flex; align-items:center; gap:32px; flex-wrap:wrap; }
+  .spec-num { font-family:var(--disp); font-weight:var(--disp-w,300); font-size:64px; line-height:1; color:var(--gold-bright); letter-spacing:-0.02em; }
+  .spec-num small { display:block; font-family:var(--lab); font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-3); margin-top:6px; font-weight:500; }
+  .spec-btn { font-family:var(--text); font-size:15px; font-weight:600; color:var(--white); background:var(--gold-bright); padding:14px 24px; border-radius:7px; border:none; }
+  .spec-mono { font-family:var(--lab); font-size:13px; font-weight:500; color:var(--gold); background:var(--gold-glow); border:1px solid var(--rule-gold); border-radius:30px; padding:8px 15px; letter-spacing:0.06em; }
+  .spec-word { font-family:var(--disp); font-weight:var(--disp-w,400); font-size:30px; letter-spacing:-0.005em; }
+  .spec-word em { font-style:italic; color:var(--gold-bright); }
+  .spec-deva { font-family:var(--disp); font-size:34px; color:var(--ink); }
+  .spec-deva span { color:var(--gold-bright); }
+  .deva-note { font-family:var(--lab); font-size:11px; color:var(--ink-3); margin-top:6px; }
+
+  /* per-system font roles */
+  .sys-a { --disp:"Fraunces", serif; --disp-w:340; --disp-ls:-0.02em; --text:"Newsreader", serif; --lab:"Spline Sans Mono", monospace; }
+  .sys-b { --disp:"Bricolage Grotesque", sans-serif; --disp-w:600; --disp-ls:-0.03em; --text:"Hanken Grotesk", sans-serif; --lab:"JetBrains Mono", monospace; }
+  .sys-c { --disp:"Instrument Serif", serif; --disp-w:400; --disp-ls:-0.01em; --text:"Schibsted Grotesk", sans-serif; --lab:"IBM Plex Mono", monospace; }
+  .sys-d { --disp:"Yrsa", serif; --disp-w:500; --disp-ls:-0.01em; --text:"Mukta", sans-serif; --lab:"IBM Plex Mono", monospace; }
+  /* The display name labels render in their own display font */
+  .sys-a .role.disp .role-font { font-family:"Fraunces", serif; } .sys-a .role.text .role-font { font-family:"Newsreader", serif; } .sys-a .role.lab .role-font { font-family:"Spline Sans Mono", monospace; }
+  .sys-b .role.disp .role-font { font-family:"Bricolage Grotesque", sans-serif; font-weight:600; } .sys-b .role.text .role-font { font-family:"Hanken Grotesk", sans-serif; font-weight:600; } .sys-b .role.lab .role-font { font-family:"JetBrains Mono", monospace; }
+  .sys-c .role.disp .role-font { font-family:"Instrument Serif", serif; font-size:28px; } .sys-c .role.text .role-font { font-family:"Schibsted Grotesk", sans-serif; font-weight:600; } .sys-c .role.lab .role-font { font-family:"IBM Plex Mono", monospace; }
+  .sys-d .role.disp .role-font { font-family:"Yrsa", serif; font-weight:500; } .sys-d .role.text .role-font { font-family:"Mukta", sans-serif; font-weight:600; } .sys-d .role.lab .role-font { font-family:"IBM Plex Mono", monospace; }
+
+  .reco { background:var(--ink); color:var(--paper); border-radius:18px; padding:40px 44px; margin:24px 0 90px; }
+  .reco .kicker { color:var(--gold-bright); }
+  .reco h3 { font-family:"Fraunces", serif; font-weight:300; font-size:30px; margin:14px 0 12px; color:var(--paper); }
+  .reco p { color:#d8cdb4; max-width:64ch; font-size:15px; }
+  .reco b { color:var(--gold-bright); }
+
+  footer { border-top:1px solid var(--rule); padding:30px 0; font-size:12.5px; color:var(--ink-3); }
+
+  @media (max-width:820px) {
+    .wrap, .jump-inner, .intro { padding-left:22px; padding-right:22px; }
+    .intro .how, .legend { grid-template-columns:1fr; }
+    .spec { padding:32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="intro">
+  <div class="wrap">
+    <p class="kicker">Samay Setu · Type System Study</p>
+    <h1>Four ways to <em>sound</em><br/>like Samay Setu.</h1>
+    <p>One typeface can't carry a brand — a system can. Each option below assigns a font to three jobs and shows them on real Samay Setu copy, so you can judge them in context, not in isolation. Pick the system whose voice fits; I'll then apply it across every page and remove the generic touches in one pass.</p>
+    <div class="how">
+      <div class="how-card"><div class="r">Role 1 — Display</div><div class="t">Headlines &amp; numbers</div><div class="d">Hero lines, section titles, the wordmark, big figures. Carries the personality.</div></div>
+      <div class="how-card"><div class="r">Role 2 — Text</div><div class="t">Body &amp; interface</div><div class="d">Ledes, paragraphs, UI labels, buttons. Must stay calm and readable at length.</div></div>
+      <div class="how-card"><div class="r">Role 3 — Label</div><div class="t">Kickers &amp; meta</div><div class="d">Eyebrows, tags, countdowns, data. A mono or technical accent for texture.</div></div>
+    </div>
+  </div>
+</header>
+
+<nav class="jump">
+  <div class="jump-inner">
+    <span class="lbl">Jump to</span>
+    <a href="#a">A · The Press</a>
+    <a href="#b">B · The Grotesque</a>
+    <a href="#c">C · The Atelier</a>
+    <a href="#d">D · Bilingual</a>
+    <a href="#reco">Recommendation</a>
+  </div>
+</nav>
+
+<!-- OPTION A -->
+<section class="sys sys-a" id="a">
+  <div class="wrap">
+    <div class="sys-head">
+      <div>
+        <div class="sys-opt">Option A</div>
+        <div class="sys-name">The Press</div>
+      </div>
+      <p class="sys-vibe">Literary and warm. An editorial, old-world voice with real character — premium without feeling like a luxury template.</p>
+    </div>
+    <div class="legend">
+      <div class="role disp"><div class="role-tag">Display</div><div class="role-font">Fraunces</div><div class="role-use">Headlines, section titles, numbers, wordmark</div><div class="role-weights">Light 340 · italic for emphasis</div></div>
+      <div class="role text"><div class="role-tag">Text</div><div class="role-font">Newsreader</div><div class="role-use">Ledes, body, long-form reading</div><div class="role-weights">Regular 400 · Medium 500</div></div>
+      <div class="role lab"><div class="role-tag">Label</div><div class="role-font">Spline Sans Mono</div><div class="role-use">Eyebrows, tags, countdowns, data</div><div class="role-weights">Regular 400 · Medium 500</div></div>
+    </div>
+    <div class="spec">
+      <span class="spec-eyebrow">Pilot · North Kolkata · Vol. I</span>
+      <h2>Your time is the only<br/><em>currency that matters.</em></h2>
+      <p class="lede">A private exchange for your neighbourhood. Trade an hour of your <strong>skill</strong> for an hour of someone else's help — no money, just minutes.</p>
+      <p class="body">An hour is an hour. Whether you are designing a website or walking a neighbour's dog, the value of your time stays equal. We trade in humanity, not hierarchy.</p>
+      <hr/>
+      <div class="spec-row">
+        <div class="spec-num">1h<small>One credit</small></div>
+        <div class="spec-num">08 / 20<small>Founding seats</small></div>
+        <button class="spec-btn">Get your invite</button>
+        <span class="spec-mono">WAVE II · 3D 14H 02M</span>
+        <span class="spec-word">samay <em>setu</em></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OPTION B -->
+<section class="sys sys-b" id="b">
+  <div class="wrap">
+    <div class="sys-head">
+      <div>
+        <div class="sys-opt">Option B</div>
+        <div class="sys-name">The Grotesque</div>
+      </div>
+      <p class="sys-vibe">Modern and confident. A contemporary grotesque with personality — neighbourly and current, the furthest from the old-world look.</p>
+    </div>
+    <div class="legend">
+      <div class="role disp"><div class="role-tag">Display</div><div class="role-font">Bricolage Grotesque</div><div class="role-use">Headlines, section titles, numbers, wordmark</div><div class="role-weights">Semibold 600 · Bold 700</div></div>
+      <div class="role text"><div class="role-tag">Text</div><div class="role-font">Hanken Grotesk</div><div class="role-use">Ledes, body, interface, buttons</div><div class="role-weights">Regular 400 · Semibold 600</div></div>
+      <div class="role lab"><div class="role-tag">Label</div><div class="role-font">JetBrains Mono</div><div class="role-use">Eyebrows, tags, countdowns, data</div><div class="role-weights">Regular 400 · Medium 500</div></div>
+    </div>
+    <div class="spec">
+      <span class="spec-eyebrow">Pilot · North Kolkata · Vol. I</span>
+      <h2>Your time is the only<br/><em>currency that matters.</em></h2>
+      <p class="lede">A private exchange for your neighbourhood. Trade an hour of your <strong>skill</strong> for an hour of someone else's help — no money, just minutes.</p>
+      <p class="body">An hour is an hour. Whether you are designing a website or walking a neighbour's dog, the value of your time stays equal. We trade in humanity, not hierarchy.</p>
+      <hr/>
+      <div class="spec-row">
+        <div class="spec-num">1h<small>One credit</small></div>
+        <div class="spec-num">08 / 20<small>Founding seats</small></div>
+        <button class="spec-btn">Get your invite</button>
+        <span class="spec-mono">WAVE II · 3D 14H 02M</span>
+        <span class="spec-word">samay <em>setu</em></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OPTION C -->
+<section class="sys sys-c" id="c">
+  <div class="wrap">
+    <div class="sys-head">
+      <div>
+        <div class="sys-opt">Option C</div>
+        <div class="sys-name">The Atelier</div>
+      </div>
+      <p class="sys-vibe">High-contrast and boutique. Instrument Serif gives striking, fashion-editorial headlines; a crisp neutral grotesque keeps the rest quiet.</p>
+    </div>
+    <div class="legend">
+      <div class="role disp"><div class="role-tag">Display</div><div class="role-font">Instrument Serif</div><div class="role-use">Headlines, section titles, numbers, wordmark</div><div class="role-weights">Regular 400 · italic</div></div>
+      <div class="role text"><div class="role-tag">Text</div><div class="role-font">Schibsted Grotesk</div><div class="role-use">Ledes, body, interface, buttons</div><div class="role-weights">Regular 400 · Semibold 600</div></div>
+      <div class="role lab"><div class="role-tag">Label</div><div class="role-font">IBM Plex Mono</div><div class="role-use">Eyebrows, tags, countdowns, data</div><div class="role-weights">Regular 400 · Medium 500</div></div>
+    </div>
+    <div class="spec">
+      <span class="spec-eyebrow">Pilot · North Kolkata · Vol. I</span>
+      <h2>Your time is the only<br/><em>currency that matters.</em></h2>
+      <p class="lede">A private exchange for your neighbourhood. Trade an hour of your <strong>skill</strong> for an hour of someone else's help — no money, just minutes.</p>
+      <p class="body">An hour is an hour. Whether you are designing a website or walking a neighbour's dog, the value of your time stays equal. We trade in humanity, not hierarchy.</p>
+      <hr/>
+      <div class="spec-row">
+        <div class="spec-num">1h<small>One credit</small></div>
+        <div class="spec-num">08 / 20<small>Founding seats</small></div>
+        <button class="spec-btn">Get your invite</button>
+        <span class="spec-mono">WAVE II · 3D 14H 02M</span>
+        <span class="spec-word">samay <em>setu</em></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OPTION D -->
+<section class="sys sys-d" id="d">
+  <div class="wrap">
+    <div class="sys-head">
+      <div>
+        <div class="sys-opt">Option D</div>
+        <div class="sys-name">Bilingual · Sampradaya</div>
+      </div>
+      <p class="sys-vibe">Rooted in place. One family covers Latin and Devanagari, so समय सेतु and Samay Setu share a single, humane voice — authentic to North Kolkata.</p>
+    </div>
+    <div class="legend">
+      <div class="role disp"><div class="role-tag">Display</div><div class="role-font">Yrsa</div><div class="role-use">Headlines + Devanagari + wordmark</div><div class="role-weights">Medium 500 · Semibold 600</div></div>
+      <div class="role text"><div class="role-tag">Text</div><div class="role-font">Mukta</div><div class="role-use">Body, interface (Latin + Devanagari)</div><div class="role-weights">Regular 400 · Semibold 600</div></div>
+      <div class="role lab"><div class="role-tag">Label</div><div class="role-font">IBM Plex Mono</div><div class="role-use">Eyebrows, tags, countdowns, data</div><div class="role-weights">Regular 400 · Medium 500</div></div>
+    </div>
+    <div class="spec">
+      <span class="spec-eyebrow">Pilot · North Kolkata · Vol. I</span>
+      <h2>Your time is the only<br/><em>currency that matters.</em></h2>
+      <p class="lede">A private exchange for your neighbourhood. Trade an hour of your <strong>skill</strong> for an hour of someone else's help — no money, just minutes.</p>
+      <p class="body">An hour is an hour. Whether you are designing a website or walking a neighbour's dog, the value of your time stays equal. We trade in humanity, not hierarchy.</p>
+      <hr/>
+      <div class="spec-row">
+        <div class="spec-num">1h<small>One credit</small></div>
+        <div>
+          <div class="spec-deva">समय <span>सेतु</span></div>
+          <div class="deva-note">Same family, one voice across scripts</div>
+        </div>
+        <button class="spec-btn">Get your invite</button>
+        <span class="spec-mono">WAVE II · 3D 14H 02M</span>
+        <span class="spec-word">samay <em>setu</em></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RECOMMENDATION -->
+<section class="sys" id="reco" style="border-top:1px solid var(--rule);">
+  <div class="wrap">
+    <div class="reco">
+      <p class="kicker">My recommendation</p>
+      <h3>Option A — The Press, with one tweak.</h3>
+      <p>It keeps the editorial soul you already have but swaps the slightly generic pairing for fonts with real character: <b>Fraunces</b> (display) has the old-style warmth Cormorant aimed at, with more personality and better numerals; <b>Newsreader</b> reads beautifully at length; <b>Spline Sans Mono</b> adds a modern technical accent. If you want to feel less old-world and more "now," go <b>Option B (The Grotesque)</b>. If place/identity matters most, <b>Option D</b> gives you true bilingual unity. Tell me which one (or mix roles across options) and I'll roll it through every page — and in the same pass strip the AI-slop tells: decorative emoji in the UI, the ✦ marquee filler, single-letter avatars everywhere, over-centered symmetry, and the always-on fake "live" tickers.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Samay Setu · Type system study · Fonts shown live via Google Fonts</div>
+</footer>
+
+</body>
+</html>
