@@ -37,13 +37,16 @@ export default function MemberVisibilityToggle({
       onClick={() => void toggle()}
       disabled={busy}
       style={{
-        border: "1px solid rgba(0,0,0,0.15)",
-        background: visible ? "rgba(31,77,58,0.12)" : "rgba(139,46,46,0.08)",
-        color: visible ? "#1f4d3a" : "#8b2e2e",
+        border: visible ? "1px solid rgba(127,166,125,0.5)" : "1px solid #c5b899",
+        background: visible ? "rgba(127,166,125,0.16)" : "#e0d4b8",
+        color: visible ? "#4d7a4b" : "#6e6552",
         padding: "4px 10px",
         borderRadius: 999,
         cursor: "pointer",
         fontSize: "0.8rem",
+        textTransform: "none",
+        letterSpacing: "normal",
+        fontWeight: 600,
       }}
     >
       {busy ? "…" : visible ? "Visible" : "Hidden"}

@@ -1,8 +1,12 @@
+import Link from "next/link";
 import { pool } from "@/lib/db";
 import { readMemberSession } from "@/lib/member-session";
 import { isPillarSlug, pillarLabel, type PillarSlug } from "@/lib/pillars";
+import { CONTEST } from "@/lib/contest";
+import TrophyIcon from "@/components/TrophyIcon";
 import LiveBridgeFilters from "./LiveBridgeFilters";
 import TradeCard, { type TradeCardMember } from "./TradeCard";
+import "./page.css";
 
 export const dynamic = "force-dynamic";
 
@@ -158,40 +162,71 @@ export default async function DashboardFeedPage({
   });
 
   const scopeLabel = activePillar ? pillarLabel(activePillar) : "all pillars";
-  const countText = `${cards.length} Open`;
+  const openCount = String(cards.length).padStart(2, "0");
 
   return (
-    <>
-      <div className="dash-header">
-        <p className="dash-eyebrow">The Live Bridge</p>
-        <h1 className="dash-title">A circle of trade, not transaction.</h1>
-        <p className="dash-subtitle">
-          Each card is one verified neighbour. Read what they give, what they seek,
-          and offer a Bridge if there&apos;s an exchange to be made.
-        </p>
-      </div>
+    <div className="ss-feed">
+      {/* Founding 50 Race promo banner */}
+      <Link className="cb-banner" href="/dashboard/contest">
+        <div className="cb-banner-inner">
+          <div className="cb-banner-motif" aria-hidden="true" />
+          <div className="cb-banner-icon" aria-hidden="true"><TrophyIcon /></div>
+          <div className="cb-banner-body">
+            <div className="cb-banner-title">
+              <em>{CONTEST.title}</em> is live — {CONTEST.winners} Lifetime VIP Passes up for grabs.
+            </div>
+            <div className="cb-banner-sub">
+              Top {CONTEST.winners} referrers by Friday 23:59 IST win.{" "}
+              <span className="mono">Climb the leaderboard with verified referrals.</span>
+            </div>
+          </div>
+          <span className="cb-banner-cta">View race →</span>
+        </div>
+      </Link>
+
+      <section className="cb-hero">
+        <div className="cb-hero-inner">
+          <p className="cb-eyebrow">
+            The Live Bridge <span className="vol">{scopeLabel}</span>
+          </p>
+          <h1 className="cb-h1">
+            Who, this week,
+            <br />
+            <em>has time to give.</em>
+          </h1>
+          <p className="cb-lede">
+            Each card is a verified neighbour, the hour they offer, and the hour they seek.
+            Mutual matches surface first. Read carefully — the swap begins with attention.
+          </p>
+        </div>
+      </section>
+
+      <div className="cb-divider" aria-hidden="true" />
 
       <LiveBridgeFilters activePillar={activePillar} initialQuery={query} />
 
-      <p className="lb-active-count">
-        {activePillar
-          ? <>Active Trades in <strong>{scopeLabel}</strong> ({countText})</>
-          : <>Active Trades across <strong>{scopeLabel}</strong> ({countText})</>}
-      </p>
+      <div className="cb-count">
+        <span>
+          <strong>{openCount}</strong> open trades · across <em>{scopeLabel}</em>
+        </span>
+        <span>North Kolkata · this fortnight</span>
+      </div>
 
       {cards.length === 0 ? (
-        <div className="empty-card">
-          {query || activePillar
-            ? "No trades match this filter yet. Try widening it."
-            : "No open trades right now. The circle is just opening — check back soon."}
+        <div className="cb-empty">
+          <div className="cb-empty-inner">
+            {query || activePillar
+              ? "No trades match this filter yet. Try widening it."
+              : "No open trades right now. The circle is just opening — check back soon."}
+          </div>
         </div>
       ) : (
-        <div className="feed-grid">
+        <div className="cb-grid">
           {cards.map((m) => (
             <TradeCard key={m.tradeId} member={m} />
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 }

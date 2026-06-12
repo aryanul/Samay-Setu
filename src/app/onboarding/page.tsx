@@ -22,36 +22,34 @@ export default async function OnboardingPage({
 
   return (
     <div className="ss-onboard">
-      <div className="ambient-bg" aria-hidden="true">
-        <div className="ambient-grid" />
-        <div className="orb orb-1" />
-        <div className="orb orb-2" />
-        <div className="orb orb-3" />
-      </div>
-
-      <div className="page-wrap">
-        <header className="topbar">
+      <div className="nav-wrap">
+        <nav className="nav">
           <Link className="brand" href="/" aria-label="Samay Setu">
-            <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <path
                 d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12"
-                stroke="#C9A96E"
+                stroke="#a07f3f"
                 strokeWidth="2"
                 strokeLinecap="round"
               />
-              <circle cx="8" cy="24" r="2.5" fill="#C9A96E" />
-              <circle cx="28" cy="12" r="2.5" fill="#1a1a18" />
+              <circle cx="8" cy="24" r="2.5" fill="#a07f3f" />
+              <circle cx="28" cy="12" r="2.5" fill="#14120e" />
             </svg>
-            <span className="logo-text">
-              samay <span>setu</span>
-            </span>
+            <span className="word">samay <em>setu</em></span>
           </Link>
-          <div className="pilot-chip">Verified Architect · Pilot</div>
-        </header>
+          <span className="nav-tag">Verified Architect · Pilot</span>
+        </nav>
+      </div>
 
-        <main className="onboard-main">
-          <OnboardingWizard draft={draft} initialError={initialError} showVerified={showVerified} />
-        </main>
+      <main className="main">
+        <OnboardingWizard draft={draft} initialError={initialError} showVerified={showVerified} />
+      </main>
+
+      <div className="footer-wrap">
+        <footer className="footer">
+          <span>Samay Setu · North Kolkata · 2026</span>
+          <em>One hour given, one hour received.</em>
+        </footer>
       </div>
     </div>
   );

@@ -17,10 +17,10 @@
   isolation: isolate;
   overflow: hidden;
   background:
-    radial-gradient(circle at 50% 40%, rgba(201, 169, 110, 0.18), transparent 55%),
-    radial-gradient(circle at 50% 65%, rgba(26, 26, 24, 0.06), transparent 50%),
-    linear-gradient(180deg, #faf6f0 0%, #f1ebe1 100%);
-  color: #1a1a18;
+    radial-gradient(circle at 50% 40%, rgba(176, 134, 63, 0.16), transparent 55%),
+    radial-gradient(circle at 50% 65%, rgba(20, 18, 14, 0.05), transparent 50%),
+    linear-gradient(160deg, var(--band) 0%, var(--paper-3) 100%);
+  color: var(--ink);
   font-family: var(--font-sans), "DM Sans", system-ui, sans-serif;
   transition: opacity 0.65s ease, visibility 0s linear 0.65s;
 }
@@ -51,7 +51,7 @@
   border-radius: 50%;
   z-index: -1;
   pointer-events: none;
-  background: radial-gradient(circle, rgba(201, 169, 110, 0.42) 0%, rgba(201, 169, 110, 0) 70%);
+  background: radial-gradient(circle, rgba(176, 134, 63, 0.34) 0%, rgba(176, 134, 63, 0) 70%);
   filter: blur(6px);
   opacity: 0;
   animation:
@@ -75,7 +75,7 @@
   z-index: -1;
   pointer-events: none;
   opacity: 0;
-  border: 1px solid rgba(201, 169, 110, 0.22);
+  border: 1px solid rgba(160, 127, 63, 0.3);
 }
 .splash-ring-1 {
   width: clamp(280px, 46vmin, 460px);
@@ -88,7 +88,7 @@
   width: clamp(380px, 62vmin, 620px);
   height: clamp(380px, 62vmin, 620px);
   border-style: dashed;
-  border-color: rgba(26, 26, 24, 0.1);
+  border-color: rgba(20, 18, 14, 0.12);
   animation:
     splash-fade-in 1.4s 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) forwards,
     splash-spin-ccw 90s 0.6s linear infinite;
@@ -112,7 +112,7 @@
 }
 .splash-mark {
   overflow: visible;
-  filter: drop-shadow(0 8px 22px rgba(176, 138, 74, 0.25));
+  filter: drop-shadow(0 8px 22px rgba(160, 127, 63, 0.22));
 }
 
 /* Halo glow behind the gold endpoint — appears just before the dot lands */
@@ -158,7 +158,7 @@
 
 /* Particles riding the bridge */
 .splash-particles { opacity: 0; animation: splash-fade-in 0.5s 1.9s ease-out forwards; }
-.splash-particle  { filter: drop-shadow(0 0 1.5px rgba(241, 214, 153, 0.9)); }
+.splash-particle  { filter: drop-shadow(0 0 1.5px rgba(220, 201, 146, 0.9)); }
 
 /* ──────────────────────────────────────────────────────────────────────── */
 
@@ -183,11 +183,12 @@
   transform: translateY(14px);
 }
 .splash-word-1 {
-  color: #1a1a18;
+  color: var(--ink);
   animation: splash-word-up 0.9s 2.0s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
 }
 .splash-word-2 {
-  color: #c9a96e;
+  color: var(--gold-bright);
+  font-style: italic;
   animation: splash-word-up 0.9s 2.25s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
 }
 @keyframes splash-word-up {
@@ -196,7 +197,7 @@
 
 .splash-tag {
   margin: 10px 0 0;
-  color: rgba(61, 59, 53, 0.78);
+  color: var(--muted-on-paper);
   font-size: clamp(0.86rem, 1.7vmin, 1.02rem);
   letter-spacing: 0.04em;
   font-style: italic;
@@ -213,14 +214,14 @@
   padding: 12px 22px;
   border-radius: 999px;
   text-decoration: none;
-  background: linear-gradient(135deg, #c9a96e, #b08a4a);
-  color: #1a1a18;
+  background: linear-gradient(135deg, var(--gold-bright), var(--gold));
+  color: var(--ink);
   font-weight: 700;
   font-size: 0.86rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   box-shadow:
-    0 14px 30px rgba(176, 138, 74, 0.28),
+    0 14px 30px rgba(160, 127, 63, 0.26),
     inset 0 1px 0 rgba(255, 255, 255, 0.4);
   opacity: 0;
   pointer-events: none;
@@ -240,16 +241,16 @@
 .splash-enter:hover {
   filter: brightness(1.06);
   box-shadow:
-    0 18px 36px rgba(176, 138, 74, 0.36),
+    0 18px 36px rgba(160, 127, 63, 0.34),
     inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 .splash-enter:focus-visible {
-  outline: 2px solid #1a1a18;
+  outline: 2px solid var(--ink);
   outline-offset: 3px;
 }
 @keyframes splash-enter-glow {
-  0%, 100% { box-shadow: 0 14px 30px rgba(176, 138, 74, 0.28), inset 0 1px 0 rgba(255,255,255,0.4); }
-  50%      { box-shadow: 0 18px 40px rgba(201, 169, 110, 0.45), inset 0 1px 0 rgba(255,255,255,0.5); }
+  0%, 100% { box-shadow: 0 14px 30px rgba(160, 127, 63, 0.26), inset 0 1px 0 rgba(255,255,255,0.4); }
+  50%      { box-shadow: 0 18px 40px rgba(176, 134, 63, 0.42), inset 0 1px 0 rgba(255,255,255,0.5); }
 }
 
 @media (max-width: 480px) {

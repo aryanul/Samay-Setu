@@ -1,74 +1,156 @@
-.login-divider {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 18px 0 14px;
-  color: var(--stone);
-  font-size: 0.78rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-.login-divider::before,
-.login-divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--border);
-}
-
-.magic-link-form {
+/* ───────────────────────────────────────────────────────────────
+   Sign in — exact port of mockups/login.html (parchment system).
+   Tokens come from globals.css :root. The form markup is supplied by
+   LinkedInLoginButton + MagicLinkForm; their classes are styled here.
+   ─────────────────────────────────────────────────────────────── */
+.ss-login {
+  font-family: var(--sans);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.55;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
-.magic-label {
-  font-size: 0.85rem;
-  color: var(--stone);
-  font-weight: 600;
-  letter-spacing: 0.04em;
+/* Topbar */
+.ss-login .nav-wrap { background: var(--paper); box-shadow: 0 1px 0 var(--rule-light); }
+.ss-login .nav {
+  max-width: 1280px; margin: 0 auto; width: 100%;
+  padding: 18px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--rule-dark);
+}
+.ss-login .brand { display: flex; align-items: center; gap: 12px; color: var(--ink); text-decoration: none; }
+.ss-login .brand svg { width: 32px; height: 32px; }
+.ss-login .brand .word { font-family: var(--serif); font-size: 22px; }
+.ss-login .brand .word em { font-style: italic; color: var(--gold-bright); font-weight: 500; }
+.ss-login .nav-tag {
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold-bright); font-weight: 600;
+  padding: 6px 12px; border: 1px solid var(--rule-dark); border-radius: 4px;
+}
+.ss-login .back-link { font-size: 13px; color: var(--ink-2); transition: color 160ms ease; text-decoration: none; }
+.ss-login .back-link:hover { color: var(--gold-bright); }
+
+/* Main */
+.ss-login .main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 80px 24px; position: relative; }
+.ss-login .main::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle at 50% 30%, rgba(184, 146, 76, 0.08) 0%, transparent 60%);
 }
 
-.magic-row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px;
-  align-items: stretch;
+/* Card */
+.ss-login .card {
+  width: 100%; max-width: 460px;
+  background: var(--plate); color: var(--ink);
+  border-radius: 10px;
+  border: 1px solid var(--rule-gold);
+  padding: 48px 40px 36px;
+  box-shadow: 0 32px 64px -28px rgba(20, 18, 14, 0.22);
+  position: relative; z-index: 1; overflow: hidden;
 }
-
-@media (max-width: 540px) {
-  .magic-row {
-    grid-template-columns: 1fr;
-  }
-  .magic-row .btn-solid {
-    padding: 12px 18px;
-    width: 100%;
-  }
-  .magic-row .field {
-    font-size: 16px;
-  }
+.ss-login .card::before {
+  content: ""; position: absolute; top: -30px; right: -30px;
+  width: 160px; height: 160px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23a07f3f' stroke-width='0.3' stroke-linecap='round'/></svg>");
+  background-size: contain; opacity: 0.4;
 }
-
-.magic-row .field {
-  margin: 0;
+.ss-login .card-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold-bright); font-weight: 600;
+  padding: 5px 11px;
+  border: 1px solid var(--rule-gold); border-radius: 4px;
+  margin-bottom: 28px;
 }
-
-.magic-row .btn-solid {
-  padding: 0 18px;
-  border-radius: 12px;
+.ss-login .card-tag::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--gold-bright); }
+.ss-login h1 {
+  font-family: var(--serif);
+  font-size: 40px; font-weight: 400;
+  line-height: 1.1; letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 14px;
 }
+.ss-login h1 em { font-style: italic; color: var(--gold-bright); font-weight: 400; }
+.ss-login .lede { font-size: 14.5px; color: var(--ink-2); line-height: 1.6; margin-bottom: 32px; }
 
-.magic-success {
-  margin: 8px 0 0;
-  color: #1f4d3a;
-  font-size: 0.9rem;
+/* LinkedIn button */
+.ss-login .btn-linkedin {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%;
+  padding: 14px;
+  background: var(--linkedin); color: #fff;
+  border: none; border-radius: 4px;
+  font-size: 14.5px; font-weight: 600; cursor: pointer;
+  transition: background 160ms ease;
 }
+.ss-login .btn-linkedin:hover { background: #0958a8; }
+.ss-login .btn-linkedin svg { width: 18px; height: 18px; }
 
-@media (max-width: 540px) {
-  .magic-row {
-    grid-template-columns: 1fr;
-  }
-  .magic-row .btn-solid {
-    padding: 12px 18px;
-  }
+/* Divider */
+.ss-login .divider {
+  display: flex; align-items: center; gap: 16px;
+  margin: 28px 0 24px;
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted-on-paper); font-family: var(--mono); font-weight: 400;
+}
+.ss-login .divider::before, .ss-login .divider::after { content: ""; flex: 1; height: 1px; background: var(--rule-light); }
+
+/* Magic-link form (MagicLinkForm component) */
+.ss-login .magic-link-form { display: block; }
+.ss-login .magic-label {
+  display: block; margin-bottom: 8px;
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted-on-paper); font-weight: 500;
+}
+.ss-login .magic-row { display: flex; gap: 8px; }
+.ss-login .field {
+  flex: 1; font: inherit; font-size: 14px;
+  padding: 13px 14px;
+  background: #fff; color: var(--ink);
+  border: 1px solid var(--rule-light); border-radius: 4px;
+  outline: none; transition: border-color 160ms ease;
+}
+.ss-login .field::placeholder { color: var(--muted-on-paper); }
+.ss-login .field:focus { border-color: var(--gold-bright); }
+.ss-login .btn-solid {
+  font: inherit; font-size: 13px; font-weight: 600;
+  padding: 13px 18px;
+  background: var(--gold-bright); color: var(--ink);
+  border: none; border-radius: 4px;
+  letter-spacing: 0.04em; cursor: pointer; white-space: nowrap;
+  transition: background 160ms ease;
+}
+.ss-login .btn-solid:hover { background: var(--gold); }
+.ss-login .btn-solid:disabled { opacity: 0.7; cursor: wait; }
+.ss-login .magic-success { margin-top: 10px; font-size: 12.5px; color: #4a7c59; line-height: 1.5; }
+.ss-login .form-error { margin-top: 10px; font-size: 12.5px; color: #a8472f; line-height: 1.5; }
+
+/* "Not a member" footer link */
+.ss-login .alt {
+  margin-top: 28px; padding-top: 24px;
+  border-top: 1px solid var(--rule-light);
+  font-size: 13.5px; color: var(--ink-2);
+  text-align: center;
+}
+.ss-login .alt a { color: var(--gold-bright); border-bottom: 1px solid var(--rule-gold); padding-bottom: 1px; transition: border-color 160ms ease; }
+.ss-login .alt a:hover { border-color: var(--gold-bright); }
+
+/* Footer */
+.ss-login .footer-wrap { background: var(--band); border-top: 1px solid var(--rule-light); }
+.ss-login .footer {
+  max-width: 1280px; margin: 0 auto;
+  padding: 24px 48px;
+  display: flex; justify-content: space-between;
+  font-size: 12.5px; color: var(--muted-on-paper);
+}
+.ss-login .footer em { font-family: var(--serif); font-style: italic; color: var(--gold-bright); font-size: 14px; }
+
+@media (max-width: 640px) {
+  .ss-login .nav, .ss-login .footer { padding: 16px 22px; }
+  .ss-login .card { padding: 36px 24px 28px; }
+  .ss-login h1 { font-size: 32px; }
+  .ss-login .magic-row { flex-direction: column; }
+  .ss-login .footer { flex-direction: column; gap: 6px; }
 }

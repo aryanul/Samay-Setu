@@ -27,6 +27,13 @@ function oauthErrorMessage(code: string | null): string | null {
   return map[code] ?? "Something went wrong with LinkedIn. Please try again.";
 }
 
+function initialsOf(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "SS";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
 export default function OnboardingWizard({
   draft,
   initialError,
@@ -190,51 +197,55 @@ export default function OnboardingWizard({
   if (done) {
     const thankName = (doneName || draft?.name || "there").trim();
     return (
-      <div className="ss-onboard-success">
-        <div className="verify-badge">Welcome</div>
-        <h1>You&apos;re in, {thankName}.</h1>
-        <p className="lead">
+      <article className="card success-card">
+        <p className="card-pillar">Welcome</p>
+        <h2>You&apos;re in, <em>{thankName}.</em></h2>
+        <p className="card-hint">
           Opening the Live Bridge — your members-only feed of trade cards…
         </p>
-        <p className="sub">If nothing happens in a moment, tap below.</p>
-        <Link
-          className="btn-primary-outline"
-          href="/dashboard"
-          onClick={() => {
-            try {
-              window.sessionStorage.removeItem(DONE_KEY);
-              window.sessionStorage.removeItem(DONE_NAME_KEY);
-            } catch {
-              /* ignore */
-            }
-          }}
-        >
-          Enter the Bridge →
-        </Link>
-      </div>
+        <p className="card-sub">If nothing happens in a moment, tap below.</p>
+        <div className="card-actions card-actions-end">
+          <Link
+            className="btn-continue"
+            href="/dashboard"
+            onClick={() => {
+              try {
+                window.sessionStorage.removeItem(DONE_KEY);
+                window.sessionStorage.removeItem(DONE_NAME_KEY);
+              } catch {
+                /* ignore */
+              }
+            }}
+          >
+            Enter the Bridge →
+          </Link>
+        </div>
+      </article>
     );
   }
 
   if (!draft) {
     return (
-      <div className="ss-onboard-gate">
-        <div className="verify-badge">Verified Architect</div>
-        <h1>Professional onboarding</h1>
-        <p className="lead">
+      <article className="card gate-card">
+        <p className="card-pillar">Verified Architect</p>
+        <h2>Professional <em>onboarding</em></h2>
+        <p className="card-hint">
           We verify every member like a trusted practice — not a mass signup. Start by authenticating with LinkedIn so we can
           pull your name, title, and profile photo automatically.
         </p>
-        <ul className="checklist">
+        <ul className="gate-checklist">
           <li>LinkedIn identity (OpenID)</li>
           <li>The Giver pillar — your primary expertise</li>
           <li>The Seeker pillar — your current need</li>
           <li>Proof of wisdom — one post or article</li>
         </ul>
         {displayError && <p className="form-error">{displayError}</p>}
-        <button 
-          className="btn-linkedin" 
-          onClick={() => { window.location.href = "/api/auth/linkedin"; }}
-          style={{ border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 'inherit' }}
+        <button
+          type="button"
+          className="btn-linkedin"
+          onClick={() => {
+            window.location.href = "/api/auth/linkedin";
+          }}
         >
           <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -244,53 +255,59 @@ export default function OnboardingWizard({
           </svg>
           Continue with LinkedIn
         </button>
-        <p className="fineprint">
+        <p className="micro">
           We use LinkedIn only for verification-style onboarding. By continuing you agree to share basic profile fields allowed by
           your LinkedIn settings.
         </p>
-        <Link className="text-link" href="/">
-          ← Back to Samay Setu
-        </Link>
-      </div>
+        <p className="micro">
+          <Link className="text-link" href="/">
+            ← Back to Samay Setu
+          </Link>
+        </p>
+      </article>
     );
   }
 
   const meta = STEPS[step - 1];
 
   return (
-    <div className="ss-onboard-flow">
-      <div className="identity-strip">
-        <div className="avatar-wrap">
-          {draft.picture ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img className="avatar" src={draft.picture} alt="" width={72} height={72} />
+    <>
+      <div className="identity">
+        {draft.picture ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="avatar avatar-img" src={draft.picture} alt="" width={56} height={56} />
+        ) : (
+          <div className="avatar" aria-hidden="true">{initialsOf(draft.name)}</div>
+        )}
+        <div className="identity-body">
+          <div className="identity-name">{draft.name}</div>
+          {draft.headline ? (
+            <div className="identity-title">{draft.headline} · pulled from LinkedIn</div>
           ) : (
-            <div className="avatar placeholder" aria-hidden="true" />
+            <div className="identity-title subtle">Title not provided by LinkedIn — you may describe expertise below.</div>
           )}
         </div>
-        <div>
-          <p className="identity-name">{draft.name}</p>
-          {draft.headline && <p className="identity-title">{draft.headline}</p>}
-          {!draft.headline && <p className="identity-title subtle">Title not provided by LinkedIn — you may describe expertise below.</p>}
-        </div>
-        <button type="button" className="btn-text" onClick={() => void disconnect()}>
+        <button type="button" className="identity-reset" onClick={() => void disconnect()}>
           Not you?
         </button>
       </div>
 
-      <div className="step-rail" aria-hidden="true">
+      <div className="step-rail">
         {STEPS.map((s) => (
-          <div key={s.id} className={`step-pill${s.id === step ? " active" : ""}${s.id < step ? " done" : ""}`}>
-            <span className="num">{s.id}</span>
-            <span className="lbl">{s.label}</span>
+          <div key={s.id} className={`step${s.id === step ? " active" : ""}${s.id < step ? " done" : ""}`}>
+            <div className="n">{s.id}</div>
+            <div className="body">
+              <span className="pillar">{s.label}</span>
+              <span className="label">{s.title}</span>
+            </div>
           </div>
         ))}
       </div>
 
-      <div className="pillar-card">
-        <p className="pillar-tag">{meta.pillar}</p>
+      <article className="card">
+        <p className="card-pillar">{meta.pillar}</p>
         <h2>{meta.title}</h2>
-        <p className="pillar-hint">
+        <p className="card-hint">
           {step === 1 && "Choose the one domain you would list on a business card — taxation, coaching, design, care work, and so on."}
           {step === 2 && "What would you book a 1:1 for? Be specific — it helps future matches."}
           {step === 3 && "Paste a public LinkedIn post or article that demonstrates how you think or practice."}
@@ -298,7 +315,7 @@ export default function OnboardingWizard({
 
         {step === 1 && (
           <input
-            className="field"
+            className="card-field"
             type="text"
             autoComplete="off"
             placeholder="e.g. GST taxation · Strength coaching · HR strategy"
@@ -308,7 +325,7 @@ export default function OnboardingWizard({
         )}
         {step === 2 && (
           <textarea
-            className="field area"
+            className="card-field"
             placeholder='e.g. "I need a 1:1 on leadership management for a small team"'
             value={currentNeed}
             onChange={(e) => setCurrentNeed(e.target.value)}
@@ -316,7 +333,7 @@ export default function OnboardingWizard({
         )}
         {step === 3 && (
           <input
-            className="field"
+            className="card-field"
             type="url"
             inputMode="url"
             placeholder="https://www.linkedin.com/posts/..."
@@ -327,21 +344,30 @@ export default function OnboardingWizard({
 
         {displayError && <p className="form-error">{displayError}</p>}
 
-        <div className="actions">
-          <button type="button" className="btn-ghost" onClick={back} style={{ visibility: step === 1 ? "hidden" : "visible" }}>
-            Back
+        <div className="card-actions">
+          <button
+            type="button"
+            className="btn-back"
+            onClick={back}
+            style={{ visibility: step === 1 ? "hidden" : "visible" }}
+          >
+            ← Back
           </button>
           {step < 3 ? (
-            <button type="button" className="btn-solid" onClick={next}>
-              Continue
+            <button type="button" className="btn-continue" onClick={next}>
+              Continue →
             </button>
           ) : (
-            <button type="button" className="btn-solid" onClick={() => void submit()} disabled={submitting}>
-              {submitting ? "Submitting…" : "Submit verification"}
+            <button type="button" className="btn-continue" onClick={() => void submit()} disabled={submitting}>
+              {submitting ? "Submitting…" : "Submit verification →"}
             </button>
           )}
         </div>
-      </div>
-    </div>
+      </article>
+
+      <p className="micro">
+        Your responses stay private until your verification is complete. <strong>Two members</strong> are currently in onboarding ahead of you.
+      </p>
+    </>
   );
 }

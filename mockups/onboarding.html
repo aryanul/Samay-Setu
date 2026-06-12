@@ -10,18 +10,22 @@
 <style>
   :root {
     --ink: #14120e;
-    --ink-2: #1f1c16;
+    --ink-2: #4a4436;
     --ink-3: #2a261d;
     --paper: #f4ecdb;
     --paper-2: #ebe1cc;
+    --band: #ece0c6;
+    --plate: #f8eed0;
+    --rule-gold: #dcc992;
+    --track: #e0d4b8;
     --rule-light: #c5b899;
-    --rule-dark: #2e2a20;
-    --text-on-ink: #ebe1cc;
-    --text-on-ink-2: #c9bea2;
-    --muted-on-ink: #8a8068;
+    --rule-dark: #d3c7a8;
+    --text-on-ink: #14120e;
+    --text-on-ink-2: #4a4436;
+    --muted-on-ink: #6e6552;
     --muted-on-paper: #6e6552;
-    --gold: #b8924c;
-    --gold-bright: #d6b676;
+    --gold: #a07f3f;
+    --gold-bright: #b0863f;
     --serif: "Cormorant Garamond", serif;
     --sans: "DM Sans", system-ui, sans-serif;
     --mono: "JetBrains Mono", ui-monospace, monospace;
@@ -32,7 +36,7 @@
   button { font-family: inherit; cursor: pointer; }
 
   /* Ink nav */
-  .nav-wrap { background: var(--ink); }
+  .nav-wrap { background: var(--paper); box-shadow: 0 1px 0 var(--rule-light); }
   .nav {
     max-width: 1280px; margin: 0 auto;
     padding: 18px 48px;
@@ -61,7 +65,8 @@
   .identity {
     display: flex; align-items: center; gap: 18px;
     padding: 20px 24px;
-    background: var(--ink); color: var(--text-on-ink);
+    background: var(--plate); color: var(--ink);
+    border: 1px solid var(--rule-gold);
     border-radius: 10px;
     margin-bottom: 28px;
     position: relative; overflow: hidden;
@@ -69,7 +74,7 @@
   .identity::before {
     content: ""; position: absolute; top: -20px; right: -20px;
     width: 100px; height: 100px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23d6b676' stroke-width='0.4' stroke-linecap='round'/></svg>");
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23a07f3f' stroke-width='0.4' stroke-linecap='round'/></svg>");
     background-size: contain; opacity: 0.4;
   }
   .avatar {
@@ -121,8 +126,8 @@
     color: var(--muted-on-paper);
   }
   .step.done .n {
-    background: var(--ink); color: var(--gold-bright);
-    border-color: var(--ink);
+    background: var(--band); color: var(--gold-bright);
+    border-color: var(--rule-gold);
   }
   .step.active .n {
     background: var(--gold-bright); color: var(--ink);
@@ -143,16 +148,17 @@
 
   /* Active card */
   .card {
-    background: var(--ink); color: var(--text-on-ink);
+    background: var(--plate); color: var(--ink);
+    border: 1px solid var(--rule-gold);
     border-radius: 10px;
     padding: 40px 36px;
     position: relative; overflow: hidden;
-    box-shadow: 0 32px 64px -28px rgba(20,18,14,0.4);
+    box-shadow: 0 32px 64px -28px rgba(20,18,14,0.22);
   }
   .card::before {
     content: ""; position: absolute; top: -30px; right: -30px;
     width: 160px; height: 160px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23d6b676' stroke-width='0.3' stroke-linecap='round'/></svg>");
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23a07f3f' stroke-width='0.3' stroke-linecap='round'/></svg>");
     background-size: contain; opacity: 0.35;
   }
   .card-pillar {
@@ -184,8 +190,8 @@
     width: 100%;
     font: inherit; font-size: 15px;
     padding: 16px 18px;
-    background: var(--ink-2); color: var(--text-on-ink);
-    border: 1px solid var(--rule-dark);
+    background: #fff; color: var(--ink);
+    border: 1px solid var(--rule-light);
     border-radius: 4px;
     outline: none;
     transition: border-color 160ms ease;
@@ -227,7 +233,7 @@
   .micro strong { color: var(--gold); font-weight: 600; }
 
   /* Footer */
-  .footer-wrap { background: var(--ink); border-top: 1px solid var(--rule-dark); margin-top: auto; }
+  .footer-wrap { background: var(--band); border-top: 1px solid var(--rule-light); margin-top: auto; }
   .footer {
     max-width: 1280px; margin: 0 auto;
     padding: 24px 48px;
@@ -255,9 +261,9 @@
   <nav class="nav">
     <a class="brand" href="landing.html">
       <svg viewBox="0 0 36 36" fill="none">
-        <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#d6b676" stroke-width="2" stroke-linecap="round" />
-        <circle cx="8" cy="24" r="2.5" fill="#d6b676" />
-        <circle cx="28" cy="12" r="2.5" fill="#ebe1cc" />
+        <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2" stroke-linecap="round" />
+        <circle cx="8" cy="24" r="2.5" fill="#a07f3f" />
+        <circle cx="28" cy="12" r="2.5" fill="#14120e" />
       </svg>
       <span class="word">samay <em>setu</em></span>
     </a>

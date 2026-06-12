@@ -18,7 +18,7 @@ export default function LogoutButton() {
   }
 
   return (
-    <button type="button" className="dash-logout" onClick={handleClick} disabled={busy}>
+    <button type="button" className="out" onClick={handleClick} disabled={busy}>
       {busy ? "…" : "Sign out"}
     </button>
   );

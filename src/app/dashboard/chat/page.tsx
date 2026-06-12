@@ -1,6 +1,8 @@
-import Link from "next/link";
 import { pool } from "@/lib/db";
 import { readMemberSession } from "@/lib/member-session";
+import ThreadList from "./ThreadList";
+import type { ThreadListItem } from "./chat-utils";
+import "./chat.css";
 
 export const dynamic = "force-dynamic";
 
@@ -17,25 +19,6 @@ type Row = {
   last_body: string | null;
   last_at: Date | null;
 };
-
-function formatWhen(value: Date | string | null): string {
-  if (!value) return "";
-  const d = value instanceof Date ? value : new Date(value);
-  if (isNaN(d.getTime())) return "";
-  return d.toLocaleString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
-}
-
-function snippet(body: string | null): string {
-  if (!body) return "No messages yet — say hello.";
-  const trimmed = body.trim().replace(/\s+/g, " ");
-  return trimmed.length > 90 ? trimmed.slice(0, 90) + "…" : trimmed;
-}
 
 export default async function ChatListPage() {
   const session = (await readMemberSession())!;
@@ -56,41 +39,34 @@ export default async function ChatListPage() {
       LIMIT 100`,
     [session.memberId, session.memberId, session.memberId]
   );
-  const threads = rowsRaw as Row[];
+  const rows = rowsRaw as Row[];
+  const threads: ThreadListItem[] = rows.map((t) => ({
+    id: t.id,
+    otherName: t.other_name,
+    otherPicture: t.other_picture,
+    lastBody: t.last_body,
+    lastAt: t.last_at,
+    createdAt: t.created_at,
+  }));
 
   return (
-    <>
-      <div className="dash-header">
-        <p className="dash-eyebrow">Chats</p>
-        <h1 className="dash-title">Open conversations.</h1>
-        <p className="dash-subtitle">
-          One thread per accepted Bridge. Names and avatars only — no emails or numbers.
-        </p>
-      </div>
+    <div className="ss-chats">
+      <ThreadList threads={threads} />
 
-      {threads.length === 0 ? (
-        <div className="empty-card">
-          No chats yet. Start by offering a Bridge from the Live Bridge feed.
+      <section className="thread-view">
+        <div className="tv-empty">
+          <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" strokeLinecap="round" />
+          </svg>
+          <h3>
+            Select a <em>conversation</em>
+          </h3>
+          <p>
+            One thread per accepted Bridge. Names and avatars only — no emails or numbers until you
+            both agree.
+          </p>
         </div>
-      ) : (
-        <div className="threads-list">
-          {threads.map((t) => (
-            <Link key={t.id} className="thread-item" href={`/dashboard/chat/${t.id}`}>
-              {t.other_picture ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img className="avatar" src={t.other_picture} alt="" width={48} height={48} />
-              ) : (
-                <div className="avatar tc-avatar" aria-hidden="true" />
-              )}
-              <div>
-                <div className="who">{t.other_name}</div>
-                <div className="last">{snippet(t.last_body)}</div>
-              </div>
-              <div className="when">{formatWhen(t.last_at ?? t.created_at)}</div>
-            </Link>
-          ))}
-        </div>
-      )}
-    </>
+      </section>
+    </div>
   );
 }

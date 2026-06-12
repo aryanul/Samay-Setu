@@ -10,12 +10,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --ink:#14120e; --ink-2:#1f1c16; --ink-3:#2a261d;
+    --ink:#14120e; --ink-2:#4a4436; --ink-3:#2a261d;
     --paper:#f4ecdb; --paper-2:#ebe1cc;
-    --rule-light:#c5b899; --rule-dark:#2e2a20;
-    --text-on-ink:#ebe1cc; --text-on-ink-2:#c9bea2;
-    --muted-on-ink:#8a8068; --muted-on-paper:#6e6552;
-    --gold:#b8924c; --gold-bright:#d6b676;
+    --band:#ece0c6; --plate:#f8eed0; --rule-gold:#dcc992; --track:#e0d4b8;
+    --rule-light:#c5b899; --rule-dark:#d3c7a8;
+    --text-on-ink:#14120e; --text-on-ink-2:#4a4436;
+    --muted-on-ink:#6e6552; --muted-on-paper:#6e6552;
+    --gold:#a07f3f; --gold-bright:#b0863f;
     --green:#7fa67d;
     --serif:"Cormorant Garamond",serif;
     --sans:"DM Sans",system-ui,sans-serif;
@@ -27,7 +28,7 @@
   button { font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; }
 
   /* Topbar */
-  .top-wrap { background:var(--ink); position:sticky; top:0; z-index:10; }
+  .top-wrap { background:var(--paper); box-shadow:0 1px 0 var(--rule-light); position:sticky; top:0; z-index:10; }
   .top { max-width:1280px; margin:0 auto; padding:18px 48px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--rule-dark); }
   .brand { display:flex; align-items:center; gap:12px; color:var(--text-on-ink); }
   .brand svg { width:32px; height:32px; }
@@ -48,7 +49,7 @@
   .main { flex:1; max-width:1280px; margin:0 auto; padding:32px 48px 64px; width:100%; display:grid; grid-template-columns:380px 1fr; gap:20px; min-height:calc(100vh - 200px); }
 
   /* ─── Threads list ─── */
-  .threads { background:var(--ink); border-radius:12px; padding:18px 14px; color:var(--text-on-ink); box-shadow:0 1px 0 0 var(--rule-light); display:flex; flex-direction:column; position:relative; overflow:hidden; }
+  .threads { background:var(--plate); border:1px solid var(--rule-gold); border-radius:12px; padding:18px 14px; color:var(--text-on-ink); box-shadow:0 1px 0 0 var(--rule-light); display:flex; flex-direction:column; position:relative; overflow:hidden; }
   .threads::before { content:""; position:absolute; top:-10px; right:-10px; width:60px; height:60px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23b8924c' stroke-width='0.5' stroke-linecap='round'/></svg>"); background-size:contain; opacity:0.3; pointer-events:none; }
   .threads-head { padding:6px 10px 14px; border-bottom:1px solid var(--rule-dark); margin-bottom:8px; position:relative; z-index:1; display:flex; justify-content:space-between; align-items:baseline; }
   .threads-head h2 { font-family:var(--serif); font-size:22px; font-weight:500; letter-spacing:-0.01em; color:var(--text-on-ink); }
@@ -56,10 +57,10 @@
   .threads-head .ct { font-family:var(--mono); font-size:11px; color:var(--gold-bright); }
 
   .thread-item { padding:14px 12px; border-radius:6px; display:flex; gap:12px; cursor:pointer; transition:background 160ms; position:relative; }
-  .thread-item:hover { background:var(--ink-2); }
-  .thread-item.active { background:var(--ink-2); }
+  .thread-item:hover { background:var(--band); }
+  .thread-item.active { background:var(--band); }
   .thread-item.active::before { content:""; position:absolute; left:0; top:14px; bottom:14px; width:3px; background:var(--gold-bright); border-radius:3px; }
-  .thread-av { width:44px; height:44px; border-radius:4px; overflow:hidden; flex-shrink:0; background:var(--ink-3); border:1px solid var(--rule-dark); }
+  .thread-av { width:44px; height:44px; border-radius:4px; overflow:hidden; flex-shrink:0; background:var(--band); border:1px solid var(--rule-dark); }
   .thread-av img { width:100%; height:100%; object-fit:cover; }
   .thread-body { flex:1; min-width:0; }
   .thread-line1 { display:flex; align-items:baseline; justify-content:space-between; gap:8px; }
@@ -72,16 +73,17 @@
 
   /* ─── Thread view ─── */
   .thread-view { background:transparent; display:flex; flex-direction:column; gap:0; }
-  .tv-head { background:var(--ink); color:var(--text-on-ink); border-radius:12px 12px 0 0; padding:20px 24px; display:flex; align-items:center; gap:14px; border-bottom:1px solid var(--rule-dark); }
-  .tv-av { width:46px; height:46px; border-radius:4px; overflow:hidden; background:var(--ink-3); border:1px solid var(--rule-dark); }
+  .tv-head { background:var(--plate); color:var(--text-on-ink); border:1px solid var(--rule-gold); border-bottom:none; border-radius:12px 12px 0 0; padding:20px 24px; display:flex; align-items:center; gap:14px; }
+  .tv-av { width:46px; height:46px; border-radius:4px; overflow:hidden; background:var(--band); border:1px solid var(--rule-dark); }
   .tv-av img { width:100%; height:100%; object-fit:cover; }
   .tv-name { font-family:var(--serif); font-size:22px; font-weight:500; line-height:1.1; letter-spacing:-0.01em; }
   .tv-status { font-size:12px; color:var(--green); margin-top:2px; display:inline-flex; align-items:center; gap:5px; }
   .tv-status::before { content:""; width:6px; height:6px; border-radius:50%; background:var(--green); }
   .tv-context {
-    background:var(--ink); color:var(--text-on-ink-2);
+    background:var(--band); color:var(--text-on-ink-2);
     padding:14px 24px;
     font-size:12.5px;
+    border-left:1px solid var(--rule-gold); border-right:1px solid var(--rule-gold);
     border-bottom:1px solid var(--rule-dark);
     display:flex; align-items:center; gap:10px;
   }
@@ -89,30 +91,30 @@
   .tv-context strong { color:var(--gold-bright); font-weight:500; }
 
   /* Messages */
-  .messages { background:var(--ink); flex:1; padding:24px; display:flex; flex-direction:column; gap:14px; min-height:380px; }
+  .messages { background:var(--plate); border-left:1px solid var(--rule-gold); border-right:1px solid var(--rule-gold); flex:1; padding:24px; display:flex; flex-direction:column; gap:14px; min-height:380px; }
   .day-divider { text-align:center; font-family:var(--mono); font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted-on-ink); padding:8px 0 12px; position:relative; }
-  .day-divider span { background:var(--ink); padding:0 12px; position:relative; z-index:1; }
+  .day-divider span { background:var(--plate); padding:0 12px; position:relative; z-index:1; }
   .day-divider::before { content:""; position:absolute; left:0; right:0; top:50%; height:1px; background:var(--rule-dark); }
 
   .msg { display:flex; gap:10px; max-width:78%; }
-  .msg-av { width:32px; height:32px; border-radius:4px; overflow:hidden; flex-shrink:0; background:var(--ink-3); border:1px solid var(--rule-dark); }
+  .msg-av { width:32px; height:32px; border-radius:4px; overflow:hidden; flex-shrink:0; background:var(--band); border:1px solid var(--rule-dark); }
   .msg-av img { width:100%; height:100%; object-fit:cover; }
   .msg-body { flex:1; }
-  .msg-bubble { background:var(--ink-2); border:1px solid var(--rule-dark); border-radius:10px 10px 10px 4px; padding:11px 14px; font-size:14px; color:var(--text-on-ink); line-height:1.5; }
+  .msg-bubble { background:#fff; border:1px solid var(--rule-light); border-radius:10px 10px 10px 4px; padding:11px 14px; font-size:14px; color:var(--text-on-ink); line-height:1.5; }
   .msg-time { font-family:var(--mono); font-size:10px; color:var(--muted-on-ink); margin-top:4px; padding-left:4px; }
   .msg.me { margin-left:auto; flex-direction:row-reverse; }
   .msg.me .msg-bubble { background:var(--gold-bright); color:var(--ink); border-color:var(--gold-bright); border-radius:10px 10px 4px 10px; }
   .msg.me .msg-time { text-align:right; padding-left:0; padding-right:4px; color:var(--muted-on-ink); }
 
-  .composer { background:var(--ink-2); border-radius:0 0 12px 12px; padding:16px 18px; display:flex; gap:10px; border-top:1px solid var(--rule-dark); }
-  .composer input { flex:1; font:inherit; font-size:14px; padding:11px 14px; background:var(--ink); color:var(--text-on-ink); border:1px solid var(--rule-dark); border-radius:6px; outline:none; transition:border-color 160ms; }
+  .composer { background:var(--plate); border:1px solid var(--rule-gold); border-top:1px solid var(--rule-dark); border-radius:0 0 12px 12px; padding:16px 18px; display:flex; gap:10px; }
+  .composer input { flex:1; font:inherit; font-size:14px; padding:11px 14px; background:#fff; color:var(--ink); border:1px solid var(--rule-light); border-radius:6px; outline:none; transition:border-color 160ms; }
   .composer input::placeholder { color:var(--muted-on-ink); }
   .composer input:focus { border-color:var(--gold-bright); }
   .composer button { padding:11px 18px; background:var(--gold-bright); color:var(--ink); border-radius:6px; font-size:13px; font-weight:600; }
   .composer button:hover { background:var(--gold); }
 
   /* Footer */
-  .footer-wrap { background:var(--ink); border-top:1px solid var(--rule-dark); margin-top:auto; }
+  .footer-wrap { background:var(--band); border-top:1px solid var(--rule-light); margin-top:auto; }
   .footer { max-width:1280px; margin:0 auto; padding:24px 48px; display:flex; justify-content:space-between; font-size:12.5px; color:var(--muted-on-ink); }
   .footer em { font-family:var(--serif); font-style:italic; color:var(--gold-bright); font-size:14px; }
 
@@ -132,9 +134,9 @@
   <header class="top">
     <a class="brand" href="landing.html">
       <svg viewBox="0 0 36 36" fill="none">
-        <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#d6b676" stroke-width="2" stroke-linecap="round" />
-        <circle cx="8" cy="24" r="2.5" fill="#d6b676" />
-        <circle cx="28" cy="12" r="2.5" fill="#ebe1cc" />
+        <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2" stroke-linecap="round" />
+        <circle cx="8" cy="24" r="2.5" fill="#a07f3f" />
+        <circle cx="28" cy="12" r="2.5" fill="#14120e" />
       </svg>
       <span class="word">samay <em>setu</em></span>
     </a>

@@ -1,8 +1,10 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { pool } from "@/lib/db";
 import { readMemberSession } from "@/lib/member-session";
+import ThreadList from "../ThreadList";
+import type { ThreadListItem } from "../chat-utils";
 import ChatRoom, { type ChatMessage } from "./ChatRoom";
+import "../chat.css";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +22,15 @@ type MessageRow = {
   from_member_id: number;
   body: string;
   created_at: Date;
+};
+
+type ListRow = {
+  id: number;
+  created_at: Date;
+  other_name: string;
+  other_picture: string | null;
+  last_body: string | null;
+  last_at: Date | null;
 };
 
 export default async function ChatThreadPage({
@@ -66,13 +77,33 @@ export default async function ChatThreadPage({
     createdAt: new Date(m.created_at).toISOString(),
   }));
 
+  // Mirror the list query so the left pane renders with this thread active.
+  const [listRowsRaw] = await pool.query(
+    `SELECT t.id, t.created_at,
+            m.full_name AS other_name,
+            m.profile_picture_url AS other_picture,
+            (SELECT body       FROM chat_messages WHERE thread_id = t.id ORDER BY created_at DESC LIMIT 1) AS last_body,
+            (SELECT created_at FROM chat_messages WHERE thread_id = t.id ORDER BY created_at DESC LIMIT 1) AS last_at
+       FROM chat_threads t
+       JOIN verified_architect_onboarding m
+         ON m.id = IF(t.member_a_id = ?, t.member_b_id, t.member_a_id)
+      WHERE t.member_a_id = ? OR t.member_b_id = ?
+      ORDER BY COALESCE(t.last_message_at, t.created_at) DESC
+      LIMIT 100`,
+    [session.memberId, session.memberId, session.memberId]
+  );
+  const threads: ThreadListItem[] = (listRowsRaw as ListRow[]).map((t) => ({
+    id: t.id,
+    otherName: t.other_name,
+    otherPicture: t.other_picture,
+    lastBody: t.last_body,
+    lastAt: t.last_at,
+    createdAt: t.created_at,
+  }));
+
   return (
-    <>
-      <div className="dash-header">
-        <Link className="dash-link" href="/dashboard/chat" style={{ paddingLeft: 0 }}>
-          ← All chats
-        </Link>
-      </div>
+    <div className="ss-chats ss-chats-room">
+      <ThreadList threads={threads} activeId={threadId} />
 
       <ChatRoom
         threadId={threadId}
@@ -84,6 +115,6 @@ export default async function ChatThreadPage({
         }}
         initialMessages={initialMessages}
       />
-    </>
+    </div>
   );
 }

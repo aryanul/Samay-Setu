@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { formatTradeRef, pillarLabel } from "@/lib/pillars";
+import { pillarLabel } from "@/lib/pillars";
 import OfferBridgeModal from "./OfferBridgeModal";
 
 export type BridgeState = {
@@ -26,6 +26,15 @@ export type TradeCardMember = {
   match: { myTradeId: number } | null;
 };
 
+function tradeRef(tradeId: number): string {
+  return `№ ${String(tradeId).padStart(4, "0")}`;
+}
+
+function initial(name: string): string {
+  const c = name.trim()[0];
+  return c ? c.toUpperCase() : "·";
+}
+
 export default function TradeCard({ member }: { member: TradeCardMember }) {
   const [open, setOpen] = useState(false);
   const [bridge, setBridge] = useState<BridgeState | null>(member.bridge);
@@ -33,77 +42,65 @@ export default function TradeCard({ member }: { member: TradeCardMember }) {
   const isMatch = !!member.match;
 
   return (
-    <article className={`trade-card${isMatch ? " trade-card-match" : ""}`}>
-      {isMatch && (
-        <>
-          <span className="tc-match-ribbon" aria-label="Two-way match with one of your trades">
-            ✦ Mutual match
-          </span>
-          <span className="tc-match-edge" aria-hidden="true" />
-        </>
-      )}
-
-      <div className="tc-badge">
-        <span className="tc-badge-pillar">{pillarLabel(member.pillar)}</span>
-        <span className="tc-badge-ref">{formatTradeRef(member.tradeId)}</span>
+    <article className={`cb-card${isMatch ? " match" : ""}`}>
+      <div className="cb-card-head">
+        <span className="cb-pillar">{pillarLabel(member.pillar)}</span>
+        <span className="cb-card-id">{tradeRef(member.tradeId)}</span>
       </div>
 
-      <div className="tc-head">
+      <div className="cb-person">
         {member.picture ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img className="tc-avatar" src={member.picture} alt="" width={56} height={56} />
+          <img className="cb-avatar" src={member.picture} alt="" width={52} height={52} />
         ) : (
-          <div className="tc-avatar" aria-hidden="true" />
+          <div className="cb-avatar" aria-hidden="true">
+            {initial(member.name)}
+          </div>
         )}
         <div>
-          <h3 className="tc-name">{member.name}</h3>
-          {member.headline && <p className="tc-headline">{member.headline}</p>}
+          <div className="nm">{member.name}</div>
+          {member.headline && <div className="ti">{member.headline}</div>}
         </div>
       </div>
 
-      <div className={`tc-pillar${isMatch ? " tc-pillar-matched" : ""}`}>
-        <p className="tc-pillar-tag">
-          OFFERING:
-          {isMatch && <span className="tc-pillar-match-hint">↻ what you seek</span>}
-        </p>
-        <p className="tc-pillar-body">{member.give}</p>
+      <div className="cb-swap">
+        <div className="cb-row gives">
+          <span className="k">Gives</span>
+          <span className="v">{member.give}</span>
+        </div>
+        <div className="cb-row seeks">
+          <span className="k">Seeks</span>
+          <span className="v">{member.take}</span>
+        </div>
       </div>
-      <div className={`tc-pillar${isMatch ? " tc-pillar-matched" : ""}`}>
-        <p className="tc-pillar-tag">
-          SEEKING:
-          {isMatch && <span className="tc-pillar-match-hint">↻ what you give</span>}
-        </p>
-        <p className="tc-pillar-body">{member.take}</p>
+
+      <div className="cb-meta">
+        <span>1 hr</span>
+        {member.location && <span>{member.location}</span>}
       </div>
-      {member.location && (
-        <p className="tc-location">
-          <span className="tc-location-pin" aria-hidden="true">📍</span>
-          <span>{member.location}</span>
-        </p>
-      )}
 
-      <a className="tc-proof" href={member.proofUrl} target="_blank" rel="noreferrer noopener">
-        View proof of practice ↗
-      </a>
+      <div className="cb-actions">
+        <a className="cb-proof" href={member.proofUrl} target="_blank" rel="noreferrer noopener">
+          View proof of practice ↗
+        </a>
 
-      <div className="tc-foot">
         {bridge?.status === "accepted" ? (
           bridge.threadId ? (
-            <Link className="tc-bridge-btn tc-bridge-btn-wide" href={`/dashboard/chat/${bridge.threadId}`}>
+            <Link className="cb-cta" href={`/dashboard/chat/${bridge.threadId}`}>
               Open chat
             </Link>
           ) : (
-            <span className="tc-status-pill tc-status-pill-wide">Bridge open</span>
+            <span className="cb-status">Bridge open</span>
           )
         ) : bridge?.status === "pending" && bridge.direction === "outgoing" ? (
-          <span className="tc-status-pill tc-status-pill-wide">Awaiting response</span>
+          <span className="cb-status">Awaiting response</span>
         ) : bridge?.status === "pending" && bridge.direction === "incoming" ? (
-          <Link className="tc-bridge-btn tc-bridge-btn-wide" href="/dashboard/bridges">
-            Respond to their offer
+          <Link className="cb-cta" href="/dashboard/bridges">
+            Respond
           </Link>
         ) : (
-          <button type="button" className="tc-bridge-btn tc-bridge-btn-wide" onClick={() => setOpen(true)}>
-            Propose a Bridge
+          <button type="button" className="cb-cta" onClick={() => setOpen(true)}>
+            Offer Bridge
           </button>
         )}
       </div>

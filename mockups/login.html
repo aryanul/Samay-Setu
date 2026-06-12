@@ -10,18 +10,21 @@
 <style>
   :root {
     --ink: #14120e;
-    --ink-2: #1f1c16;
+    --ink-2: #4a4436;
     --ink-3: #2a261d;
     --paper: #f4ecdb;
     --paper-2: #ebe1cc;
+    --band: #ece0c6;
+    --plate: #f8eed0;
+    --rule-gold: #dcc992;
     --rule-light: #c5b899;
-    --rule-dark: #2e2a20;
-    --text-on-ink: #ebe1cc;
-    --text-on-ink-2: #c9bea2;
-    --muted-on-ink: #8a8068;
+    --rule-dark: #d3c7a8;
+    --text-on-ink: #14120e;
+    --text-on-ink-2: #4a4436;
+    --muted-on-ink: #6e6552;
     --muted-on-paper: #6e6552;
-    --gold: #b8924c;
-    --gold-bright: #d6b676;
+    --gold: #a07f3f;
+    --gold-bright: #b0863f;
     --linkedin: #0a66c2;
     --serif: "Cormorant Garamond", serif;
     --sans: "DM Sans", system-ui, sans-serif;
@@ -33,7 +36,7 @@
   button { font-family: inherit; cursor: pointer; }
 
   /* Ink nav (software nav — sticky, branded) */
-  .nav-wrap { background: var(--ink); }
+  .nav-wrap { background: var(--paper); box-shadow: 0 1px 0 var(--rule-light); }
   .nav {
     max-width: 1280px; margin: 0 auto;
     padding: 18px 48px;
@@ -62,10 +65,11 @@
   /* Card */
   .card {
     width: 100%; max-width: 460px;
-    background: var(--ink); color: var(--text-on-ink);
+    background: var(--plate); color: var(--ink);
     border-radius: 10px;
+    border: 1px solid var(--rule-gold);
     padding: 48px 40px 36px;
-    box-shadow: 0 32px 64px -28px rgba(20,18,14,0.4);
+    box-shadow: 0 32px 64px -28px rgba(20,18,14,0.22);
     position: relative; z-index: 1; overflow: hidden;
   }
   .card::before {
@@ -120,11 +124,11 @@
   .field {
     flex: 1; font: inherit; font-size: 14px;
     padding: 13px 14px;
-    background: var(--ink-2); color: var(--text-on-ink);
-    border: 1px solid var(--rule-dark); border-radius: 4px;
+    background: #fff; color: var(--ink);
+    border: 1px solid var(--rule-light); border-radius: 4px;
     outline: none; transition: border-color 160ms ease;
   }
-  .field::placeholder { color: var(--muted-on-ink); }
+  .field::placeholder { color: var(--muted-on-paper); }
   .field:focus { border-color: var(--gold-bright); }
   .btn-send {
     font: inherit; font-size: 13px; font-weight: 600;
@@ -150,7 +154,7 @@
   .alt a:hover { border-color: var(--gold-bright); }
 
   /* Footer */
-  .footer-wrap { background: var(--ink); border-top: 1px solid var(--rule-dark); }
+  .footer-wrap { background: var(--band); border-top: 1px solid var(--rule-light); }
   .footer {
     max-width: 1280px; margin: 0 auto;
     padding: 24px 48px;
@@ -173,9 +177,9 @@
   <nav class="nav">
     <a class="brand" href="landing.html">
       <svg viewBox="0 0 36 36" fill="none">
-        <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#d6b676" stroke-width="2" stroke-linecap="round" />
-        <circle cx="8" cy="24" r="2.5" fill="#d6b676" />
-        <circle cx="28" cy="12" r="2.5" fill="#ebe1cc" />
+        <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2" stroke-linecap="round" />
+        <circle cx="8" cy="24" r="2.5" fill="#a07f3f" />
+        <circle cx="28" cy="12" r="2.5" fill="#14120e" />
       </svg>
       <span class="word">samay <em>setu</em></span>
     </a>

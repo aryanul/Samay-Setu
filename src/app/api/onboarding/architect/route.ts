@@ -3,6 +3,8 @@ import { pool } from "@/lib/db";
 import { clearArchitectDraft, readArchitectDraft } from "@/lib/architect-draft";
 import { clientIp } from "@/lib/req";
 import { createMemberSession } from "@/lib/member-session";
+import { readReferralCode, clearReferralCookie } from "@/lib/referral";
+import { recordReferralFromCode } from "@/lib/contest";
 
 export const runtime = "nodejs";
 
@@ -120,6 +122,19 @@ export async function POST(req: NextRequest) {
   const displayName = draft.name;
   await clearArchitectDraft();
   await createMemberSession({ memberId, name: displayName });
+
+  // Founding Race: if this member arrived through an invite link, attribute the
+  // verified referral to whoever owns that code. Never let this break onboarding.
+  try {
+    const refCode = await readReferralCode();
+    if (refCode) {
+      await recordReferralFromCode(refCode, memberId);
+    }
+    await clearReferralCookie();
+  } catch (referralErr) {
+    console.error("[onboarding/architect] referral attribution failed:", referralErr);
+  }
+
   return NextResponse.json({
     ok: true,
     message: "Your Verified Architect profile is submitted.",

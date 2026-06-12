@@ -10,20 +10,24 @@
 <style>
   :root {
     --ink: #14120e;
-    --ink-2: #1f1c16;
+    --ink-2: #4a4436;
     --ink-3: #2a261d;
     --paper: #f4ecdb;
     --paper-2: #ebe1cc;
     --paper-3: #e3d7bd;
+    --band: #ece0c6;      /* deeper parchment for feature bands (was ink) */
+    --plate: #f8eed0;     /* gold-tinted plate for cards that float on paper */
+    --rule-gold: #dcc992; /* gold-tinted border for plates */
+    --track: #e0d4b8;     /* light progress/track fill base */
     --rule-light: #c5b899;
-    --rule-dark: #2e2a20;
-    --text-on-ink: #ebe1cc;
-    --text-on-ink-2: #c9bea2;
-    --muted-on-ink: #8a8068;
+    --rule-dark: #d3c7a8;  /* remapped: light border (was used only on dark surfaces) */
+    --text-on-ink: #14120e;   /* remapped: now dark text on light bands */
+    --text-on-ink-2: #4a4436;
+    --muted-on-ink: #6e6552;
     --muted-on-paper: #6e6552;
     --ink-on-paper: #14120e;
-    --gold: #b8924c;
-    --gold-bright: #d6b676;
+    --gold: #a07f3f;          /* darker gold for hovers/strokes on light */
+    --gold-bright: #b0863f;   /* readable accent gold on light (was #d6b676) */
     --serif: "Cormorant Garamond", "EB Garamond", Georgia, serif;
     --sans: "DM Sans", system-ui, sans-serif;
     --mono: "JetBrains Mono", ui-monospace, monospace;
@@ -35,7 +39,7 @@
   button { font-family: inherit; cursor: pointer; }
 
   /* ───── Marketing nav (landing-specific — simpler than dashboard's) ───── */
-  .ln-nav-wrap { background: var(--ink); position: sticky; top: 0; z-index: 20; }
+  .ln-nav-wrap { background: var(--paper); position: sticky; top: 0; z-index: 20; box-shadow: 0 1px 0 var(--rule-light); }
   .ln-nav {
     max-width: 1280px; margin: 0 auto;
     padding: 18px 48px;
@@ -59,7 +63,7 @@
   .ln-cta:hover { background: var(--gold); }
 
   /* ───── HERO (ink band, large editorial) ───── */
-  .ln-hero { background: var(--ink); color: var(--text-on-ink); position: relative; overflow: hidden; }
+  .ln-hero { background: var(--band); color: var(--ink); position: relative; overflow: hidden; }
   .ln-hero-inner {
     max-width: 1280px; margin: 0 auto;
     padding: 120px 48px 140px;
@@ -117,12 +121,12 @@
   .ln-hero-form input {
     flex: 1; font: inherit; font-size: 14px;
     padding: 16px 18px;
-    background: var(--ink-2); color: var(--text-on-ink);
-    border: 1px solid var(--rule-dark);
+    background: #fff; color: var(--ink);
+    border: 1px solid var(--rule-light);
     border-right: none; border-radius: 4px 0 0 4px;
     outline: none; transition: border-color 160ms ease;
   }
-  .ln-hero-form input::placeholder { color: var(--muted-on-ink); }
+  .ln-hero-form input::placeholder { color: var(--muted-on-paper); }
   .ln-hero-form input:focus { border-color: var(--gold-bright); }
   .ln-hero-form button {
     font: inherit; font-size: 13px; font-weight: 600;
@@ -142,9 +146,9 @@
   .ln-emblem {
     width: 320px; height: 320px;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, var(--ink-3) 0%, var(--ink-2) 60%, var(--ink) 100%);
-    border: 1px solid var(--rule-dark);
-    box-shadow: 0 0 0 12px rgba(184,146,76,0.04), 0 0 80px rgba(184,146,76,0.06);
+    background: radial-gradient(circle at 30% 30%, var(--plate) 0%, var(--paper) 55%, var(--paper-3) 100%);
+    border: 1px solid var(--rule-light);
+    box-shadow: 0 0 0 12px rgba(184,146,76,0.06), 0 24px 60px -28px rgba(20,18,14,0.18);
     display: flex; align-items: center; justify-content: center; flex-direction: column;
     position: relative;
   }
@@ -164,7 +168,7 @@
   .ln-emblem-sub { font-family: var(--serif); font-style: italic; font-size: 16px; color: var(--gold); margin-top: 6px; }
 
   /* ───── DIVIDER ───── */
-  .ln-divider { height: 56px; background: linear-gradient(to bottom, var(--ink) 50%, var(--paper) 50%); position: relative; }
+  .ln-divider { height: 56px; background: linear-gradient(to bottom, var(--band) 50%, var(--paper) 50%); position: relative; }
   .ln-divider::after {
     content: ""; position: absolute;
     left: 50%; top: 50%; transform: translate(-50%, -50%);
@@ -239,7 +243,7 @@
   }
 
   /* ───── PHILOSOPHY (ink band) ───── */
-  .ln-phil-wrap { background: var(--ink); color: var(--text-on-ink); }
+  .ln-phil-wrap { background: var(--band); color: var(--ink); }
   .ln-phil { max-width: 1280px; margin: 0 auto; padding: 120px 48px; }
   .ln-phil-blockquote {
     font-family: var(--serif);
@@ -286,12 +290,13 @@
 
   /* progress card on paper */
   .ln-progress {
-    background: var(--ink);
-    color: var(--text-on-ink);
+    background: var(--plate);
+    color: var(--ink);
     border-radius: 10px;
+    border: 1px solid var(--rule-gold);
     padding: 36px 32px;
     position: relative; overflow: hidden;
-    box-shadow: 0 24px 48px -32px rgba(20,18,14,0.4);
+    box-shadow: 0 24px 48px -32px rgba(20,18,14,0.22);
   }
   .ln-progress::before {
     content: ""; position: absolute; top: -30px; right: -30px;
@@ -310,7 +315,7 @@
   }
   .ln-progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted-on-ink); margin-bottom: 12px; }
   .ln-progress-label strong { color: var(--gold-bright); font-family: var(--mono); font-weight: 500; }
-  .ln-progress-track { height: 4px; background: var(--ink-3); border-radius: 2px; overflow: hidden; }
+  .ln-progress-track { height: 4px; background: var(--track); border-radius: 2px; overflow: hidden; }
   .ln-progress-fill { width: 40%; height: 100%; background: linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 100%); }
   .ln-progress-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 32px 0; }
   .ln-progress-stat .num { font-family: var(--serif); font-size: 36px; color: var(--gold-bright); line-height: 1; font-weight: 400; }
@@ -327,7 +332,7 @@
   .ln-progress-cta:hover { background: var(--gold); color: var(--ink); }
 
   /* ───── WAITLIST CTA (ink) ───── */
-  .ln-cta-wrap { background: var(--ink); color: var(--text-on-ink); }
+  .ln-cta-wrap { background: var(--band); color: var(--ink); }
   .ln-cta-band {
     max-width: 1280px; margin: 0 auto;
     padding: 120px 48px;
@@ -348,12 +353,12 @@
   .ln-cta-form input {
     flex: 1; font: inherit; font-size: 14px;
     padding: 16px 18px;
-    background: var(--ink-2); color: var(--text-on-ink);
-    border: 1px solid var(--rule-dark);
+    background: #fff; color: var(--ink);
+    border: 1px solid var(--rule-light);
     border-right: none; border-radius: 4px 0 0 4px;
     outline: none;
   }
-  .ln-cta-form input::placeholder { color: var(--muted-on-ink); }
+  .ln-cta-form input::placeholder { color: var(--muted-on-paper); }
   .ln-cta-form button {
     font: inherit; font-size: 13px; font-weight: 600;
     letter-spacing: 0.08em; text-transform: uppercase;
@@ -395,25 +400,25 @@
 <body>
 
 <!-- Live contest announcement (marquee at the very top) -->
-<a href="contest.html" style="display:block;background:#0a0907;border-bottom:1px solid #2e2a20;color:#ebe1cc;text-decoration:none;font-family:'DM Sans',sans-serif;">
+<a href="contest.html" style="display:block;background:#ece0c6;border-bottom:1px solid #c5b899;color:#4a4436;text-decoration:none;font-family:'DM Sans',sans-serif;">
   <div style="max-width:1280px;margin:0 auto;padding:10px 48px;display:flex;align-items:center;justify-content:center;gap:14px;font-size:13px;flex-wrap:wrap;">
-    <span style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:#d6b676;font-weight:600;">
-      <span style="width:7px;height:7px;border-radius:50%;background:#d6b676;display:inline-block;animation:ln-pulse 1.6s ease-out infinite;"></span>
+    <span style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:#a07f3f;font-weight:600;">
+      <span style="width:7px;height:7px;border-radius:50%;background:#b0863f;display:inline-block;animation:ln-pulse 1.6s ease-out infinite;"></span>
       Live · 3d 14h left
     </span>
-    <span style="color:#c9bea2;">🏆 The <em style="font-style:italic;color:#d6b676;font-family:'Cormorant Garamond',serif;font-size:15px;">Founding 50 Race</em> — five Lifetime VIP Passes for the top referrers.</span>
-    <span style="font-weight:600;color:#d6b676;border-bottom:1px solid #2e2a20;">See leaderboard →</span>
+    <span style="color:#4a4436;">🏆 The <em style="font-style:italic;color:#a07f3f;font-family:'Cormorant Garamond',serif;font-size:15px;">Founding 50 Race</em> — five Lifetime VIP Passes for the top referrers.</span>
+    <span style="font-weight:600;color:#a07f3f;border-bottom:1px solid #c5b899;">See leaderboard →</span>
   </div>
-  <style>@keyframes ln-pulse { 0% { box-shadow:0 0 0 0 rgba(214,182,118,0.7); } 70% { box-shadow:0 0 0 8px rgba(214,182,118,0); } 100% { box-shadow:0 0 0 0 rgba(214,182,118,0); } }</style>
+  <style>@keyframes ln-pulse { 0% { box-shadow:0 0 0 0 rgba(176,134,63,0.6); } 70% { box-shadow:0 0 0 8px rgba(176,134,63,0); } 100% { box-shadow:0 0 0 0 rgba(176,134,63,0); } }</style>
 </a>
 
 <div class="ln-nav-wrap">
   <nav class="ln-nav">
     <a class="ln-brand" href="#">
       <svg viewBox="0 0 36 36" fill="none">
-        <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#d6b676" stroke-width="2" stroke-linecap="round" />
-        <circle cx="8" cy="24" r="2.5" fill="#d6b676" />
-        <circle cx="28" cy="12" r="2.5" fill="#ebe1cc" />
+        <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2" stroke-linecap="round" />
+        <circle cx="8" cy="24" r="2.5" fill="#a07f3f" />
+        <circle cx="28" cy="12" r="2.5" fill="#14120e" />
       </svg>
       <span class="word">samay <em>setu</em></span>
     </a>

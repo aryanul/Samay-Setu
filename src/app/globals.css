@@ -1,11 +1,65 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────────
+   Samay Setu — canonical design tokens (parchment editorial system)
+   Ported from the mockup walkthrough. Every page inherits these.
+   ───────────────────────────────────────────────────────────── */
+:root {
+  /* Ink (dark text — never a page surface in this theme) */
+  --ink: #14120e;
+  --ink-2: #4a4436;
+  --ink-3: #2a261d;
+
+  /* Paper surfaces (light, warm) */
+  --paper: #f4ecdb;
+  --paper-2: #ebe1cc;
+  --paper-3: #e3d7bd;
+  --band: #ece0c6;     /* deeper parchment for feature bands */
+  --plate: #f8eed0;    /* gold-tinted plate for cards that float on paper */
+  --track: #e0d4b8;    /* progress/meter track base */
+  --white: #ffffff;
+
+  /* Rules / borders */
+  --rule-light: #c5b899;
+  --rule-dark: #d3c7a8;
+  --rule-gold: #dcc992;
+  --border: rgba(20, 18, 14, 0.12);
+
+  /* Text tones */
+  --text-on-ink: #14120e;
+  --text-on-ink-2: #4a4436;
+  --muted-on-ink: #6e6552;
+  --muted-on-paper: #6e6552;
+  --ink-on-paper: #14120e;
+  --stone: #4a4436;
+
+  /* Gold accents — darker than the mockup originals so they read on light */
+  --gold: #a07f3f;          /* hovers / strokes */
+  --gold-bright: #b0863f;   /* readable accent gold for text */
+  --gold-light: #dcc992;
+  --gold-glow: rgba(214, 182, 118, 0.18);
+
+  /* Status hues */
+  --rose: #c97b5e;
+  --green: #7fa67d;
+  --sage: #7fa67d;
+  --sage-bg: #ece0c6;
+  --linkedin: #0a66c2;
+
+  /* Type */
+  --serif: var(--font-serif), "Cormorant Garamond", Georgia, serif;
+  --sans: var(--font-sans), "DM Sans", system-ui, sans-serif;
+  --mono: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-sans), "DM Sans", sans-serif;
+  background: var(--paper);
+  color: var(--ink);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }

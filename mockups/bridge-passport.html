@@ -10,24 +10,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --ink:#14120e; --ink-2:#1f1c16; --ink-3:#2a261d;
-    --paper:#f4ecdb; --paper-2:#ebe1cc;
-    --rule-light:#c5b899; --rule-dark:#2e2a20;
-    --text-on-ink:#ebe1cc; --text-on-ink-2:#c9bea2;
-    --muted-on-ink:#8a8068; --muted-on-paper:#6e6552;
-    --gold:#b8924c; --gold-bright:#d6b676;
+    --ink:#14120e; --ink-2:#4a4436; --ink-3:#2a261d;
+    --paper:#f4ecdb; --paper-2:#ebe1cc; --paper-3:#e3d7bd;
+    --band:#ece0c6; --plate:#f8eed0; --rule-gold:#dcc992; --track:#e0d4b8;
+    --rule-light:#c5b899; --rule-dark:#d3c7a8;
+    --text-on-ink:#14120e; --text-on-ink-2:#4a4436;
+    --muted-on-ink:#6e6552; --muted-on-paper:#6e6552;
+    --gold:#a07f3f; --gold-bright:#b0863f;
     --linkedin:#0a66c2;
     --serif:"Cormorant Garamond",serif;
     --sans:"DM Sans",system-ui,sans-serif;
     --mono:"JetBrains Mono",ui-monospace,monospace;
   }
   *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
-  body { font-family:var(--sans); background:var(--ink); color:var(--text-on-ink); line-height:1.55; min-height:100vh; display:flex; flex-direction:column; -webkit-font-smoothing:antialiased; }
+  body { font-family:var(--sans); background:var(--band); color:var(--ink); line-height:1.55; min-height:100vh; display:flex; flex-direction:column; -webkit-font-smoothing:antialiased; }
   a { color:inherit; text-decoration:none; }
   button { font-family:inherit; cursor:pointer; }
 
   /* ───── Topbar ───── */
-  .top { max-width:1280px; margin:0 auto; padding:18px 32px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--rule-dark); width:100%; }
+  .top { max-width:1280px; margin:0 auto; padding:18px 32px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--rule-dark); width:100%; background:var(--paper); box-shadow:0 1px 0 var(--rule-light); }
   .brand { display:flex; align-items:center; gap:12px; color:var(--text-on-ink); }
   .brand svg { width:32px; height:32px; }
   .brand .word { font-family:var(--serif); font-size:22px; }
@@ -43,7 +44,7 @@
 
   /* ───── Main ───── */
   .main { flex:1; max-width:1280px; margin:0 auto; width:100%; padding:48px 32px 80px; display:grid; grid-template-columns:1.2fr 1fr; gap:48px; align-items:center; position:relative; }
-  .main::before { content:""; position:absolute; right:-100px; top:50%; transform:translateY(-50%); width:700px; height:700px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23d6b676' stroke-width='0.25' stroke-linecap='round'/></svg>"); background-size:contain; background-repeat:no-repeat; opacity:0.16; pointer-events:none; z-index:0; }
+  .main::before { content:""; position:absolute; right:-100px; top:50%; transform:translateY(-50%); width:700px; height:700px; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23a07f3f' stroke-width='0.25' stroke-linecap='round'/></svg>"); background-size:contain; background-repeat:no-repeat; opacity:0.16; pointer-events:none; z-index:0; }
 
   /* ───── Left: bounty preview (locked) ───── */
   .preview-col { position:relative; z-index:1; }
@@ -66,8 +67,8 @@
   /* The locked bounty card */
   .bounty {
     margin-top:36px;
-    background:var(--ink-2);
-    border:1px solid var(--rule-dark);
+    background:var(--plate);
+    border:1px solid var(--rule-gold);
     border-radius:10px;
     padding:24px 26px;
     position:relative;
@@ -75,7 +76,7 @@
   }
   .bounty-tag { font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--gold-bright); font-weight:600; margin-bottom:14px; }
   .bounty-person { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
-  .bounty-av { width:44px; height:44px; border-radius:4px; overflow:hidden; background:var(--ink-3); border:1px solid var(--rule-dark); }
+  .bounty-av { width:44px; height:44px; border-radius:4px; overflow:hidden; background:var(--band); border:1px solid var(--rule-light); }
   .bounty-av img { width:100%; height:100%; object-fit:cover; }
   .bounty-nm { font-family:var(--serif); font-size:18px; font-weight:500; line-height:1.1; color:var(--text-on-ink); letter-spacing:-0.005em; }
   .bounty-ti { font-size:12px; color:var(--muted-on-ink); margin-top:2px; }
@@ -97,11 +98,11 @@
   /* ───── Right: gate card ───── */
   .gate-col { position:relative; z-index:1; }
   .gate {
-    background:linear-gradient(170deg, var(--ink-2) 0%, var(--ink) 100%);
-    border:1px solid var(--rule-dark);
+    background:linear-gradient(170deg, var(--plate) 0%, var(--paper-3) 100%);
+    border:1px solid var(--rule-gold);
     border-radius:14px;
     padding:36px 32px 28px;
-    box-shadow:0 32px 64px -32px rgba(0,0,0,0.5);
+    box-shadow:0 32px 64px -32px rgba(20,18,14,0.2);
     position:relative; overflow:hidden;
   }
   .gate::before {
@@ -148,11 +149,11 @@
   .gate-alt input {
     flex:1; font:inherit; font-size:14px;
     padding:13px 14px;
-    background:var(--ink-3); color:var(--text-on-ink);
-    border:1px solid var(--rule-dark); border-radius:4px;
+    background:#fff; color:var(--ink);
+    border:1px solid var(--rule-light); border-radius:4px;
     outline:none; transition:border-color 160ms;
   }
-  .gate-alt input::placeholder { color:var(--muted-on-ink); }
+  .gate-alt input::placeholder { color:var(--muted-on-paper); }
   .gate-alt input:focus { border-color:var(--gold-bright); }
   .gate-alt button {
     font:inherit; font-size:13px; font-weight:600;
@@ -177,7 +178,7 @@
   .trust-row strong { color:var(--text-on-ink); }
 
   /* ───── Contest teaser strip ───── */
-  .teaser-wrap { background:var(--ink-2); border-top:1px solid var(--rule-dark); }
+  .teaser-wrap { background:var(--band); border-top:1px solid var(--rule-dark); }
   .teaser { max-width:1280px; margin:0 auto; padding:28px 32px; display:flex; align-items:center; gap:24px; }
   .teaser-icon { font-size:32px; line-height:1; }
   .teaser-body { flex:1; }
@@ -208,9 +209,9 @@
 <header class="top">
   <a class="brand" href="landing.html">
     <svg viewBox="0 0 36 36" fill="none">
-      <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#d6b676" stroke-width="2" stroke-linecap="round" />
-      <circle cx="8" cy="24" r="2.5" fill="#d6b676" />
-      <circle cx="28" cy="12" r="2.5" fill="#ebe1cc" />
+      <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2" stroke-linecap="round" />
+      <circle cx="8" cy="24" r="2.5" fill="#a07f3f" />
+      <circle cx="28" cy="12" r="2.5" fill="#14120e" />
     </svg>
     <span class="word">samay <em>setu</em></span>
   </a>

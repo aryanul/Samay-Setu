@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 export type ChatMessage = {
   id: number;
@@ -16,12 +17,15 @@ function formatStamp(iso: string): string {
   const d = new Date(iso);
   if (isNaN(d.getTime())) return "";
   return d.toLocaleString("en-IN", {
-    day: "2-digit",
-    month: "short",
     hour: "2-digit",
     minute: "2-digit",
     hour12: true,
   });
+}
+
+function initials(name: string): string {
+  const c = name.trim()[0];
+  return c ? c.toUpperCase() : "·";
 }
 
 export default function ChatRoom({
@@ -168,40 +172,66 @@ export default function ChatRoom({
   }
 
   return (
-    <div className="chat-window">
-      <div className="chat-head">
-        {other.picture ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img className="avatar" src={other.picture} alt="" width={48} height={48} />
-        ) : (
-          <div className="avatar tc-avatar" aria-hidden="true" />
-        )}
-        <div>
-          <div className="who">{other.name}</div>
-          {other.headline && <div className="meta">{other.headline}</div>}
+    <section className="thread-view">
+      <div className="tv-head">
+        <Link className="tv-back" href="/dashboard/chat" aria-label="Back to all chats">
+          ← All
+        </Link>
+        <div className="tv-av">
+          {other.picture ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={other.picture} alt="" />
+          ) : (
+            initials(other.name)
+          )}
         </div>
-        <div />
+        <div>
+          <div className="tv-name">{other.name}</div>
+          {other.headline && <div className="tv-status">{other.headline}</div>}
+        </div>
       </div>
 
-      <div className="chat-body" ref={bodyRef}>
-        {messages.length === 0 && (
-          <p className="meta" style={{ textAlign: "center", marginTop: 24 }}>
+      {other.headline && (
+        <div className="tv-context">
+          <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" strokeLinecap="round" />
+          </svg>
+          Active bridge with <strong>{other.headline}</strong>
+        </div>
+      )}
+
+      <div className="messages" ref={bodyRef}>
+        {messages.length === 0 ? (
+          <p className="messages-empty">
             The Bridge is open. Say hello — names only, no contact details until you both agree.
           </p>
+        ) : (
+          messages.map((m) => {
+            const mine = m.fromMemberId === meId;
+            return (
+              <div key={m.id} className={`msg${mine ? " me" : ""}`}>
+                <div className="msg-av">
+                  {mine ? (
+                    "·"
+                  ) : other.picture ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={other.picture} alt="" />
+                  ) : (
+                    initials(other.name)
+                  )}
+                </div>
+                <div className="msg-body">
+                  <div className="msg-bubble">{m.body}</div>
+                  <div className="msg-time">{formatStamp(m.createdAt)}</div>
+                </div>
+              </div>
+            );
+          })
         )}
-        {messages.map((m) => {
-          const mine = m.fromMemberId === meId;
-          return (
-            <div key={m.id} style={{ display: "flex", flexDirection: "column", maxWidth: "100%" }}>
-              <div className={`chat-bubble ${mine ? "mine" : "theirs"}`}>{m.body}</div>
-              <span className={`chat-meta ${mine ? "" : "theirs"}`}>{formatStamp(m.createdAt)}</span>
-            </div>
-          );
-        })}
       </div>
 
       <form
-        className="chat-form"
+        className="composer"
         onSubmit={(e) => {
           e.preventDefault();
           void send();
@@ -211,18 +241,15 @@ export default function ChatRoom({
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={onKey}
-          placeholder="Write a message — Enter to send, Shift+Enter for a new line"
+          placeholder="Write a message…"
+          rows={1}
           maxLength={MAX_BODY + 50}
         />
         <button type="submit" disabled={sending || draft.trim().length === 0}>
           {sending ? "…" : "Send"}
         </button>
-        {error && (
-          <p className="form-error" style={{ gridColumn: "1 / -1", margin: 0 }}>
-            {error}
-          </p>
-        )}
+        {error && <p className="composer-error">{error}</p>}
       </form>
-    </div>
+    </section>
   );
 }

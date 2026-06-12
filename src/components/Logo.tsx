@@ -7,7 +7,7 @@ type LogoProps = {
 
 export default function Logo({
   size = 36,
-  gold = "#C9A96E",
+  gold = "#a07f3f",
   className,
   title = "Samay Setu",
 }: LogoProps) {
@@ -30,7 +30,7 @@ export default function Logo({
         strokeLinecap="round"
       />
       <circle cx="8" cy="24" r="2.5" fill={gold} />
-      <circle cx="28" cy="12" r="2.5" fill="currentColor" />
+      <circle cx="28" cy="12" r="2.5" fill="#14120e" />
     </svg>
   );
 }

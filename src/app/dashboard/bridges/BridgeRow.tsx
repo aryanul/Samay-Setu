@@ -29,6 +29,17 @@ function formatWhen(iso: string): string {
   });
 }
 
+function initial(name: string): string {
+  const c = name.trim()[0];
+  return c ? c.toUpperCase() : "·";
+}
+
+const STATUS_PILL: Record<BridgeRowData["status"], { cls: string; label: string }> = {
+  pending: { cls: "pending", label: "Awaiting you" },
+  accepted: { cls: "accepted", label: "Accepted" },
+  declined: { cls: "declined", label: "Declined" },
+};
+
 export default function BridgeRow({ row }: { row: BridgeRowData }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -60,40 +71,61 @@ export default function BridgeRow({ row }: { row: BridgeRowData }) {
     }
   }
 
+  const pill =
+    row.direction === "outgoing" && row.status === "pending"
+      ? { cls: "pending", label: "Awaiting them" }
+      : STATUS_PILL[row.status];
+
   return (
-    <div className="bridge-row">
+    <article className="row">
       {row.other.picture ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img className="tc-avatar" src={row.other.picture} alt="" width={48} height={48} style={{ width: 48, height: 48 }} />
+        <img className="av av-img" src={row.other.picture} alt="" width={48} height={48} />
       ) : (
-        <div className="tc-avatar" aria-hidden="true" style={{ width: 48, height: 48 }} />
+        <div className="av">{initial(row.other.name)}</div>
       )}
 
       <div>
-        <div className="who">{row.other.name}</div>
-        <div className="meta">
-          {row.other.headline ? `${row.other.headline} · ` : ""}{formatWhen(row.createdAt)}
+        <div className="who-line">
+          <span className="nm">{row.other.name}</span>
         </div>
-        <div className="note">&ldquo;{row.note}&rdquo;</div>
+        {row.other.headline && <div className="ti">{row.other.headline}</div>}
+        <div className="swap">
+          <div className="gives">
+            <span className="key">Note</span>
+            {row.note}
+          </div>
+        </div>
         {error && <p className="form-error">{error}</p>}
       </div>
 
-      <div className="bridge-actions">
-        {row.status !== "pending" ? (
-          <span className={`status-tag ${row.status}`}>{row.status}</span>
-        ) : row.direction === "incoming" ? (
+      <div className="status">
+        <span className={`pill ${pill.cls}`}>{pill.label}</span>
+        <span className="since">{formatWhen(row.createdAt)}</span>
+      </div>
+
+      <div className="actions">
+        {row.direction === "incoming" && row.status === "pending" ? (
           <>
-            <button type="button" className="btn-decline" onClick={() => void respond("decline")} disabled={busy}>
+            <button
+              type="button"
+              className="btn btn-decline"
+              onClick={() => void respond("decline")}
+              disabled={busy}
+            >
               Decline
             </button>
-            <button type="button" className="btn-accept" onClick={() => void respond("accept")} disabled={busy}>
-              Accept
+            <button
+              type="button"
+              className="btn btn-accept"
+              onClick={() => void respond("accept")}
+              disabled={busy}
+            >
+              Accept bridge
             </button>
           </>
-        ) : (
-          <span className="status-tag pending">awaiting</span>
-        )}
+        ) : null}
       </div>
-    </div>
+    </article>
   );
 }

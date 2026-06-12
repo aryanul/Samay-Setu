@@ -96,7 +96,7 @@ export default function OfferBridgeModal({
               <>
                 <button
                   type="button"
-                  className="dash-logout"
+                  className="modal-cancel"
                   onClick={() => {
                     onClose();
                     router.refresh();
@@ -106,7 +106,7 @@ export default function OfferBridgeModal({
                 </button>
                 <button
                   type="button"
-                  className="tc-bridge-btn"
+                  className="modal-send"
                   onClick={() => router.push("/dashboard/bridges")}
                 >
                   Go to Bridges
@@ -114,10 +114,10 @@ export default function OfferBridgeModal({
               </>
             ) : (
               <>
-                <button type="button" className="dash-logout" onClick={onClose} disabled={submitting}>
+                <button type="button" className="modal-cancel" onClick={onClose} disabled={submitting}>
                   Cancel
                 </button>
-                <button type="button" className="tc-bridge-btn" onClick={() => void submit()} disabled={submitting}>
+                <button type="button" className="modal-send" onClick={() => void submit()} disabled={submitting}>
                   {submitting ? "Sending…" : "Send offer"}
                 </button>
               </>

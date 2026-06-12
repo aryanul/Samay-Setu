@@ -46,27 +46,16 @@ export default function LiveBridgeFilters({ activePillar, initialQuery }: Props)
   }
 
   return (
-    <div className={`lb-toolbar${pending ? " is-pending" : ""}`}>
-      <label className="lb-search">
-        <span className="lb-search-icon" aria-hidden="true">⌕</span>
-        <input
-          type="search"
-          placeholder="Search skills, locations, or keywords…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          aria-label="Search the Live Bridge"
-        />
-      </label>
-
-      <div className="lb-pills" role="tablist" aria-label="Filter by pillar">
+    <div className={`cb-filters${pending ? " is-pending" : ""}`}>
+      <div className="cb-pills" role="tablist" aria-label="Filter by pillar">
         <button
           type="button"
           role="tab"
           aria-selected={activePillar === null}
-          className={`lb-pill${activePillar === null ? " is-active" : ""}`}
+          className={`cb-pill${activePillar === null ? " active" : ""}`}
           onClick={() => selectPillar(null)}
         >
-          All Trades
+          All pillars
         </button>
         {PILLARS.filter((p) => p.slug !== "general").map((p) => (
           <button
@@ -74,12 +63,26 @@ export default function LiveBridgeFilters({ activePillar, initialQuery }: Props)
             type="button"
             role="tab"
             aria-selected={activePillar === p.slug}
-            className={`lb-pill${activePillar === p.slug ? " is-active" : ""}`}
+            className={`cb-pill${activePillar === p.slug ? " active" : ""}`}
             onClick={() => selectPillar(p.slug)}
           >
             {p.short}
           </button>
         ))}
+      </div>
+
+      <div className="cb-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-3-3" />
+        </svg>
+        <input
+          type="search"
+          placeholder="Search a skill or neighbourhood"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          aria-label="Search the Live Bridge"
+        />
       </div>
     </div>
   );

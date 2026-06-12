@@ -19,6 +19,7 @@ const MAX_LOCATION = 255;
 
 export default function TradesManager({ trades }: { trades: MyTrade[] }) {
   const router = useRouter();
+  const [adding, setAdding] = useState(false);
   const [creating, setCreating] = useState(false);
   const [skillOffered, setSkillOffered] = useState("");
   const [skillNeeded, setSkillNeeded] = useState("");
@@ -53,6 +54,7 @@ export default function TradesManager({ trades }: { trades: MyTrade[] }) {
       setSkillNeeded("");
       setLocationPreference("");
       setPillar(DEFAULT_PILLAR);
+      setAdding(false);
       router.refresh();
     } catch {
       setError("Network issue. Please try again.");
@@ -63,85 +65,103 @@ export default function TradesManager({ trades }: { trades: MyTrade[] }) {
 
   return (
     <>
-      <div className="trades-list">
-        {trades.length === 0 ? (
-          <p className="trades-empty">No trades yet — list one below to appear in the Live Bridge feed.</p>
-        ) : (
-          trades.map((t) => <TradeRow key={t.id} trade={t} />)
-        )}
-      </div>
+      {trades.length === 0 ? (
+        <p className="trades-empty">No trades yet — list one below to appear in the Live Bridge feed.</p>
+      ) : (
+        trades.map((t) => <TradeRow key={t.id} trade={t} />)
+      )}
 
-      <form
-        className="trade-create"
-        onSubmit={(e) => {
-          e.preventDefault();
-          void create();
-        }}
-      >
-        <div className="trade-create-row">
-          <div>
-            <label htmlFor="t-offered">I can offer</label>
-            <input
-              id="t-offered"
-              className="field"
-              type="text"
-              maxLength={MAX_SKILL}
-              value={skillOffered}
-              onChange={(e) => setSkillOffered(e.target.value)}
-              placeholder="e.g. SEO audit, dog walking, Bengali tutoring"
-            />
+      {adding ? (
+        <form
+          className="trade-create"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void create();
+          }}
+        >
+          <div className="trade-create-head">
+            Add a <em>new trade</em>
           </div>
-          <div>
-            <label htmlFor="t-needed">In exchange for</label>
-            <input
-              id="t-needed"
-              className="field"
-              type="text"
-              maxLength={MAX_SKILL}
-              value={skillNeeded}
-              onChange={(e) => setSkillNeeded(e.target.value)}
-              placeholder="e.g. home cooking, guitar lessons"
-            />
+          <div className="trade-create-row">
+            <div>
+              <label htmlFor="t-offered">I can offer</label>
+              <input
+                id="t-offered"
+                className="field"
+                type="text"
+                maxLength={MAX_SKILL}
+                value={skillOffered}
+                onChange={(e) => setSkillOffered(e.target.value)}
+                placeholder="e.g. SEO audit, dog walking, Bengali tutoring"
+              />
+            </div>
+            <div>
+              <label htmlFor="t-needed">In exchange for</label>
+              <input
+                id="t-needed"
+                className="field"
+                type="text"
+                maxLength={MAX_SKILL}
+                value={skillNeeded}
+                onChange={(e) => setSkillNeeded(e.target.value)}
+                placeholder="e.g. home cooking, guitar lessons"
+              />
+            </div>
           </div>
-        </div>
-        <div className="trade-create-row">
-          <div>
-            <label htmlFor="t-pillar">Pillar</label>
-            <select
-              id="t-pillar"
-              className="field"
-              value={pillar}
-              onChange={(e) => setPillar(e.target.value as PillarSlug)}
+          <div className="trade-create-row">
+            <div>
+              <label htmlFor="t-pillar">Pillar</label>
+              <select
+                id="t-pillar"
+                className="field"
+                value={pillar}
+                onChange={(e) => setPillar(e.target.value as PillarSlug)}
+              >
+                {PILLARS.map((p) => (
+                  <option key={p.slug} value={p.slug}>
+                    {p.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="t-loc">Location preference (optional)</label>
+              <input
+                id="t-loc"
+                className="field"
+                type="text"
+                maxLength={MAX_LOCATION}
+                value={locationPreference}
+                onChange={(e) => setLocationPreference(e.target.value)}
+                placeholder="e.g. North Kolkata, Remote, Salt Lake"
+              />
+            </div>
+          </div>
+
+          {error && <p className="form-error">{error}</p>}
+
+          <div className="row">
+            <button type="submit" className="tc-bridge-btn" disabled={creating}>
+              {creating ? "Adding…" : "Add trade"}
+            </button>
+            <button
+              type="button"
+              className="trade-add"
+              style={{ margin: 0, width: "auto", padding: "11px 18px" }}
+              onClick={() => {
+                setAdding(false);
+                setError("");
+              }}
             >
-              {PILLARS.map((p) => (
-                <option key={p.slug} value={p.slug}>
-                  {p.label}
-                </option>
-              ))}
-            </select>
+              Cancel
+            </button>
           </div>
-          <div>
-            <label htmlFor="t-loc">Location preference (optional)</label>
-            <input
-              id="t-loc"
-              className="field"
-              type="text"
-              maxLength={MAX_LOCATION}
-              value={locationPreference}
-              onChange={(e) => setLocationPreference(e.target.value)}
-              placeholder="e.g. North Kolkata, Remote, Salt Lake"
-            />
-          </div>
-        </div>
-
-        {error && <p className="form-error">{error}</p>}
-
-        <div className="row">
-          <button type="submit" className="tc-bridge-btn" disabled={creating}>
-            {creating ? "Adding…" : "Add trade"}
-          </button>
-        </div>
-      </form>
+        </form>
+      ) : (
+        <button type="button" className="trade-add" onClick={() => setAdding(true)}>
+          + Add a new trade
+        </button>
+      )}
     </>
   );
 }
@@ -173,48 +193,38 @@ function TradeRow({ trade }: { trade: MyTrade }) {
     }
   }
 
+  const meta =
+    trade.status === "open" ? (
+      <span className="live">● LIVE</span>
+    ) : trade.status === "matched" ? (
+      <span className="matched">● MATCHED</span>
+    ) : (
+      <span className="closed">● CLOSED</span>
+    );
+
   return (
-    <div className="trade-row">
-      <div className="trade-body">
-        <div className="trade-pillars">
-          <span className="trade-pillar-tag">Pillar</span>
-          <span className="trade-pillar-body">{pillarLabel(trade.pillar)}</span>
+    <div className={`trade-item${trade.status === "closed" ? " is-closed" : ""}`}>
+      <div>
+        <div className="trade-pillar">{pillarLabel(trade.pillar)}</div>
+        <div className="trade-swap">
+          <span className="gives">{trade.skillOffered}</span>
+          <span className="arrow">⇄</span>
+          <span className="seeks">{trade.skillNeeded}</span>
         </div>
-        <div className="trade-pillars">
-          <span className="trade-pillar-tag">Gives</span>
-          <span className="trade-pillar-body">{trade.skillOffered}</span>
+        <div className="trade-meta">
+          {meta}
+          {trade.locationPreference && <> &nbsp;·&nbsp; {trade.locationPreference}</>}
         </div>
-        <div className="trade-pillars">
-          <span className="trade-pillar-tag">Seeks</span>
-          <span className="trade-pillar-body">{trade.skillNeeded}</span>
-        </div>
-        {trade.locationPreference && (
-          <div className="trade-pillars">
-            <span className="trade-pillar-tag">Where</span>
-            <span className="trade-pillar-body">{trade.locationPreference}</span>
-          </div>
-        )}
-        {error && <p className="form-error">{error}</p>}
+        {error && <p className="trade-error">{error}</p>}
       </div>
       <div className="trade-actions">
-        <span className={`status-tag ${trade.status}`}>{trade.status}</span>
         {trade.status === "open" && (
-          <button
-            type="button"
-            className="btn-decline"
-            onClick={() => void setStatus("closed")}
-            disabled={busy}
-          >
+          <button type="button" className="del" onClick={() => void setStatus("closed")} disabled={busy}>
             Close
           </button>
         )}
         {trade.status === "closed" && (
-          <button
-            type="button"
-            className="btn-accept"
-            onClick={() => void setStatus("open")}
-            disabled={busy}
-          >
+          <button type="button" onClick={() => void setStatus("open")} disabled={busy}>
             Reopen
           </button>
         )}

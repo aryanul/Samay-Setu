@@ -10,18 +10,22 @@
 <style>
   :root {
     --ink: #14120e;
-    --ink-2: #1f1c16;
+    --ink-2: #4a4436;
     --ink-3: #2a261d;
     --paper: #f4ecdb;
     --paper-2: #ebe1cc;
+    --band: #ece0c6;
+    --plate: #f8eed0;
+    --rule-gold: #dcc992;
+    --track: #e0d4b8;
     --rule-light: #c5b899;
-    --rule-dark: #2e2a20;
-    --text-on-ink: #ebe1cc;
-    --text-on-ink-2: #c9bea2;
-    --muted-on-ink: #8a8068;
+    --rule-dark: #d3c7a8;
+    --text-on-ink: #14120e;
+    --text-on-ink-2: #4a4436;
+    --muted-on-ink: #6e6552;
     --muted-on-paper: #6e6552;
-    --gold: #b8924c;
-    --gold-bright: #d6b676;
+    --gold: #a07f3f;
+    --gold-bright: #b0863f;
     --gold-glow: rgba(184,146,76,0.18);
     --serif: "Cormorant Garamond", "EB Garamond", Georgia, serif;
     --sans: "DM Sans", system-ui, sans-serif;
@@ -41,7 +45,7 @@
   .cb-app { position: relative; }
 
   /* ───── Top bar (ink section) ───── */
-  .cb-top-wrap { background: var(--ink); position: sticky; top: 0; z-index: 10; }
+  .cb-top-wrap { background: var(--paper); box-shadow: 0 1px 0 var(--rule-light); position: sticky; top: 0; z-index: 10; }
   .cb-top {
     max-width: 1280px;
     margin: 0 auto;
@@ -87,7 +91,7 @@
     margin-left: 6px;
     font-weight: 600;
   }
-  .cb-tab.active .badge { background: var(--ink); color: var(--gold-bright); }
+  .cb-tab.active .badge { background: #fff; color: var(--gold); }
 
   .cb-me { display: flex; align-items: center; gap: 12px; }
   .cb-pip {
@@ -111,7 +115,7 @@
   .cb-me .out:hover { border-color: var(--gold-bright); color: var(--text-on-ink); }
 
   /* ───── Hero band (ink) ───── */
-  .cb-hero { background: var(--ink); color: var(--text-on-ink); position: relative; overflow: hidden; }
+  .cb-hero { background: var(--band); color: var(--text-on-ink); position: relative; overflow: hidden; }
   .cb-hero-inner {
     max-width: 1280px;
     margin: 0 auto;
@@ -178,7 +182,7 @@
   .cb-divider {
     height: 56px;
     background:
-      linear-gradient(to bottom, var(--ink) 50%, var(--paper) 50%);
+      linear-gradient(to bottom, var(--band) 50%, var(--paper) 50%);
     position: relative;
   }
   .cb-divider::after {
@@ -216,8 +220,9 @@
   }
   .cb-pill:hover { color: var(--ink); background: var(--paper-2); }
   .cb-pill.active {
-    background: var(--ink);
+    background: var(--plate);
     color: var(--gold-bright);
+    border: 1px solid var(--rule-gold);
   }
   .cb-search { position: relative; margin-left: auto; width: 280px; }
   .cb-search input {
@@ -225,15 +230,15 @@
     font: inherit;
     font-size: 13.5px;
     padding: 11px 14px 11px 38px;
-    background: var(--paper-2);
-    border: 1px solid transparent;
+    background: #fff;
+    border: 1px solid var(--rule-light);
     border-radius: 4px;
     color: var(--ink);
     outline: none;
     transition: border-color 160ms ease, background 160ms ease;
   }
   .cb-search input::placeholder { color: var(--muted-on-paper); }
-  .cb-search input:focus { border-color: var(--ink); background: var(--paper); }
+  .cb-search input:focus { border-color: var(--gold-bright); background: #fff; }
   .cb-search svg {
     position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
     width: 14px; height: 14px; color: var(--muted-on-paper);
@@ -271,18 +276,19 @@
   }
   .cb-card {
     position: relative;
-    background: var(--ink);
+    background: var(--plate);
     color: var(--text-on-ink);
+    border: 1px solid var(--rule-gold);
     border-radius: 8px;
     padding: 26px 24px 22px;
     display: flex; flex-direction: column;
-    box-shadow: 0 1px 0 0 var(--rule-light), 0 18px 28px -20px rgba(20,18,14,0.25);
+    box-shadow: 0 18px 28px -20px rgba(20,18,14,0.2);
     transition: transform 220ms ease, box-shadow 220ms ease;
     overflow: hidden;
   }
   .cb-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 1px 0 0 var(--gold), 0 22px 36px -20px rgba(20,18,14,0.35);
+    box-shadow: 0 1px 0 0 var(--gold), 0 22px 36px -20px rgba(20,18,14,0.22);
   }
   /* corner stitch — bridge curve in the top-right */
   .cb-card::before {
@@ -296,7 +302,7 @@
     opacity: 0.35;
     pointer-events: none;
   }
-  .cb-card.match { border: 1px solid var(--gold); padding: 25px 23px 21px; }
+  .cb-card.match { border: 1px solid var(--gold); padding: 26px 24px 22px; }
   .cb-card.match::after {
     content: "MUTUAL MATCH";
     position: absolute;
@@ -329,8 +335,8 @@
   .cb-avatar {
     width: 52px; height: 52px;
     border-radius: 4px;
-    background: var(--ink-3);
-    border: 1px solid var(--rule-dark);
+    background: var(--band);
+    border: 1px solid var(--rule-gold);
     display: flex; align-items: center; justify-content: center;
     font-family: var(--serif); font-size: 22px; font-weight: 500;
     color: var(--gold-bright);
@@ -407,7 +413,7 @@
   .cb-cta:hover { background: var(--gold); color: var(--ink); }
 
   /* ───── Footer band (ink) ───── */
-  .cb-foot-wrap { background: var(--ink); color: var(--text-on-ink-2); margin-top: 0; }
+  .cb-foot-wrap { background: var(--band); color: var(--text-on-ink-2); margin-top: 0; }
   .cb-foot {
     max-width: 1280px; margin: 0 auto;
     padding: 48px;
@@ -440,9 +446,9 @@
     <header class="cb-top">
       <a class="cb-brand" href="landing.html">
         <svg viewBox="0 0 36 36" fill="none">
-          <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#d6b676" stroke-width="2" stroke-linecap="round" />
-          <circle cx="8" cy="24" r="2.5" fill="#d6b676" />
-          <circle cx="28" cy="12" r="2.5" fill="#ebe1cc" />
+          <path d="M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12" stroke="#a07f3f" stroke-width="2" stroke-linecap="round" />
+          <circle cx="8" cy="24" r="2.5" fill="#a07f3f" />
+          <circle cx="28" cy="12" r="2.5" fill="#14120e" />
         </svg>
         <span class="word">samay <em>setu</em></span>
       </a>
@@ -451,12 +457,12 @@
         <a class="cb-tab" href="bridges.html">Bridges <span class="badge">2</span></a>
         <a class="cb-tab" href="chats.html">Chats</a>
         <a class="cb-tab" href="me.html">Me</a>
-        <a class="cb-tab" href="contest.html" style="color:#d6b676;display:inline-flex;align-items:center;gap:6px;">
-          <span style="width:6px;height:6px;border-radius:50%;background:#d6b676;display:inline-block;animation:cb-pulse 1.6s ease-out infinite;"></span>
+        <a class="cb-tab" href="contest.html" style="color:#b0863f;display:inline-flex;align-items:center;gap:6px;">
+          <span style="width:6px;height:6px;border-radius:50%;background:#b0863f;display:inline-block;animation:cb-pulse 1.6s ease-out infinite;"></span>
           Founding Race
         </a>
       </nav>
-      <style>@keyframes cb-pulse { 0% { box-shadow:0 0 0 0 rgba(214,182,118,0.7); } 70% { box-shadow:0 0 0 10px rgba(214,182,118,0); } 100% { box-shadow:0 0 0 0 rgba(214,182,118,0); } }</style>
+      <style>@keyframes cb-pulse { 0% { box-shadow:0 0 0 0 rgba(176,134,63,0.6); } 70% { box-shadow:0 0 0 10px rgba(176,134,63,0); } 100% { box-shadow:0 0 0 0 rgba(176,134,63,0); } }</style>
       <div class="cb-me">
         <div class="cb-pip">A</div>
         <button class="out">Sign out</button>
@@ -465,19 +471,19 @@
   </div>
 
   <!-- Founding 50 Race promo banner -->
-  <a href="contest.html" style="display:block;background:linear-gradient(90deg, #14120e 0%, #1f1c16 50%, #14120e 100%);border-bottom:1px solid #2e2a20;color:#ebe1cc;text-decoration:none;">
+  <a href="contest.html" style="display:block;background:linear-gradient(90deg, #ece0c6 0%, #f3e8cd 50%, #ece0c6 100%);border-bottom:1px solid #c5b899;color:#4a4436;text-decoration:none;">
     <div style="max-width:1280px;margin:0 auto;padding:18px 48px;display:flex;align-items:center;gap:24px;position:relative;overflow:hidden;">
-      <div style="position:absolute;right:-40px;top:-40px;width:200px;height:200px;background-image:url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23d6b676' stroke-width='0.3' stroke-linecap='round'/></svg>&quot;);background-size:contain;opacity:0.25;pointer-events:none;"></div>
+      <div style="position:absolute;right:-40px;top:-40px;width:200px;height:200px;background-image:url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 36' fill='none'><path d='M8 24 C8 14, 18 10, 18 18 C18 26, 28 22, 28 12' stroke='%23a07f3f' stroke-width='0.3' stroke-linecap='round'/></svg>&quot;);background-size:contain;opacity:0.25;pointer-events:none;"></div>
       <div style="font-size:28px;line-height:1;flex-shrink:0;">🏆</div>
       <div style="flex:1;position:relative;z-index:1;">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;letter-spacing:-0.01em;">
-          The <em style="font-style:italic;color:#d6b676;">Founding 50 Race</em> is live — five Lifetime VIP Passes up for grabs.
+        <div style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;letter-spacing:-0.01em;color:#14120e;">
+          The <em style="font-style:italic;color:#a07f3f;">Founding 50 Race</em> is live — five Lifetime VIP Passes up for grabs.
         </div>
-        <div style="font-size:12.5px;color:#c9bea2;margin-top:3px;">
-          Top 5 referrers by Friday 23:59 IST win. <span style="font-family:'JetBrains Mono',monospace;color:#d6b676;">You're rank #14 with 8 verified referrals.</span>
+        <div style="font-size:12.5px;color:#4a4436;margin-top:3px;">
+          Top 5 referrers by Friday 23:59 IST win. <span style="font-family:'JetBrains Mono',monospace;color:#a07f3f;">You're rank #14 with 8 verified referrals.</span>
         </div>
       </div>
-      <span style="font-size:12.5px;font-weight:600;color:#14120e;background:#d6b676;padding:10px 18px;border-radius:4px;white-space:nowrap;position:relative;z-index:1;">
+      <span style="font-size:12.5px;font-weight:600;color:#14120e;background:#b0863f;padding:10px 18px;border-radius:4px;white-space:nowrap;position:relative;z-index:1;">
         View race →
       </span>
     </div>

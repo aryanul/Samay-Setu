@@ -11,6 +11,7 @@ type Initial = {
 
 export default function EditMeForm({ initial }: { initial: Initial }) {
   const router = useRouter();
+  const [open, setOpen] = useState(false);
   const [primaryExpertise, setPrimaryExpertise] = useState(initial.primaryExpertise);
   const [currentNeed, setCurrentNeed] = useState(initial.currentNeed);
   const [proofOfWisdomUrl, setProofOfWisdomUrl] = useState(initial.proofOfWisdomUrl);
@@ -41,50 +42,66 @@ export default function EditMeForm({ initial }: { initial: Initial }) {
   }
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        void submit();
-      }}
-    >
-      <label htmlFor="primaryExpertise">Gives — your primary expertise</label>
-      <input
-        id="primaryExpertise"
-        className="field"
-        type="text"
-        value={primaryExpertise}
-        onChange={(e) => setPrimaryExpertise(e.target.value)}
-      />
-
-      <label htmlFor="currentNeed">Seeks — what you currently need</label>
-      <textarea
-        id="currentNeed"
-        className="field area"
-        value={currentNeed}
-        onChange={(e) => setCurrentNeed(e.target.value)}
-      />
-
-      <label htmlFor="proofOfWisdomUrl">Proof of practice</label>
-      <input
-        id="proofOfWisdomUrl"
-        className="field"
-        type="url"
-        inputMode="url"
-        value={proofOfWisdomUrl}
-        onChange={(e) => setProofOfWisdomUrl(e.target.value)}
-      />
-
-      {status && (
-        <p className={status.error ? "form-error" : "magic-success"} aria-live="polite">
-          {status.text}
-        </p>
-      )}
-
-      <div className="row">
-        <button type="submit" className="tc-bridge-btn" disabled={submitting}>
-          {submitting ? "Saving…" : "Save changes"}
+    <>
+      <div className="profile-edit">
+        <button
+          type="button"
+          className={open ? "is-active" : undefined}
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+        >
+          {open ? "Close editor" : "Edit profile"}
         </button>
       </div>
-    </form>
+
+      {open && (
+        <form
+          className="me-edit"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void submit();
+          }}
+        >
+          <label htmlFor="primaryExpertise">Gives — your primary expertise</label>
+          <input
+            id="primaryExpertise"
+            className="field"
+            type="text"
+            value={primaryExpertise}
+            onChange={(e) => setPrimaryExpertise(e.target.value)}
+          />
+
+          <label htmlFor="currentNeed">Seeks — what you currently need</label>
+          <textarea
+            id="currentNeed"
+            className="field area"
+            value={currentNeed}
+            onChange={(e) => setCurrentNeed(e.target.value)}
+          />
+
+          <label htmlFor="proofOfWisdomUrl">Proof of practice</label>
+          <input
+            id="proofOfWisdomUrl"
+            className="field"
+            type="url"
+            inputMode="url"
+            value={proofOfWisdomUrl}
+            onChange={(e) => setProofOfWisdomUrl(e.target.value)}
+          />
+
+          {status && (
+            <p className={status.error ? "form-error" : "magic-success"} aria-live="polite">
+              {status.text}
+            </p>
+          )}
+
+          <div className="row">
+            <button type="submit" className="tc-bridge-btn" disabled={submitting}>
+              {submitting ? "Saving…" : "Save changes"}
+            </button>
+          </div>
+        </form>
+      )}
+    </>
   );
 }

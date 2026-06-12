@@ -151,6 +151,35 @@ const TABLE_STATEMENTS: string[] = [
     KEY idx_trades_pillar (pillar),
     KEY idx_trades_created (created_at)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  // ---- Founding Race: referral codes + verified referrals -----------------
+  // One stable, shareable code per member. The code is derived from the
+  // member's name + id (see src/lib/contest.ts) and never changes.
+  `CREATE TABLE IF NOT EXISTS referral_codes (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    member_id BIGINT UNSIGNED NOT NULL,
+    code VARCHAR(48) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_referral_codes_member (member_id),
+    UNIQUE KEY uq_referral_codes_code (code)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  // A row is written when a NEW member finishes Verified Architect onboarding
+  // after arriving through someone's referral link. Because every referee is a
+  // verified member by construction, each row is a "verified referral". The
+  // UNIQUE on referee guarantees a joiner is attributed to at most one referrer.
+  `CREATE TABLE IF NOT EXISTS referrals (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    referrer_member_id BIGINT UNSIGNED NOT NULL,
+    referee_member_id BIGINT UNSIGNED NOT NULL,
+    code VARCHAR(48) NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_referrals_referee (referee_member_id),
+    KEY idx_referrals_referrer (referrer_member_id),
+    KEY idx_referrals_created (created_at)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 ];
 
 type ColumnAdd = {

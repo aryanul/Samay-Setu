@@ -75,13 +75,13 @@ export default function SplashScreen({
               y2="12"
               gradientUnits="userSpaceOnUse"
             >
-              <stop offset="0" stopColor="#d4b478" />
-              <stop offset="0.6" stopColor="#b08a4a" />
-              <stop offset="1" stopColor="#3d3b35" />
+              <stop offset="0" stopColor="#b0863f" />
+              <stop offset="0.6" stopColor="#a07f3f" />
+              <stop offset="1" stopColor="#14120e" />
             </linearGradient>
             <radialGradient id="splash-gold-glow" cx="0.5" cy="0.5" r="0.5">
-              <stop offset="0" stopColor="#f1d699" stopOpacity="0.9" />
-              <stop offset="1" stopColor="#c9a96e" stopOpacity="0" />
+              <stop offset="0" stopColor="#dcc992" stopOpacity="0.9" />
+              <stop offset="1" stopColor="#a07f3f" stopOpacity="0" />
             </radialGradient>
           </defs>
 
@@ -111,30 +111,30 @@ export default function SplashScreen({
             cx={8}
             cy={24}
             r={2.5}
-            fill="#c9a96e"
+            fill="#a07f3f"
             className="splash-dot splash-dot-gold"
           />
           <circle
             cx={28}
             cy={12}
             r={2.5}
-            fill="#1a1a18"
+            fill="#14120e"
             className="splash-dot splash-dot-ink"
           />
 
           {/* Gold particles flowing along the bridge — continuous after curve lands */}
           <g className="splash-particles">
-            <circle r={0.5} fill="#f1d699" className="splash-particle">
+            <circle r={0.5} fill="#dcc992" className="splash-particle">
               <animateMotion dur="2.6s" begin="1.9s" repeatCount="indefinite" rotate="auto">
                 <mpath href="#splash-bridge-path" />
               </animateMotion>
             </circle>
-            <circle r={0.38} fill="#e8c280" className="splash-particle">
+            <circle r={0.38} fill="#b0863f" className="splash-particle">
               <animateMotion dur="2.6s" begin="2.4s" repeatCount="indefinite" rotate="auto">
                 <mpath href="#splash-bridge-path" />
               </animateMotion>
             </circle>
-            <circle r={0.3} fill="#d4b478" className="splash-particle">
+            <circle r={0.3} fill="#a07f3f" className="splash-particle">
               <animateMotion dur="2.6s" begin="2.9s" repeatCount="indefinite" rotate="auto">
                 <mpath href="#splash-bridge-path" />
               </animateMotion>
