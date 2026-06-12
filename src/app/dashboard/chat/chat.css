@@ -9,13 +9,17 @@
   max-width: 1280px;
   margin: 0 auto;
   width: 100%;
-  padding: 32px 48px 64px;
+  padding: 24px 48px;
   font-family: var(--sans);
   color: var(--ink);
   display: grid;
   grid-template-columns: 380px 1fr;
   gap: 20px;
-  min-height: calc(100vh - 200px);
+  /* Fill the viewport below the sticky topbar so the message list scrolls
+     internally instead of the whole page growing. */
+  height: calc(100vh - 76px);
+  height: calc(100dvh - 76px);
+  overflow: hidden;
 }
 
 /* ─── Threads list ─── */
@@ -164,6 +168,8 @@
   flex-direction: column;
   gap: 0;
   min-width: 0;
+  min-height: 0;
+  height: 100%;
 }
 .ss-chats .tv-head {
   background: var(--plate);
@@ -232,7 +238,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  min-height: 380px;
+  min-height: 0;
   overflow-y: auto;
 }
 .ss-chats .messages-empty {
@@ -259,7 +265,7 @@
   height: 1px; background: var(--rule-dark);
 }
 
-.ss-chats .msg { display: flex; gap: 10px; max-width: 78%; }
+.ss-chats .msg { display: flex; gap: 10px; max-width: 78%; align-self: flex-start; }
 .ss-chats .msg-av {
   width: 32px; height: 32px;
   border-radius: 4px;
@@ -271,7 +277,7 @@
   font-family: var(--serif); font-weight: 600; font-size: 13px; color: var(--gold);
 }
 .ss-chats .msg-av img { width: 100%; height: 100%; object-fit: cover; }
-.ss-chats .msg-body { flex: 1; min-width: 0; }
+.ss-chats .msg-body { min-width: 0; }
 .ss-chats .msg-bubble {
   background: #fff;
   border: 1px solid var(--rule-light);
@@ -291,7 +297,7 @@
   margin-top: 4px;
   padding-left: 4px;
 }
-.ss-chats .msg.me { margin-left: auto; flex-direction: row-reverse; }
+.ss-chats .msg.me { align-self: flex-end; flex-direction: row-reverse; }
 .ss-chats .msg.me .msg-bubble {
   background: var(--gold-bright);
   color: var(--ink);
@@ -377,14 +383,58 @@
 /* Responsive */
 @media (max-width: 980px) {
   .ss-chats { padding-left: 18px; padding-right: 18px; grid-template-columns: 1fr; }
-  .ss-chats .threads { max-height: 340px; }
   .ss-chats .msg { max-width: 90%; }
   /* On the room route, hide the list and show only the conversation. */
   .ss-chats.ss-chats-room .threads { display: none; }
   .ss-chats.ss-chats-room .tv-back { display: inline; }
+  /* The list route stacks the panes — let the page scroll normally there
+     instead of locking to one screen. */
+  .ss-chats:not(.ss-chats-room) {
+    height: auto;
+    overflow: visible;
+    min-height: calc(100dvh - 90px);
+  }
+  .ss-chats:not(.ss-chats-room) .threads { max-height: 60vh; }
+}
+
+/* Below 880px the topbar wraps its nav onto a second row, so the room
+   conversation needs a larger offset to stay within one screen. */
+@media (max-width: 880px) {
+  .ss-chats.ss-chats-room {
+    height: calc(100vh - 132px);
+    height: calc(100dvh - 132px);
+  }
 }
 
 @media (max-width: 560px) {
-  .ss-chats { padding-left: 14px; padding-right: 14px; padding-top: 20px; padding-bottom: 40px; }
+  .ss-chats { padding-left: 14px; padding-right: 14px; padding-top: 16px; }
   .ss-chats .msg { max-width: 92%; }
+  .ss-chats .messages { padding: 18px 16px; }
+  .ss-chats .composer { padding: 12px 14px; }
+}
+
+/* ── Themed scrollbars (match the parchment palette) ── */
+.ss-chats .messages,
+.ss-chats .threads-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule-gold) transparent;
+}
+.ss-chats .messages::-webkit-scrollbar,
+.ss-chats .threads-scroll::-webkit-scrollbar {
+  width: 9px;
+}
+.ss-chats .messages::-webkit-scrollbar-track,
+.ss-chats .threads-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.ss-chats .messages::-webkit-scrollbar-thumb,
+.ss-chats .threads-scroll::-webkit-scrollbar-thumb {
+  background: var(--rule-gold);
+  border-radius: 999px;
+  border: 2px solid var(--plate);
+  background-clip: padding-box;
+}
+.ss-chats .messages::-webkit-scrollbar-thumb:hover,
+.ss-chats .threads-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
 }

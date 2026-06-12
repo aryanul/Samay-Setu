@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { pool } from "@/lib/db";
 import { readMemberSession } from "@/lib/member-session";
 import EditMeForm from "./EditMeForm";
@@ -43,7 +44,8 @@ function pad2(n: number): string {
 }
 
 export default async function MePage() {
-  const session = (await readMemberSession())!;
+  const session = await readMemberSession();
+  if (!session) redirect("/login");
   const [rowsRaw] = await pool.query(
     `SELECT id, full_name, professional_title, profile_picture_url,
             primary_expertise, current_need, proof_of_wisdom_url, is_visible

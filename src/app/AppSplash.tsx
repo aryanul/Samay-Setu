@@ -5,6 +5,14 @@ import { usePathname } from "next/navigation";
 import SplashScreen, { SPLASH_READY_AT_MS } from "./splash/SplashScreen";
 
 const SESSION_KEY = "ss-splash-seen";
+
+/**
+ * Navigations *within* the authenticated app shell (dashboard ↔ dashboard,
+ * including chat threads) should feel instant — no navigation splash. The
+ * splash is reserved for entering/leaving the app and marketing transitions.
+ */
+const isAppPath = (p: string | null | undefined): boolean =>
+  !!p && p.startsWith("/dashboard");
 /**
  * How long the navigation splash stays at full opacity before fading.
  * Long enough for both endpoints to bounce in and the bridge curve to
@@ -51,10 +59,13 @@ export default function AppSplash({ children }: { children: React.ReactNode }) {
     if (pathname === "/splash") {
       if (phase !== "done") setPhase("done");
     } else if (!isFirstRunRef.current && phase === "done") {
-      // Only fire here if the click interceptor didn't already activate it.
-      setPhase("active");
-      setWithCta(false);
-      setNavTick((t) => t + 1);
+      // Only fire here if the click interceptor didn't already activate it,
+      // and never for instant in-app navigation.
+      if (!(isAppPath(trackedPathname) && isAppPath(pathname))) {
+        setPhase("active");
+        setWithCta(false);
+        setNavTick((t) => t + 1);
+      }
     }
   }
 
@@ -100,6 +111,9 @@ export default function AppSplash({ children }: { children: React.ReactNode }) {
       const link = target?.closest?.("a") as HTMLAnchorElement | null;
       if (!link || !isInternalNav(link)) return;
       if (isFirstRunRef.current || withCta) return; // first-load CTA owns the screen
+      // Instant in-app navigation: no splash when moving between dashboard pages.
+      const destPath = (link.getAttribute("href") || "").split("?")[0].split("#")[0];
+      if (isAppPath(pathname) && isAppPath(destPath)) return;
       setPhase("active");
       setWithCta(false);
       setNavTick((t) => t + 1);

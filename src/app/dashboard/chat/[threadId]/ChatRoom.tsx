@@ -31,11 +31,13 @@ function initials(name: string): string {
 export default function ChatRoom({
   threadId,
   meId,
+  me,
   other,
   initialMessages,
 }: {
   threadId: number;
   meId: number;
+  me: { name: string; picture: string };
   other: { name: string; picture: string; headline: string };
   initialMessages: ChatMessage[];
 }) {
@@ -212,7 +214,12 @@ export default function ChatRoom({
               <div key={m.id} className={`msg${mine ? " me" : ""}`}>
                 <div className="msg-av">
                   {mine ? (
-                    "·"
+                    me.picture ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={me.picture} alt="" />
+                    ) : (
+                      initials(me.name)
+                    )
                   ) : other.picture ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={other.picture} alt="" />

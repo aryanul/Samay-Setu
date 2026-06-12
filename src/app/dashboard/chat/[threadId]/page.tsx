@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { pool } from "@/lib/db";
 import { readMemberSession } from "@/lib/member-session";
 import ThreadList from "../ThreadList";
@@ -15,6 +15,7 @@ type ThreadRow = {
   other_name: string;
   other_picture: string | null;
   other_headline: string | null;
+  my_picture: string | null;
 };
 
 type MessageRow = {
@@ -38,7 +39,8 @@ export default async function ChatThreadPage({
 }: {
   params: Promise<{ threadId: string }>;
 }) {
-  const session = (await readMemberSession())!;
+  const session = await readMemberSession();
+  if (!session) redirect("/login");
   const { threadId: rawId } = await params;
   const threadId = Number(rawId);
   if (!Number.isInteger(threadId) || threadId <= 0) notFound();
@@ -47,13 +49,14 @@ export default async function ChatThreadPage({
     `SELECT t.id, t.member_a_id, t.member_b_id,
             m.full_name AS other_name,
             m.profile_picture_url AS other_picture,
-            m.professional_title  AS other_headline
+            m.professional_title  AS other_headline,
+            (SELECT profile_picture_url FROM verified_architect_onboarding WHERE id = ?) AS my_picture
        FROM chat_threads t
        JOIN verified_architect_onboarding m
          ON m.id = IF(t.member_a_id = ?, t.member_b_id, t.member_a_id)
       WHERE t.id = ?
       LIMIT 1`,
-    [session.memberId, threadId]
+    [session.memberId, session.memberId, threadId]
   );
   const threadRows = threadRowsRaw as ThreadRow[];
   const thread = threadRows[0];
@@ -108,6 +111,10 @@ export default async function ChatThreadPage({
       <ChatRoom
         threadId={threadId}
         meId={session.memberId}
+        me={{
+          name: session.name,
+          picture: thread.my_picture ?? "",
+        }}
         other={{
           name: thread.other_name,
           picture: thread.other_picture ?? "",

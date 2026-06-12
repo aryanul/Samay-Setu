@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { pool } from "@/lib/db";
 import { readMemberSession } from "@/lib/member-session";
 import { type BridgeRowData } from "./BridgeRow";
@@ -36,7 +37,8 @@ function toUI(row: Row, direction: "incoming" | "outgoing"): BridgeRowData {
 }
 
 export default async function BridgesPage() {
-  const session = (await readMemberSession())!;
+  const session = await readMemberSession();
+  if (!session) redirect("/login");
 
   const [incomingRaw] = await pool.query(
     `SELECT b.id, b.from_member_id, b.to_member_id, b.note, b.status, b.created_at,

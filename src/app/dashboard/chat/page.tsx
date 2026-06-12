@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { pool } from "@/lib/db";
 import { readMemberSession } from "@/lib/member-session";
 import ThreadList from "./ThreadList";
@@ -21,7 +22,8 @@ type Row = {
 };
 
 export default async function ChatListPage() {
-  const session = (await readMemberSession())!;
+  const session = await readMemberSession();
+  if (!session) redirect("/login");
 
   const [rowsRaw] = await pool.query(
     `SELECT t.id, t.member_a_id, t.member_b_id, t.last_message_at, t.created_at,

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { pool } from "@/lib/db";
 import { readMemberSession } from "@/lib/member-session";
 import { isPillarSlug, pillarLabel, type PillarSlug } from "@/lib/pillars";
@@ -53,7 +54,8 @@ export default async function DashboardFeedPage({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
-  const session = (await readMemberSession())!;
+  const session = await readMemberSession();
+  if (!session) redirect("/login");
   const params = await searchParams;
 
   const pillarParam = readParam(params, "pillar");
